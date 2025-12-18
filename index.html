@@ -57,10 +57,80 @@
       --sidebar-collapsed-width: 0px;
     }
 
+    /* --- [暗夜星辰 - Dark Mode] --- */
+    body[data-theme="dark"] {
+      --primary-deep: #051624;
+      --primary: #0A2647;
+      --primary-light: #144272;
+      --primary-glow: rgba(20, 66, 114, 0.4);
+      --surface-base: #020C1B;
+      --surface-card: #0A192F;
+      --surface-elevated: #112240;
+      --surface-sidebar: #051624;
+      --text-title: #E6F1FF;
+      --text-body: #8892B0;
+      --text-muted: #495670;
+      --text-sidebar: rgba(255, 255, 255, 0.6);
+      --border-subtle: rgba(255, 255, 255, 0.05);
+      --border-medium: rgba(255, 255, 255, 0.1);
+      --shadow-ambient: 0 4px 6px rgba(0, 0, 0, 0.3);
+      --shadow-elevated: 0 10px 15px rgba(0, 0, 0, 0.4);
+    }
+
+    /* --- [流金岁月 - Royal Wine] --- */
+    body[data-theme="wine"] {
+      --primary-deep: #4A0E0E;
+      --primary: #6B0D0D;
+      --primary-light: #941111;
+      --primary-glow: rgba(148, 17, 17, 0.3);
+      --surface-base: #FDF4F4;
+      --surface-card: #FFFFFF;
+      --surface-elevated: #F9EBEB;
+      --surface-sidebar: #4A0E0E;
+      --text-title: #4A0E0E;
+      --text-body: #6D4C4C;
+      --text-muted: #A68A8A;
+      --border-subtle: rgba(107, 13, 13, 0.08);
+      --border-medium: rgba(107, 13, 13, 0.15);
+    }
+
+    /* --- [生机薄荷 - Growth Mint] --- */
+    body[data-theme="mint"] {
+      --primary-deep: #1B5E20;
+      --primary: #2E7D32;
+      --primary-light: #4CAF50;
+      --primary-glow: rgba(76, 175, 80, 0.3);
+      --surface-base: #F1F8E9;
+      --surface-card: #FFFFFF;
+      --surface-elevated: #E8F5E9;
+      --surface-sidebar: #1B5E20;
+      --text-title: #1B5E20;
+      --text-body: #33691E;
+      --text-muted: #7CB342;
+    }
+
+    /* --- [匠心工匠 - Smartisan Craft] --- */
+    body[data-theme="craft"] {
+      --primary-deep: #2A2A2A;
+      --primary: #3F3F3F;
+      --primary-light: #555555;
+      --primary-glow: rgba(85, 85, 85, 0.3);
+      --surface-base: #E0E0E0;
+      --surface-card: #F5F5F5;
+      --surface-elevated: #EEEEEE;
+      --surface-sidebar: #2A2A2A;
+      --text-title: #212121;
+      --text-body: #424242;
+      --text-muted: #757575;
+      --border-subtle: rgba(0, 0, 0, 0.05);
+      --border-medium: rgba(0, 0, 0, 0.1);
+    }
+
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
+      transition: background var(--transition-smooth), border-color var(--transition-smooth), color var(--transition-smooth);
     }
 
     body {
@@ -1322,6 +1392,76 @@
       justify-content: flex-end;
       gap: 12px;
     }
+
+    /* 主题下拉菜单 */
+    .theme-switcher {
+      position: relative;
+    }
+
+    .theme-dropdown {
+      position: absolute;
+      top: calc(100% + 12px);
+      right: 0;
+      background: var(--surface-card);
+      border: 1px solid var(--border-medium);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-floating);
+      width: 160px;
+      display: none;
+      z-index: 500;
+      flex-direction: column;
+      padding: 6px;
+      animation: toast-in 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .theme-dropdown.active {
+      display: flex;
+    }
+
+    .theme-option {
+      padding: 10px 12px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-body);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: all var(--transition-fast);
+    }
+
+    .theme-option:hover {
+      background: var(--surface-elevated);
+      color: var(--primary);
+    }
+
+    .theme-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(0, 0, 0, 0.1);
+    }
+
+    body[data-theme="dark"] .theme-dot {
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    body[data-theme="dark"] .topbar {
+      background: rgba(10, 25, 47, 0.85);
+    }
+
+    body[data-theme="wine"] .topbar {
+      background: rgba(255, 255, 255, 0.85);
+    }
+
+    body[data-theme="mint"] .topbar {
+      background: rgba(255, 255, 255, 0.85);
+    }
+
+    body[data-theme="craft"] .topbar {
+      background: rgba(245, 245, 245, 0.85);
+    }
   </style>
 </head>
 
@@ -1408,6 +1548,28 @@
         <h1 class="page-title" id="pageTitle">培训大屏</h1>
       </div>
       <div class="topbar-actions" id="topbarActions">
+        <div class="theme-switcher">
+          <button class="btn btn-secondary btn-sm" id="themeBtn" onclick="toggleThemeDropdown(event)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="5" />
+              <path
+                d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
+            </svg>
+            主题方案
+          </button>
+          <div class="theme-dropdown" id="themeDropdown">
+            <div class="theme-option" onclick="setTheme('default')"><span class="theme-dot"
+                style="background:#0F4264"></span>经典原力</div>
+            <div class="theme-option" onclick="setTheme('dark')"><span class="theme-dot"
+                style="background:#020C1B"></span>暗夜星辰</div>
+            <div class="theme-option" onclick="setTheme('wine')"><span class="theme-dot"
+                style="background:#6B0D0D"></span>流金岁月</div>
+            <div class="theme-option" onclick="setTheme('mint')"><span class="theme-dot"
+                style="background:#2E7D32"></span>生机薄荷</div>
+            <div class="theme-option" onclick="setTheme('craft')"><span class="theme-dot"
+                style="background:#3F3F3F"></span>匠心工匠</div>
+          </div>
+        </div>
         <button class="btn btn-secondary btn-sm" onclick="exportExcel()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
@@ -2100,6 +2262,34 @@
       currentConfirmCallback = null;
     };
 
+    // 主题切换
+    function setTheme(theme) {
+      if (theme === 'default') {
+        document.body.removeAttribute('data-theme');
+      } else {
+        document.body.setAttribute('data-theme', theme);
+      }
+      localStorage.setItem('surfin_theme', theme);
+      document.getElementById('themeDropdown').classList.remove('active');
+      showToast(`已切换至「${getThemeName(theme)}」主题`, 'info');
+      // 触发图表刷新以适配背景
+      setTimeout(renderAll, 300);
+    }
+
+    function getThemeName(theme) {
+      const names = { default: '经典原力', dark: '暗夜星辰', wine: '流金岁月', mint: '生机薄荷', craft: '匠心工匠' };
+      return names[theme] || '未知';
+    }
+
+    function toggleThemeDropdown(e) {
+      e.stopPropagation();
+      document.getElementById('themeDropdown').classList.toggle('active');
+    }
+
+    document.addEventListener('click', () => {
+      document.getElementById('themeDropdown').classList.remove('active');
+    });
+
     /* =========================================
        3. 数据初始化 & 逻辑
        ========================================= */
@@ -2561,7 +2751,14 @@
       showToast('预算记录已保存', 'success');
     });
 
+    // 初始化
     initData();
+    // 加载主题
+    const savedTheme = localStorage.getItem('surfin_theme');
+    if (savedTheme) {
+      if (savedTheme === 'default') document.body.removeAttribute('data-theme');
+      else document.body.setAttribute('data-theme', savedTheme);
+    }
     renderAll();
 
     // ============ AI 知识库功能 ============
