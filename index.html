@@ -2296,11 +2296,18 @@
        3. 数据初始化 & 逻辑
        ========================================= */
 
+    // 数据版本号：每次更新嵌入数据时递增此版本号
+    const DATA_VERSION = 2;
+
     function initData() {
       const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) {
+      const savedVersion = localStorage.getItem(STORAGE_KEY + '_version');
+
+      if (raw && savedVersion === String(DATA_VERSION)) {
+        // 版本号匹配，使用本地缓存数据
         Object.assign(state, JSON.parse(raw));
       } else {
+        // 首次访问或数据版本更新，使用嵌入的最新数据
         // 初始嵌入数据：确保 GitHub Pages 打开即有数据
         state.sessions = [
           { id: "kqdwlix8", date: "2024-08-12", course: "安全规范", project: "项目 Alpha", lecturer: "王工", people: 15, duration: 1.5, note: "设备安全" },
@@ -2327,7 +2334,7 @@
           { id: "ep10", episode: 10, date: "2024-07-15", title: "中国 AI 教育类产品很能打，真题对比实测九章大模型和 GPT4o", views: 238, total: 260, category: "tool", note: "" },
           { id: "ep09", episode: 9, date: "2024-07-12", title: "AI 如何融入教育？看 MagicSchool深度定制教学场景", views: 248, total: 260, category: "tool", note: "" },
           { id: "ep08", episode: 8, date: "2024-07-11", title: "Kimi官方发布的浏览器插件！不完美但依旧值得推荐！", views: 250, total: 260, category: "tool", note: "" },
-          { id: "ep07", episode: 7, date: "2024-07-10", title: "快手可灵 AI 生成视频五大特色让它成为“Sora 杀手”", views: 227, total: 260, category: "tool", note: "" },
+          { id: "ep07", episode: 7, date: "2024-07-10", title: "快手可灵 AI 生成视频五大特色让它成为 Sora 杀手", views: 227, total: 260, category: "tool", note: "" },
           { id: "ep06", episode: 6, date: "2024-07-09", title: "清华团队构建 AI 版主题医院，准确率达 93%", views: 236, total: 260, category: "paper", note: "" },
           { id: "ep05", episode: 5, date: "2024-07-08", title: "如何让机器人陪伴孤独老人", views: 230, total: 260, category: "news", note: "" },
           { id: "ep04", episode: 4, date: "2024-07-05", title: "2024 年全球最急需的 9 大技能", views: 250, total: 260, category: "report", note: "" },
@@ -2345,8 +2352,10 @@
         state.currentStationEpisode = null;
         state.currentShareEpisode = null;
         persist();
+        localStorage.setItem(STORAGE_KEY + '_version', String(DATA_VERSION));
       }
     }
+
 
     function persist() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
 
