@@ -1903,7 +1903,7 @@
                 <div class="form-grid form-grid-5">
                   <div class="form-group">
                     <label class="form-label">期数</label>
-                    <input type="number" id="stationEpisode" min="1" placeholder="第几期" required />
+                    <input type="number" id="stationEpisode" min="0" placeholder="第几期" required />
                   </div>
                   <div class="form-group">
                     <label class="form-label">发布日期</label>
@@ -1939,6 +1939,8 @@
                 </div>
                 <div class="form-footer">
                   <button class="btn btn-primary" type="submit">保存记录</button>
+                  <button class="btn btn-warning" type="button" id="stationCancelBtn" style="display:none;"
+                    onclick="cancelStationEdit()">取消编辑</button>
                   <button class="btn btn-secondary" type="button" onclick="resetStationForm()">清空</button>
                 </div>
               </form>
@@ -3220,6 +3222,10 @@
       document.getElementById('stationTotal').value = item.total;
       document.getElementById('stationCategory').value = item.category;
       document.getElementById('stationNote').value = item.note || '';
+      // 自动滚动到表单位置
+      document.getElementById('stationForm').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      // 显示取消编辑按钮
+      document.getElementById('stationCancelBtn').style.display = 'inline-block';
     };
 
     window.deleteStation = function (id) {
@@ -3229,6 +3235,11 @@
         renderAIKnowledge();
         showToast('记录已删除', 'success');
       });
+    };
+
+    window.cancelStationEdit = function () {
+      resetStationForm();
+      document.getElementById('stationCancelBtn').style.display = 'none';
     };
 
     window.editShare = function (id) {
