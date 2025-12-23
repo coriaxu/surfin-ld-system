@@ -38,6 +38,15 @@
       --accent-danger: #EF4444;
       --accent-danger-glow: rgba(239, 68, 68, 0.15);
 
+      --chart-blue-bottom: rgba(30, 78, 216, 0.9);
+      --chart-blue-mid: rgba(59, 130, 246, 0.85);
+      --chart-blue-top: rgba(147, 197, 253, 0.9);
+      --chart-blue-solid: rgba(30, 78, 216, 0.8);
+      --chart-blue-edge: rgba(30, 78, 216, 0.9);
+      --chart-green-line: #1BB678;
+      --chart-green-fill: rgba(27, 182, 120, 0.14);
+      --chart-grid: rgba(15, 66, 100, 0.08);
+
       --border-subtle: rgba(0, 0, 0, 0.06);
       --border-medium: rgba(0, 0, 0, 0.1);
 
@@ -988,6 +997,12 @@
     .chart-zoom {
       display: flex;
       gap: 4px;
+    }
+
+    .chart-container {
+      position: relative;
+      overscroll-behavior: contain;
+      touch-action: pan-y;
     }
 
     .btn-icon {
@@ -2593,6 +2608,57 @@
     let stationChart = null;
     let shareChart = null;
     let stationChartRange = { start: 0, count: 12 };
+    const stationChartGesture = {
+      wheelDelta: 0,
+      zoomDelta: 0,
+      touchDistance: null,
+      touchCenterX: null
+    };
+    let stationChartGesturesBound = false;
+
+    function getChartPalette() {
+      const styles = getComputedStyle(document.documentElement);
+      const read = (name, fallback) => styles.getPropertyValue(name).trim() || fallback;
+      return {
+        barBottom: read('--chart-blue-bottom', 'rgba(30, 78, 216, 0.9)'),
+        barMid: read('--chart-blue-mid', 'rgba(59, 130, 246, 0.85)'),
+        barTop: read('--chart-blue-top', 'rgba(147, 197, 253, 0.9)'),
+        barSolid: read('--chart-blue-solid', 'rgba(30, 78, 216, 0.8)'),
+        barEdge: read('--chart-blue-edge', 'rgba(30, 78, 216, 0.9)'),
+        line: read('--chart-green-line', '#1BB678'),
+        lineFill: read('--chart-green-fill', 'rgba(27, 182, 120, 0.14)'),
+        grid: read('--chart-grid', 'rgba(15, 66, 100, 0.08)')
+      };
+    }
+
+    function normalizeStationChartRange() {
+      const total = state.aiStations.length;
+      if (total === 0) {
+        stationChartRange.start = 0;
+        stationChartRange.count = 0;
+        return;
+      }
+      const minCount = Math.min(6, total);
+      stationChartRange.count = Math.min(total, Math.max(minCount, stationChartRange.count));
+      const maxStart = Math.max(0, total - stationChartRange.count);
+      stationChartRange.start = Math.min(maxStart, Math.max(0, stationChartRange.start));
+    }
+
+    function applyStationChartZoom(step) {
+      if (!step) return;
+      const before = stationChartRange.count;
+      stationChartRange.count += step;
+      normalizeStationChartRange();
+      if (stationChartRange.count !== before) renderStationChart();
+    }
+
+    function applyStationChartPan(step) {
+      if (!step) return;
+      const before = stationChartRange.start;
+      stationChartRange.start += step;
+      normalizeStationChartRange();
+      if (stationChartRange.start !== before) renderStationChart();
+    }
 
     // 渲染广播站表格
     function renderStations() {
@@ -2667,6 +2733,9 @@
       const ctx = document.getElementById('stationChart');
       if (!ctx) return;
 
+      normalizeStationChartRange();
+      const palette = getChartPalette();
+      let barGradient = null;
       const sorted = [...state.aiStations].sort((a, b) => a.episode - b.episode);
       const total = sorted.length;
       const start = Math.max(0, total - stationChartRange.count - stationChartRange.start);
@@ -2675,7 +2744,7 @@
 
       const labels = data.map(d => `第${d.episode}期`);
       const views = data.map(d => d.views);
-      const rates = data.map(d => ((d.views / d.total) * 100).toFixed(1));
+      const rates = data.map(d => Number(((d.views / d.total) * 100).toFixed(1)));
 
       if (stationChart) stationChart.destroy();
       stationChart = new Chart(ctx, {
@@ -2686,21 +2755,41 @@
             {
               label: '查看人数',
               data: views,
-              backgroundColor: 'rgba(15, 66, 100, 0.7)',
-              borderRadius: 4,
-              barThickness: 24,
+              backgroundColor: (context) => {
+                const { chart } = context;
+                const { chartArea } = chart;
+                if (!chartArea) return palette.barSolid;
+                if (!barGradient) {
+                  const gradient = chart.ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
+                  gradient.addColorStop(0, palette.barBottom);
+                  gradient.addColorStop(0.6, palette.barMid);
+                  gradient.addColorStop(1, palette.barTop);
+                  barGradient = gradient;
+                }
+                return barGradient;
+              },
+              borderColor: palette.barEdge,
+              borderWidth: 1,
+              borderRadius: 6,
+              borderSkipped: false,
+              maxBarThickness: 26,
+              categoryPercentage: 0.7,
+              barPercentage: 0.7,
               yAxisID: 'y'
             },
             {
               label: '查看率',
               data: rates,
               type: 'line',
-              borderColor: '#10B981',
-              backgroundColor: 'rgba(16, 185, 129, 0.1)',
-              borderWidth: 2,
-              pointRadius: 4,
-              pointBackgroundColor: '#10B981',
-              tension: 0.3,
+              borderColor: palette.line,
+              backgroundColor: palette.lineFill,
+              borderWidth: 2.5,
+              pointRadius: 3.5,
+              pointHoverRadius: 5,
+              pointBackgroundColor: palette.line,
+              pointBorderColor: '#ffffff',
+              pointBorderWidth: 2,
+              tension: 0.35,
               fill: true,
               yAxisID: 'y1'
             }
@@ -2714,12 +2803,13 @@
             legend: { position: 'top', align: 'end', labels: { usePointStyle: true, font: { size: 11 } } }
           },
           scales: {
-            x: { grid: { display: false } },
-            y: { position: 'left', title: { display: true, text: '人数' }, grid: { color: 'rgba(0,0,0,0.05)' } },
+            x: { grid: { display: false }, ticks: { maxRotation: 0, autoSkip: true, autoSkipPadding: 8 } },
+            y: { position: 'left', title: { display: true, text: '人数' }, grid: { color: palette.grid } },
             y1: { position: 'right', title: { display: true, text: '查看率 %' }, min: 0, max: 100, grid: { display: false } }
           }
         }
       });
+      bindStationChartGestures();
     }
 
     // 渲染分享月图表
@@ -2727,10 +2817,12 @@
       const ctx = document.getElementById('shareChart');
       if (!ctx) return;
 
+      const palette = getChartPalette();
+      let barGradient = null;
       const sorted = [...state.aiShares].sort((a, b) => a.episode - b.episode);
       const labels = sorted.map(d => `第${d.episode}期`);
       const attendees = sorted.map(d => d.attendees);
-      const rates = sorted.map(d => ((d.attendees / d.total) * 100).toFixed(1));
+      const rates = sorted.map(d => Number(((d.attendees / d.total) * 100).toFixed(1)));
 
       if (shareChart) shareChart.destroy();
       shareChart = new Chart(ctx, {
@@ -2741,9 +2833,26 @@
             {
               label: '参加人数',
               data: attendees,
-              backgroundColor: 'rgba(15, 66, 100, 0.7)',
-              borderRadius: 4,
-              barThickness: 32,
+              backgroundColor: (context) => {
+                const { chart } = context;
+                const { chartArea } = chart;
+                if (!chartArea) return palette.barSolid;
+                if (!barGradient) {
+                  const gradient = chart.ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
+                  gradient.addColorStop(0, palette.barBottom);
+                  gradient.addColorStop(0.6, palette.barMid);
+                  gradient.addColorStop(1, palette.barTop);
+                  barGradient = gradient;
+                }
+                return barGradient;
+              },
+              borderColor: palette.barEdge,
+              borderWidth: 1,
+              borderRadius: 6,
+              borderSkipped: false,
+              maxBarThickness: 30,
+              categoryPercentage: 0.72,
+              barPercentage: 0.72,
               yAxisID: 'y'
             },
             {
@@ -2752,10 +2861,13 @@
               type: 'line',
               borderColor: '#F59E0B',
               backgroundColor: 'rgba(245, 158, 11, 0.1)',
-              borderWidth: 2,
-              pointRadius: 4,
+              borderWidth: 2.5,
+              pointRadius: 3.5,
+              pointHoverRadius: 5,
               pointBackgroundColor: '#F59E0B',
-              tension: 0.3,
+              pointBorderColor: '#ffffff',
+              pointBorderWidth: 2,
+              tension: 0.35,
               fill: true,
               yAxisID: 'y1'
             }
@@ -2769,25 +2881,103 @@
             legend: { position: 'top', align: 'end', labels: { usePointStyle: true, font: { size: 11 } } }
           },
           scales: {
-            x: { grid: { display: false } },
-            y: { position: 'left', title: { display: true, text: '人数' }, grid: { color: 'rgba(0,0,0,0.05)' } },
+            x: { grid: { display: false }, ticks: { maxRotation: 0, autoSkip: true, autoSkipPadding: 8 } },
+            y: { position: 'left', title: { display: true, text: '人数' }, grid: { color: palette.grid } },
             y1: { position: 'right', title: { display: true, text: '参与率 %' }, min: 0, max: 50, grid: { display: false } }
           }
         }
       });
     }
 
+    function bindStationChartGestures() {
+      if (stationChartGesturesBound) return;
+      const canvas = document.getElementById('stationChart');
+      if (!canvas) return;
+      const target = canvas.closest('.chart-container') || canvas;
+
+      const wheelPanStep = 60;
+      const wheelZoomStep = 40;
+      const touchPanStep = 24;
+      const touchZoomStep = 18;
+
+      target.addEventListener('wheel', (e) => {
+        if (e.ctrlKey) {
+          e.preventDefault();
+          stationChartGesture.zoomDelta += e.deltaY;
+          const steps = Math.trunc(stationChartGesture.zoomDelta / wheelZoomStep);
+          if (steps !== 0) {
+            applyStationChartZoom(steps);
+            stationChartGesture.zoomDelta -= steps * wheelZoomStep;
+          }
+          return;
+        }
+
+        if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
+          e.preventDefault();
+          stationChartGesture.wheelDelta += e.deltaX;
+          const steps = Math.trunc(stationChartGesture.wheelDelta / wheelPanStep);
+          if (steps !== 0) {
+            applyStationChartPan(-steps);
+            stationChartGesture.wheelDelta -= steps * wheelPanStep;
+          }
+        }
+      }, { passive: false });
+
+      target.addEventListener('touchstart', (e) => {
+        if (e.touches.length !== 2) return;
+        const [t1, t2] = e.touches;
+        stationChartGesture.touchDistance = Math.hypot(t1.clientX - t2.clientX, t1.clientY - t2.clientY);
+        stationChartGesture.touchCenterX = (t1.clientX + t2.clientX) / 2;
+      }, { passive: false });
+
+      target.addEventListener('touchmove', (e) => {
+        if (e.touches.length !== 2) return;
+        e.preventDefault();
+        const [t1, t2] = e.touches;
+        const distance = Math.hypot(t1.clientX - t2.clientX, t1.clientY - t2.clientY);
+        const centerX = (t1.clientX + t2.clientX) / 2;
+
+        if (stationChartGesture.touchDistance !== null) {
+          const deltaDistance = distance - stationChartGesture.touchDistance;
+          if (Math.abs(deltaDistance) >= touchZoomStep) {
+            const steps = Math.round(Math.abs(deltaDistance) / touchZoomStep);
+            applyStationChartZoom(deltaDistance < 0 ? steps : -steps);
+          }
+        }
+
+        if (stationChartGesture.touchCenterX !== null) {
+          const deltaX = centerX - stationChartGesture.touchCenterX;
+          if (Math.abs(deltaX) >= touchPanStep) {
+            const steps = Math.round(Math.abs(deltaX) / touchPanStep);
+            applyStationChartPan(deltaX > 0 ? -steps : steps);
+          }
+        }
+
+        stationChartGesture.touchDistance = distance;
+        stationChartGesture.touchCenterX = centerX;
+      }, { passive: false });
+
+      const resetTouch = () => {
+        stationChartGesture.touchDistance = null;
+        stationChartGesture.touchCenterX = null;
+      };
+
+      target.addEventListener('touchend', resetTouch);
+      target.addEventListener('touchcancel', resetTouch);
+      stationChartGesturesBound = true;
+    }
+
     // 图表缩放
     window.zoomStationChart = function (action) {
-      const total = state.aiStations.length;
       if (action === 'in') {
-        stationChartRange.count = Math.max(6, stationChartRange.count - 3);
+        applyStationChartZoom(-3);
       } else if (action === 'out') {
-        stationChartRange.count = Math.min(total, stationChartRange.count + 3);
+        applyStationChartZoom(3);
       } else {
         stationChartRange = { start: 0, count: 12 };
+        normalizeStationChartRange();
+        renderStationChart();
       }
-      renderStationChart();
     };
 
     // 高亮图表某期
