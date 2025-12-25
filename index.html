@@ -2700,6 +2700,26 @@
       min-height: 400px;
     }
 
+    .kanban-card[draggable="true"] {
+      cursor: grab;
+    }
+
+    .kanban-card.is-dragging {
+      opacity: 0.5;
+      transform: scale(0.95);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .kanban-column {
+      transition: background 0.2s, box-shadow 0.2s;
+      border-radius: 8px;
+    }
+
+    .kanban-column.drag-over {
+      background: rgba(255, 255, 255, 0.05);
+      box-shadow: inset 0 0 0 2px var(--fin-accent);
+    }
+
     .kanban-column {
       flex: 0 0 200px;
       background: rgba(0, 0, 0, 0.15);
@@ -3135,6 +3155,23 @@
             </div>
             <div class="stat-value" id="statYearSpend">¥0</div>
             <div class="stat-desc">含常规与专项</div>
+          </div>
+        </section>
+
+        <section class="stats-grid" style="margin-top: 1.5rem;">
+          <div class="stat-card cyan">
+            <!-- 金融小百科 Stat Card -->
+            <div class="stat-header">
+              <span class="stat-label">金融小百科总期数</span>
+              <div class="stat-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+                  <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+                </svg>
+              </div>
+            </div>
+            <div class="stat-value" id="statFinanceTotal">0</div>
+            <div class="stat-desc">累计已发布期数</div>
           </div>
         </section>
 
@@ -3672,7 +3709,8 @@
             <div id="finKanbanView">
               <div class="kanban-board" id="financeKanbanBoard">
                 <!-- Column: 选题策划 -->
-                <div class="kanban-column" data-stage="topic">
+                <div class="kanban-column" data-stage="topic" ondragover="financeDragOver(event)"
+                  ondragleave="financeDragLeave(event)" ondrop="financeDrop(event)">
                   <div class="kanban-column-header">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
                       <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
@@ -3684,7 +3722,8 @@
                   <div class="kanban-cards" id="finCards-topic"></div>
                 </div>
                 <!-- Column: 文案撰写 -->
-                <div class="kanban-column" data-stage="draft">
+                <div class="kanban-column" data-stage="draft" ondragover="financeDragOver(event)"
+                  ondragleave="financeDragLeave(event)" ondrop="financeDrop(event)">
                   <div class="kanban-column-header">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
                       <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
@@ -3696,7 +3735,8 @@
                   <div class="kanban-cards" id="finCards-draft"></div>
                 </div>
                 <!-- Column: PPT制作 -->
-                <div class="kanban-column" data-stage="ppt">
+                <div class="kanban-column" data-stage="ppt" ondragover="financeDragOver(event)"
+                  ondragleave="financeDragLeave(event)" ondrop="financeDrop(event)">
                   <div class="kanban-column-header">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
                       <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
@@ -3709,7 +3749,8 @@
                   <div class="kanban-cards" id="finCards-ppt"></div>
                 </div>
                 <!-- Column: 视频制作 -->
-                <div class="kanban-column" data-stage="video">
+                <div class="kanban-column" data-stage="video" ondragover="financeDragOver(event)"
+                  ondragleave="financeDragLeave(event)" ondrop="financeDrop(event)">
                   <div class="kanban-column-header">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
                       <rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18" />
@@ -3723,7 +3764,8 @@
                   <div class="kanban-cards" id="finCards-video"></div>
                 </div>
                 <!-- Column: 宣发文案 -->
-                <div class="kanban-column" data-stage="copy">
+                <div class="kanban-column" data-stage="copy" ondragover="financeDragOver(event)"
+                  ondragleave="financeDragLeave(event)" ondrop="financeDrop(event)">
                   <div class="kanban-column-header">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
                       <path
@@ -3735,7 +3777,8 @@
                   <div class="kanban-cards" id="finCards-copy"></div>
                 </div>
                 <!-- Column: 社群发布 -->
-                <div class="kanban-column" data-stage="publish">
+                <div class="kanban-column" data-stage="publish" ondragover="financeDragOver(event)"
+                  ondragleave="financeDragLeave(event)" ondrop="financeDrop(event)">
                   <div class="kanban-column-header">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
                       <line x1="22" y1="2" x2="11" y2="13" />
@@ -3747,7 +3790,8 @@
                   <div class="kanban-cards" id="finCards-publish"></div>
                 </div>
                 <!-- Column: 数据归档 (Done) -->
-                <div class="kanban-column done" data-stage="data">
+                <div class="kanban-column done" data-stage="data" ondragover="financeDragOver(event)"
+                  ondragleave="financeDragLeave(event)" ondrop="financeDrop(event)">
                   <div class="kanban-column-header">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
                       <polyline points="20 6 9 17 4 12" />
@@ -3760,172 +3804,162 @@
               </div>
             </div>
 
-            <!-- Stats View (Hidden by Default) -->
-            <div id="finStatsView" style="display: none;">
-              <div class="card" style="margin-bottom: 1.5rem;">
+
+          </div>
+
+          <!-- Statistics View -->
+          <div id="finStatsView" style="display: none; padding-top: 1rem;">
+            <div class="stats-dashboard-grid"
+              style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 1.5rem;">
+              <!-- Trend Chart -->
+              <div class="card" style="min-height: 400px; display: flex; flex-direction: column;">
                 <div class="card-header">
-                  <h3 class="card-title card-title-sm">
-                    <span class="card-title-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                        stroke-width="2">
-                        <line x1="18" y1="20" x2="18" y2="10" />
-                        <line x1="12" y1="20" x2="12" y2="4" />
-                        <line x1="6" y1="20" x2="6" y2="14" />
-                      </svg></span>
-                    查看率趋势
-                  </h3>
+                  <h3 class="card-title card-title-sm">查看率趋势</h3>
                 </div>
-                <div class="card-body">
-                  <div class="chart-area" style="height: 300px;"><canvas id="financeTrendChart"></canvas></div>
+                <div class="card-body" style="flex: 1; position: relative;">
+                  <canvas id="financeTrendChart"></canvas>
                 </div>
               </div>
-              <div class="card">
+              <!-- Heatmap -->
+              <div class="card" style="min-height: 400px;">
                 <div class="card-header">
                   <h3 class="card-title card-title-sm">
-                    <span class="card-title-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                        stroke-width="2">
-                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-                        <line x1="3" y1="9" x2="21" y2="9" />
-                        <line x1="9" y1="21" x2="9" y2="9" />
-                      </svg></span>
-                    年度发布热力图
+                    <span>发布热力图</span>
+                    <select id="financeHeatmapYear" class="select-sm" onchange="renderFinanceHeatmap()"></select>
                   </h3>
-                  <select id="financeHeatmapYear" class="select-sm" onchange="renderFinanceHeatmap()"></select>
                 </div>
                 <div class="card-body">
                   <div class="heatmap-container" id="financeHeatmap"></div>
                   <div class="heatmap-legend">
-                    <span class="heatmap-legend-label">查看率</span>
+                    <span class="heatmap-legend-label">Less</span>
                     <span class="heatmap-legend-item" style="background:#ebedf0"></span>
-                    <span class="heatmap-legend-item" style="background:#9be9a8"></span>
                     <span class="heatmap-legend-item" style="background:#40c463"></span>
-                    <span class="heatmap-legend-item" style="background:#30a14e"></span>
-                    <span class="heatmap-legend-item" style="background:#216e39"></span>
-                    <span class="heatmap-legend-label">高</span>
+                    <span class="heatmap-legend-label">More</span>
                   </div>
                 </div>
               </div>
             </div>
           </div>
+        </div>
 
-          <!-- Episode Detail Modal -->
-          <div class="modal-overlay" id="financeModal" style="display:none;">
-            <div class="modal-content fin-modal">
-              <div class="modal-header">
-                <h3 id="finModalTitle">编辑期次</h3>
-                <button class="modal-close" onclick="closeFinanceModal()">&times;</button>
-              </div>
-              <div class="modal-body">
-                <form id="financeForm">
-                  <input type="hidden" id="finId" />
-                  <div class="form-grid form-grid-2">
-                    <div class="form-group">
-                      <label class="form-label">期数</label>
-                      <input type="number" id="finEpisode" min="1" required />
-                    </div>
-                    <div class="form-group">
-                      <label class="form-label">发布日期</label>
-                      <input type="date" id="finDate" required />
-                    </div>
-                    <div class="form-group span-2">
-                      <label class="form-label">本期主题</label>
-                      <input type="text" id="finTitle" placeholder="标题或关键词" required />
-                    </div>
-                    <div class="form-group">
-                      <label class="form-label">查看人数</label>
-                      <input type="number" id="finViews" min="0" />
-                    </div>
-                    <div class="form-group">
-                      <label class="form-label">公司总人数</label>
-                      <input type="number" id="finTotal" min="1" value="260" />
-                    </div>
-                    <div class="form-group span-2">
-                      <label class="form-label">备注</label>
-                      <input type="text" id="finNote" placeholder="特殊情况记录（选填）" />
-                    </div>
+        <!-- Episode Detail Modal -->
+        <div class="modal-overlay" id="financeModal" style="display:none;">
+          <div class="modal-content fin-modal">
+            <div class="modal-header">
+              <h3 id="finModalTitle">编辑期次</h3>
+              <button class="modal-close" onclick="closeFinanceModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+              <form id="financeForm">
+                <input type="hidden" id="finId" />
+                <div class="form-grid form-grid-2">
+                  <div class="form-group">
+                    <label class="form-label">期数</label>
+                    <input type="number" id="finEpisode" min="1" required />
                   </div>
-                  <!-- Workflow Status -->
-                  <div class="fin-workflow-status" style="margin-top: 1.5rem;">
-                    <label class="form-label">工作流进度</label>
-                    <div class="fin-workflow-chips" id="finWorkflowChips"></div>
+                  <div class="form-group">
+                    <label class="form-label">发布日期</label>
+                    <input type="date" id="finDate" required />
                   </div>
-                  <div class="form-footer" style="margin-top: 1.5rem;">
-                    <button class="btn btn-secondary" type="button" onclick="closeFinanceModal()">取消</button>
-                    <button class="btn btn-delete" type="button" onclick="deleteCurrentFinanceEpisode()">删除</button>
-                    <button class="btn btn-primary" type="submit">保存</button>
+                  <div class="form-group span-2">
+                    <label class="form-label">本期主题</label>
+                    <input type="text" id="finTitle" placeholder="标题或关键词" required />
                   </div>
-                </form>
-              </div>
+                  <div class="form-group">
+                    <label class="form-label">查看人数</label>
+                    <input type="number" id="finViews" min="0" />
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">公司总人数</label>
+                    <input type="number" id="finTotal" min="1" value="260" />
+                  </div>
+                  <div class="form-group span-2">
+                    <label class="form-label">备注</label>
+                    <input type="text" id="finNote" placeholder="特殊情况记录（选填）" />
+                  </div>
+                </div>
+                <!-- Workflow Status -->
+                <div class="fin-workflow-status" style="margin-top: 1.5rem;">
+                  <label class="form-label">工作流进度</label>
+                  <div class="fin-workflow-chips" id="finWorkflowChips"></div>
+                </div>
+                <div class="form-footer" style="margin-top: 1.5rem;">
+                  <button class="btn btn-secondary" type="button" onclick="closeFinanceModal()">取消</button>
+                  <button class="btn btn-delete" type="button" onclick="deleteCurrentFinanceEpisode()">删除</button>
+                  <button class="btn btn-primary" type="submit">保存</button>
+                </div>
+              </form>
             </div>
           </div>
         </div>
       </div>
-  </div>
 
-  <!-- 预算与开销 -->
-  <div class="page" id="page-budget">
-    <div class="card">
-      <div class="card-header">
-        <h2 class="card-title">
-          <span class="card-title-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
-              <line x1="1" y1="10" x2="23" y2="10" />
-            </svg></span>
-          预算与开销管理
-        </h2>
-      </div>
-      <div class="card-body">
-        <p class="card-intro">按月度记录预算与实际开销，区分常规项目与特殊项目，自动计算剩余金额。</p>
-        <form id="budgetForm">
-          <div class="form-grid">
-            <div class="form-group">
-              <label class="form-label">月份</label>
-              <input type="month" id="budgetMonth" required />
-            </div>
-            <div class="form-group">
-              <label class="form-label">类型</label>
-              <select id="budgetType">
-                <option value="regular">常规项目</option>
-                <option value="special">特殊项目</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label class="form-label">预算金额（元）</label>
-              <input type="number" min="0" id="budgetAmount" required />
-            </div>
-            <div class="form-group">
-              <label class="form-label">实际开销（元）</label>
-              <input type="number" min="0" id="budgetSpent" required />
-            </div>
-            <div class="form-group span-full">
-              <label class="form-label">备注</label>
-              <textarea id="budgetNote" placeholder="预算说明或开销原因"></textarea>
-            </div>
-            <input type="hidden" id="budgetId" />
-            <div class="form-footer">
-              <button class="btn btn-primary" type="submit">保存记录</button>
+
+      <!-- 预算与开销 -->
+      <div class="page" id="page-budget">
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">
+              <span class="card-title-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
+                  <line x1="1" y1="10" x2="23" y2="10" />
+                </svg></span>
+              预算与开销管理
+            </h2>
+          </div>
+          <div class="card-body">
+            <p class="card-intro">按月度记录预算与实际开销，区分常规项目与特殊项目，自动计算剩余金额。</p>
+            <form id="budgetForm">
+              <div class="form-grid">
+                <div class="form-group">
+                  <label class="form-label">月份</label>
+                  <input type="month" id="budgetMonth" required />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">类型</label>
+                  <select id="budgetType">
+                    <option value="regular">常规项目</option>
+                    <option value="special">特殊项目</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">预算金额（元）</label>
+                  <input type="number" min="0" id="budgetAmount" required />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">实际开销（元）</label>
+                  <input type="number" min="0" id="budgetSpent" required />
+                </div>
+                <div class="form-group span-full">
+                  <label class="form-label">备注</label>
+                  <textarea id="budgetNote" placeholder="预算说明或开销原因"></textarea>
+                </div>
+                <input type="hidden" id="budgetId" />
+                <div class="form-footer">
+                  <button class="btn btn-primary" type="submit">保存记录</button>
+                </div>
+              </div>
+            </form>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>月份</th>
+                    <th>类型</th>
+                    <th>预算</th>
+                    <th>实际</th>
+                    <th>剩余</th>
+                    <th>备注</th>
+                    <th>操作</th>
+                  </tr>
+                </thead>
+                <tbody id="budgetTable"></tbody>
+              </table>
             </div>
           </div>
-        </form>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>月份</th>
-                <th>类型</th>
-                <th>预算</th>
-                <th>实际</th>
-                <th>剩余</th>
-                <th>备注</th>
-                <th>操作</th>
-              </tr>
-            </thead>
-            <tbody id="budgetTable"></tbody>
-          </table>
         </div>
       </div>
-    </div>
-  </div>
-  </main>
+
   </div>
 
   <input type="file" id="filePicker" accept="application/json" style="display:none;" />
@@ -4316,6 +4350,11 @@
       document.getElementById('statYearPeople').textContent = yearPeople.toLocaleString();
       document.getElementById('statYearHours').textContent = yearHours.toLocaleString();
       document.getElementById('statYearSpend').textContent = `¥${yearSpend.toLocaleString()}`;
+
+      // Update Finance Wiki Stat
+      const finTotal = state.financeWiki ? state.financeWiki.length : 0;
+      const finEl = document.getElementById('statFinanceTotal');
+      if (finEl) finEl.textContent = finTotal;
 
     }
 
@@ -6093,10 +6132,97 @@
     }
 
     // Main render function
+    // Main render function
     function renderFinanceWiki() {
       if (!state.financeWiki) state.financeWiki = [];
       renderFinanceKanban();
     }
+
+    // --- Drag & Drop Handlers ---
+    let draggedFinanceItemId = null;
+
+    window.financeDragStart = function (e, id) {
+      draggedFinanceItemId = id;
+      e.dataTransfer.effectAllowed = 'move';
+      // Use a timeout to ensure element isn't hidden immediately if we manipulate DOM
+      requestAnimationFrame(() => {
+        e.target.classList.add('is-dragging');
+      });
+    };
+
+    window.financeDragEnd = function (e) {
+      e.target.classList.remove('is-dragging');
+      document.querySelectorAll('.kanban-column').forEach(c => c.classList.remove('drag-over'));
+      draggedFinanceItemId = null;
+    };
+
+    window.financeDragOver = function (e) {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      const col = e.target.closest('.kanban-column');
+      if (col) col.classList.add('drag-over');
+    };
+
+    window.financeDragLeave = function (e) {
+      const col = e.target.closest('.kanban-column');
+      if (col) col.classList.remove('drag-over');
+    };
+
+    window.financeDrop = function (e) {
+      e.preventDefault();
+      const col = e.target.closest('.kanban-column');
+      document.querySelectorAll('.kanban-column').forEach(c => c.classList.remove('drag-over'));
+
+      if (!col || !draggedFinanceItemId) return;
+
+      const targetStage = col.dataset.stage;
+      const item = state.financeWiki.find(i => i.id === draggedFinanceItemId);
+      if (!item) return;
+
+      if (!item.workflow) item.workflow = {};
+
+      // Update logic:
+      // If dropped in 'data' (Done), everything is true.
+      // If dropped in 'topic', everything is false.
+      // Else, everything BEFORE target is true, target and AFTER are false.
+      // Wait, if I drop in 'draft', 'topic' is done, 'draft' is Todo (false).
+
+      let pastTarget = false;
+
+      // Special check: If target is 'data', everything is true. 
+      // But 'data' stage in template is the last one.
+
+      financeTaskTemplate.forEach(t => {
+        if (t.stage === targetStage) pastTarget = true;
+
+        if (pastTarget) {
+          item.workflow[t.stage] = false;
+        } else {
+          item.workflow[t.stage] = true;
+        }
+      });
+
+      // Special case: If dropping into "data" column (Completed), maybe we want everything true?
+      // Logic above: If target is 'data', pastTarget becomes true immediately.
+      // So 'data' becomes false. Previous are true.
+      // Result: 'data' is the first FALSE stage. So getFinanceStage returns 'data'. Correct.
+      // But wait... getFinanceStage returns 'data' if ALL are true?
+      // "return 'data'; // All done" (Line 6104 in step 934)
+      // The template has 'data' as the last stage.
+      // If workflow['data'] is TRUE, do we move to a hidden 8th stage? No.
+      // If workflow['data'] is FALSE, getFinanceStage returns 'data'.
+      // So drag-to-data column sets workflow['data'] = false, implies it's "IN PROGRESS" at data stage.
+      // To mark as "COMPLETED" (done-done), workflow['data'] should be true?
+      // Visually 'data' column has class 'done'.
+      // If I want it to stay in 'data' column, getFinanceStage must return 'data'.
+      // getFinanceStage returns 'data' if 'publish' is true and 'data' is false.
+      // OR if 'data' is true, loop finishes, returns 'data'.
+      // So it doesn't matter if 'data' is true or false, it returns 'data'.
+      // So keeping it false is fine.
+
+      persist();
+      renderFinanceKanban();
+    };
 
     // Render Kanban Board
     function renderFinanceKanban() {
@@ -6114,8 +6240,11 @@
         const cardsEl = document.getElementById(`finCards-${stage}`);
         if (countEl) countEl.textContent = buckets[stage].length;
         if (cardsEl) {
-          cardsEl.innerHTML = buckets[stage].sort((a, b) => a.episode - b.episode).map(item => `
-            <div class="kanban-card" onclick="openFinanceModal('${item.id}')">
+          cardsEl.innerHTML = buckets[stage].sort((a, b) => b.episode - a.episode).map(item => `
+            <div class="kanban-card" draggable="true" 
+                 onclick="openFinanceModal('${item.id}')"
+                 ondragstart="financeDragStart(event, '${item.id}')"
+                 ondragend="financeDragEnd(event)">
               <div class="kanban-card-ep">第 ${item.episode} 期</div>
               <div class="kanban-card-title">${escapeHtml(item.title)}</div>
               <div class="kanban-card-date">${item.date || '--'}</div>
@@ -6213,14 +6342,29 @@
       });
     };
 
-    // New Episode
+    // New Episode with Manual Input
     function newFinanceEpisode() {
       if (!state.financeWiki) state.financeWiki = [];
       let maxEp = 0;
       if (state.financeWiki.length > 0) {
         maxEp = Math.max(...state.financeWiki.map(i => i.episode || 0));
       }
-      const newEp = maxEp + 1;
+      const defaultEp = maxEp + 1;
+      const input = prompt('请输入新期号 (例如: 86)', defaultEp);
+      if (input === null) return; // cancelled
+
+      const newEp = parseInt(input, 10);
+      if (isNaN(newEp) || newEp < 1) {
+        showToast('请输入有效的数字', 'error');
+        return;
+      }
+
+      // Check for duplicate
+      if (state.financeWiki.some(i => i.episode === newEp)) {
+        showToast(`第 ${newEp} 期已存在`, 'error');
+        return;
+      }
+
       const newItem = {
         id: uid(),
         episode: newEp,
@@ -6229,15 +6373,18 @@
         note: '',
         views: 0,
         total: 260,
-        workflow: {},
+        workflow: {}, // Start empty
         project: 'Stablecoin 101'
       };
+
       state.financeWiki.push(newItem);
       state.currentFinanceEpisode = newItem.id;
       persist();
       renderFinanceKanban();
-      openFinanceModal(newItem.id); // Open modal to edit
-      showToast(`新建第 ${newEp} 期`, 'success');
+      // force switch to kanban view if not already
+      switchFinanceView('kanban');
+      openFinanceModal(newItem.id);
+      showToast(`新建第 ${newEp} 期成功`, 'success');
     }
 
     /* --- Finance Charts --- */
@@ -6255,22 +6402,58 @@
       });
       const views = data.map(i => Number(i.views) || 0);
 
+      // Create Gradient
+      const chartCtx = ctx.getContext('2d');
+      const gradient = chartCtx.createLinearGradient(0, 0, 0, 300);
+      gradient.addColorStop(0, 'rgba(75, 110, 134, 0.8)');
+      gradient.addColorStop(1, 'rgba(75, 110, 134, 0.1)');
+
       if (financeChart) financeChart.destroy();
       financeChart = new Chart(ctx, {
         type: 'bar',
         data: {
           labels: labels,
           datasets: [
-            { label: '查看人数', data: views, backgroundColor: '#4B6E86', yAxisID: 'y' },
-            { label: '查看率 %', data: rates, type: 'line', borderColor: '#10B981', borderWidth: 2, pointBackgroundColor: '#fff', yAxisID: 'y1' }
+            {
+              label: '查看人数',
+              data: views,
+              backgroundColor: gradient,
+              borderRadius: 4,
+              order: 2,
+              yAxisID: 'y'
+            },
+            {
+              label: '查看率 %',
+              data: rates,
+              type: 'line',
+              borderColor: '#10B981',
+              borderWidth: 3,
+              pointBackgroundColor: '#fff',
+              pointBorderColor: '#10B981',
+              pointRadius: 4,
+              order: 1,
+              tension: 0.3,
+              yAxisID: 'y1'
+            }
           ]
         },
         options: {
           responsive: true,
           maintainAspectRatio: false,
+          plugins: {
+            legend: { position: 'top' },
+            tooltip: {
+              mode: 'index',
+              intersect: false,
+              backgroundColor: 'rgba(0,0,0,0.8)',
+              titleFont: { size: 13 },
+              bodyFont: { size: 13 }
+            }
+          },
           scales: {
-            y: { beginAtZero: true, position: 'left' },
-            y1: { beginAtZero: true, position: 'right', max: 100, grid: { drawOnChartArea: false } }
+            x: { grid: { display: false } },
+            y: { beginAtZero: true, position: 'left', grid: { color: 'rgba(0,0,0,0.05)' } },
+            y1: { beginAtZero: true, position: 'right', max: 100, grid: { display: false } }
           }
         }
       });
@@ -6295,14 +6478,19 @@
       container.innerHTML = '';
 
       const dayMap = {};
+      let maxCount = 0;
       state.financeWiki.forEach(item => {
         if (!item.date) return;
         const d = new Date(item.date);
         if (d.getFullYear() === year) {
           const key = item.date;
           dayMap[key] = (dayMap[key] || 0) + 1;
+          if (dayMap[key] > maxCount) maxCount = dayMap[key];
         }
       });
+
+      // Prevent divide by zero
+      if (maxCount === 0) maxCount = 1;
 
       const start = new Date(year, 0, 1);
       const end = new Date(year, 11, 31);
@@ -6310,9 +6498,20 @@
       for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
         const key = d.toISOString().split('T')[0];
         const count = dayMap[key] || 0;
+
+        // Calculate color intensity (GitHub style)
+        // 0: #ebedf0
+        // >0: shades of green
         let color = '#ebedf0';
-        if (count > 0) color = '#40c463';
-        html += `<div class="heatmap-item" style="background:${color}" title="${key}: ${count}"></div>`;
+        if (count > 0) {
+          const ratio = count / maxCount;
+          if (ratio <= 0.25) color = '#9be9a8';
+          else if (ratio <= 0.5) color = '#40c463';
+          else if (ratio <= 0.75) color = '#30a14e';
+          else color = '#216e39';
+        }
+
+        html += `<div class="heatmap-item" style="background:${color}" title="${key}: ${count} 期"></div>`;
       }
       container.innerHTML = html;
     }
@@ -6322,17 +6521,17 @@
       e.preventDefault();
       const id = document.getElementById('finId').value;
       if (!id) return;
-      const item = state.financeWiki.find(i => i.id === id);
-      if (item) {
+      const fItem = state.financeWiki.find(i => i.id === id);
+      if (fItem) {
         // Fix: Allow editing episode number manually
         const newEp = Number(document.getElementById('finEpisode').value);
-        if (newEp) item.episode = newEp;
+        if (newEp) fItem.episode = newEp;
 
-        item.title = document.getElementById('finTitle').value;
-        item.date = document.getElementById('finDate').value;
-        item.views = Number(document.getElementById('finViews').value);
-        item.total = Number(document.getElementById('finTotal').value);
-        item.note = document.getElementById('finNote').value;
+        fItem.title = document.getElementById('finTitle').value;
+        fItem.date = document.getElementById('finDate').value;
+        fItem.views = Number(document.getElementById('finViews').value);
+        fItem.total = Number(document.getElementById('finTotal').value);
+        fItem.note = document.getElementById('finNote').value;
         persist();
         closeFinanceModal();
         renderFinanceKanban();
