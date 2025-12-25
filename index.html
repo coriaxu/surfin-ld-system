@@ -3820,7 +3820,7 @@
                   <div class="form-grid form-grid-2">
                     <div class="form-group">
                       <label class="form-label">期数</label>
-                      <input type="number" id="finEpisode" min="1" required disabled />
+                      <input type="number" id="finEpisode" min="1" required />
                     </div>
                     <div class="form-group">
                       <label class="form-label">发布日期</label>
@@ -6172,11 +6172,20 @@
         }).join('');
       }
 
-      document.getElementById('financeModal').style.display = 'flex';
+      const modal = document.getElementById('financeModal');
+      modal.style.display = 'flex';
+      // Small delay to allow display:flex to apply before adding class for transition
+      requestAnimationFrame(() => {
+        modal.classList.add('active');
+      });
     };
 
     window.closeFinanceModal = function () {
-      document.getElementById('financeModal').style.display = 'none';
+      const modal = document.getElementById('financeModal');
+      modal.classList.remove('active');
+      setTimeout(() => {
+        modal.style.display = 'none';
+      }, 200);
     };
 
     // Toggle step from modal
@@ -6315,6 +6324,10 @@
       if (!id) return;
       const item = state.financeWiki.find(i => i.id === id);
       if (item) {
+        // Fix: Allow editing episode number manually
+        const newEp = Number(document.getElementById('finEpisode').value);
+        if (newEp) item.episode = newEp;
+
         item.title = document.getElementById('finTitle').value;
         item.date = document.getElementById('finDate').value;
         item.views = Number(document.getElementById('finViews').value);
