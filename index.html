@@ -2487,12 +2487,16 @@
       gap: 1.5rem;
       padding: 1rem 0.5rem 2rem 0.5rem;
       overflow-x: auto;
+      overflow-y: hidden;
       perspective: 1000px;
-      /* 3D Perspective */
+      /* Ensure scroll works */
+      min-width: 100%;
+      align-items: flex-start;
     }
 
     .fin-step {
       flex: 0 0 160px;
+      /* Fixed width, no shrink */
       display: flex;
       flex-direction: column;
       gap: 12px;
@@ -2929,39 +2933,7 @@
           </div>
         </section>
 
-        <section class="stats-grid"
-          style="margin-top: 24px; border-top: 1px dashed var(--border-medium); padding-top: 24px;">
-          <!-- Finance Wiki Stat -->
-          <div class="stat-card"
-            style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: white; border:1px solid rgba(255,255,255,0.1);">
-            <div class="stat-header">
-              <span class="stat-label" style="color: rgba(255, 255, 255, 0.7)">金融小百科 (Finance)</span>
-              <div class="stat-icon" style="color: #f59e0b">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
-                  <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
-                </svg>
-              </div>
-            </div>
-            <div class="stat-value" id="statFinanceProgress" style="color: #f59e0b">0</div>
-            <div class="stat-desc" style="color: rgba(255, 255, 255, 0.5)">Stablecoin 101 Episodes</div>
-          </div>
 
-          <!-- AI Share Stat -->
-          <div class="stat-card"
-            style="background: linear-gradient(135deg, #4c1d95 0%, #5b21b6 100%); color: white; border:1px solid rgba(255,255,255,0.1);">
-            <div class="stat-header">
-              <span class="stat-label" style="color: rgba(255, 255, 255, 0.7)">AI 分享月 (Share)</span>
-              <div class="stat-icon" style="color: #fbbf24">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
-                </svg>
-              </div>
-            </div>
-            <div class="stat-value" id="statShareProgress" style="color: #fbbf24">0</div>
-            <div class="stat-desc" style="color: rgba(255, 255, 255, 0.5)">Total Episodes</div>
-          </div>
-        </section>
 
         <section class="charts-grid">
           <div class="card">
@@ -3502,123 +3474,206 @@
               <!-- ... more steps ... -->
             </div>
 
-            <!-- 剧集详情 / 数据录入 / 备注 -->
-            <div
-              style="margin-top: 3rem; background: rgba(0,0,0,0.2); padding: 1.5rem; border-radius: 16px; border: 1px solid var(--fin-border);">
-              <h3
-                style="color: var(--fin-text-sub); font-size: 0.9rem; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 1px;">
-                Episode Details</h3>
-              <form id="financeForm" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem;">
-                <div class="form-group">
-                  <label class="form-label" style="color: var(--fin-text-sub);">Episode No.</label>
-                  <input type="number" id="finEpisode" class="input-dark" placeholder="e.g. 9" required disabled>
-                </div>
-                <div class="form-group span-2">
-                  <label class="form-label" style="color: var(--fin-text-sub);">Title</label>
-                  <input type="text" id="finTitle" class="input-dark" placeholder="Episode Title" required>
-                </div>
-                <div class="form-group">
-                  <label class="form-label" style="color: var(--fin-text-sub);">Publish Date</label>
-                  <input type="date" id="finDate">
-                </div>
-                <div class="form-group span-4">
-                  <label class="form-label" style="color: var(--fin-text-sub);">Notes / Remarks</label>
-                  <input type="text" id="finNote" class="input-dark" placeholder="Production notes...">
-                </div>
-                <div class="form-footer span-4" style="justify-content: flex-end; margin-top: 0;">
-                  <button class="fin-btn active" type="submit">Update Details</button>
-                </div>
-              </form>
-            </div>
-          </div>
-
-          <!-- 历史列表 (隐藏) -->
-          <div id="fin-panel-history" style="display: none;">
-            <div class="table-wrap" style="background: rgba(0,0,0,0.2); border-radius: 12px;">
-              <table class="table-dark">
-                <thead>
-                  <tr>
-                    <th style="color: var(--fin-text-sub);">EP</th>
-                    <th style="color: var(--fin-text-sub);">Title</th>
-                    <th style="color: var(--fin-text-sub);">Status</th>
-                    <th style="color: var(--fin-text-sub);">Date</th>
-                    <th style="color: var(--fin-text-sub);">Actions</th>
-                  </tr>
-                </thead>
-                <tbody id="financeTableBody">
-                  <!-- JS Rendered -->
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-        </div>
-      </div>
-
-      <!-- 预算与开销 -->
-      <div class="page" id="page-budget">
-        <div class="card">
-          <div class="card-header">
-            <h2 class="card-title">
-              <span class="card-title-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
-                  <line x1="1" y1="10" x2="23" y2="10" />
-                </svg></span>
-              预算与开销管理
-            </h2>
-          </div>
-          <div class="card-body">
-            <p class="card-intro">按月度记录预算与实际开销，区分常规项目与特殊项目，自动计算剩余金额。</p>
-            <form id="budgetForm">
-              <div class="form-grid">
-                <div class="form-group">
-                  <label class="form-label">月份</label>
-                  <input type="month" id="budgetMonth" required />
-                </div>
-                <div class="form-group">
-                  <label class="form-label">类型</label>
-                  <select id="budgetType">
-                    <option value="regular">常规项目</option>
-                    <option value="special">特殊项目</option>
-                  </select>
-                </div>
-                <div class="form-group">
-                  <label class="form-label">预算金额（元）</label>
-                  <input type="number" min="0" id="budgetAmount" required />
-                </div>
-                <div class="form-group">
-                  <label class="form-label">实际开销（元）</label>
-                  <input type="number" min="0" id="budgetSpent" required />
-                </div>
-                <div class="form-group span-full">
-                  <label class="form-label">备注</label>
-                  <textarea id="budgetNote" placeholder="预算说明或开销原因"></textarea>
-                </div>
-                <input type="hidden" id="budgetId" />
-                <div class="form-footer">
-                  <button class="btn btn-primary" type="submit">保存记录</button>
+            <!-- Charts Section (New) -->
+            <div class="card" style="margin-top:2rem;">
+              <div class="card-header">
+                <h3 class="card-title card-title-sm">
+                  <span class="card-title-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <line x1="18" y1="20" x2="18" y2="10" />
+                      <line x1="12" y1="20" x2="12" y2="4" />
+                      <line x1="6" y1="20" x2="6" y2="14" />
+                    </svg>
+                  </span>
+                  查看率趋势
+                </h3>
+              </div>
+              <div class="card-body">
+                <div class="chart-area" style="height: 300px;">
+                  <canvas id="financeTrendChart"></canvas>
                 </div>
               </div>
-            </form>
-            <div class="table-wrap">
-              <table>
-                <thead>
-                  <tr>
-                    <th>月份</th>
-                    <th>类型</th>
-                    <th>预算</th>
-                    <th>实际</th>
-                    <th>剩余</th>
-                    <th>备注</th>
-                    <th>操作</th>
-                  </tr>
-                </thead>
-                <tbody id="budgetTable"></tbody>
-              </table>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title card-title-sm">
+                  <span class="card-title-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                      <line x1="3" y1="9" x2="21" y2="9" />
+                      <line x1="9" y1="21" x2="9" y2="9" />
+                    </svg>
+                  </span>
+                  年度发布热力图
+                </h3>
+                <select id="financeHeatmapYear" class="select-sm" onchange="renderFinanceHeatmap()"></select>
+              </div>
+              <div class="card-body">
+                <div class="heatmap-container" id="financeHeatmap"></div>
+                <div class="heatmap-legend">
+                  <span class="heatmap-legend-label">查看率</span>
+                  <span class="heatmap-legend-item" style="background:#ebedf0"></span>
+                  <span class="heatmap-legend-item" style="background:#9be9a8"></span>
+                  <span class="heatmap-legend-item" style="background:#40c463"></span>
+                  <span class="heatmap-legend-item" style="background:#30a14e"></span>
+                  <span class="heatmap-legend-item" style="background:#216e39"></span>
+                  <span class="heatmap-legend-label">高</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 数据录入 (New Style) -->
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title card-title-sm">
+                  <span class="card-title-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                    </svg>
+                  </span>
+                  数据录入
+                </h3>
+              </div>
+              <div class="card-body">
+                <form id="financeForm">
+                  <div class="form-grid form-grid-4">
+                    <div class="form-group">
+                      <label class="form-label">期数</label>
+                      <input type="number" id="finEpisode" min="1" placeholder="第几期" required disabled />
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label">发布日期</label>
+                      <input type="date" id="finDate" required />
+                    </div>
+                    <div class="form-group span-2">
+                      <label class="form-label">本期主题</label>
+                      <input type="text" id="finTitle" placeholder="标题或关键词" required />
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label">查看人数</label>
+                      <input type="number" id="finViews" min="0" placeholder="0" />
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label">公司总人数</label>
+                      <input type="number" id="finTotal" min="1" placeholder="260" />
+                    </div>
+                    <div class="form-group span-2">
+                      <label class="form-label">备注</label>
+                      <input type="text" id="finNote" placeholder="特殊情况记录（选填）" />
+                    </div>
+                  </div>
+                  <div class="form-footer">
+                    <button class="btn btn-primary" type="submit">保存记录</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+
+            <!-- History Table (New Style) -->
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title card-title-sm">
+                  <span class="card-title-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                      stroke-width="2">
+                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                      <polyline points="14 2 14 8 20 8" />
+                      <line x1="16" y1="13" x2="8" y2="13" />
+                      <line x1="16" y1="17" x2="8" y2="17" />
+                    </svg></span>
+                  历史记录
+                </h3>
+              </div>
+              <div class="card-body">
+                <div class="table-wrap">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>期数</th>
+                        <th>发布日期</th>
+                        <th>主题</th>
+                        <th>查看人数</th>
+                        <th>总人数</th>
+                        <th>查看率</th>
+                        <th>备注</th>
+                        <th>操作</th>
+                      </tr>
+                    </thead>
+                    <tbody id="financeTableBody"></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- 预算与开销 -->
+        <div class="page" id="page-budget">
+          <div class="card">
+            <div class="card-header">
+              <h2 class="card-title">
+                <span class="card-title-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2">
+                    <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
+                    <line x1="1" y1="10" x2="23" y2="10" />
+                  </svg></span>
+                预算与开销管理
+              </h2>
+            </div>
+            <div class="card-body">
+              <p class="card-intro">按月度记录预算与实际开销，区分常规项目与特殊项目，自动计算剩余金额。</p>
+              <form id="budgetForm">
+                <div class="form-grid">
+                  <div class="form-group">
+                    <label class="form-label">月份</label>
+                    <input type="month" id="budgetMonth" required />
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">类型</label>
+                    <select id="budgetType">
+                      <option value="regular">常规项目</option>
+                      <option value="special">特殊项目</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">预算金额（元）</label>
+                    <input type="number" min="0" id="budgetAmount" required />
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">实际开销（元）</label>
+                    <input type="number" min="0" id="budgetSpent" required />
+                  </div>
+                  <div class="form-group span-full">
+                    <label class="form-label">备注</label>
+                    <textarea id="budgetNote" placeholder="预算说明或开销原因"></textarea>
+                  </div>
+                  <input type="hidden" id="budgetId" />
+                  <div class="form-footer">
+                    <button class="btn btn-primary" type="submit">保存记录</button>
+                  </div>
+                </div>
+              </form>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>月份</th>
+                      <th>类型</th>
+                      <th>预算</th>
+                      <th>实际</th>
+                      <th>剩余</th>
+                      <th>备注</th>
+                      <th>操作</th>
+                    </tr>
+                  </thead>
+                  <tbody id="budgetTable"></tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>
-      </div>
     </main>
   </div>
 
@@ -5772,31 +5827,38 @@
     /* =========================================
        New: 金融小百科 (Finance Encyclopedia) Logic
        ========================================= */
+    /* =========================================
+       New: 金融小百科 (Finance Encyclopedia) Logic
+       ========================================= */
     const financeTaskTemplate = [
-      { name: '选题策划', stage: 'topic', icon: '💡', label: 'Topic' },
-      { name: '文案撰写', stage: 'draft', icon: '📝', label: 'Draft' },
-      { name: 'PPT制作', stage: 'ppt', icon: '📊', label: 'PPT' },
-      { name: '视频制作', stage: 'video', icon: '🎬', label: 'Video' },
-      { name: '宣发文案', stage: 'copy', icon: '📣', label: 'Copy' },
-      { name: '社群发布', stage: 'publish', icon: '🚀', label: 'Publish' },
-      { name: '数据归档', stage: 'data', icon: '📈', label: 'Data' }
+      { name: '选题策划', stage: 'topic', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>', label: 'Topic' },
+      { name: '文案撰写', stage: 'draft', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>', label: 'Draft' },
+      { name: 'PPT制作', stage: 'ppt', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>', label: 'PPT' },
+      { name: '视频制作', stage: 'video', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="17" x2="22" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/></svg>', label: 'Video' },
+      { name: '宣发文案', stage: 'copy', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>', label: 'Copy' },
+      { name: '社群发布', stage: 'publish', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>', label: 'Publish' },
+      { name: '数据归档', stage: 'data', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>', label: 'Data' }
     ];
+
+    let financeChart = null;
 
     function renderFinanceWiki() {
       // 1. Init Data
       if (!state.financeWiki) state.financeWiki = [];
 
       // 2. Identify Current Episode
-      // If we have history, maybe auto-select the latest one?
-      // Or use state.currentFinanceEpisode
       let currentEp = state.currentFinanceEpisode;
 
       const displayEp = document.getElementById('finCurrentEpisodeDisplay');
       const displayStatus = document.getElementById('finCurrentStatusDisplay');
       const timelineBoard = document.getElementById('financeTimelineBoard');
+
+      // Form Elements
       const formEpisode = document.getElementById('finEpisode');
       const formTitle = document.getElementById('finTitle');
       const formDate = document.getElementById('finDate');
+      const formViews = document.getElementById('finViews');
+      const formTotal = document.getElementById('finTotal');
       const formNote = document.getElementById('finNote');
 
       // Helper to clear form
@@ -5804,6 +5866,8 @@
         if (formEpisode) formEpisode.value = '';
         if (formTitle) formTitle.value = '';
         if (formDate) formDate.value = '';
+        if (formViews) formViews.value = '';
+        if (formTotal) formTotal.value = '';
         if (formNote) formNote.value = '';
         if (displayEp) displayEp.textContent = '--';
         if (displayStatus) { displayStatus.textContent = 'Waiting'; displayStatus.className = 'tag tag-muted'; }
@@ -5811,14 +5875,13 @@
       };
 
       if (!currentEp) {
-        // Auto-select latest if exists
         if (state.financeWiki.length > 0) {
-          // Sort by episode desc
           const sorted = [...state.financeWiki].sort((a, b) => b.episode - a.episode);
           state.currentFinanceEpisode = sorted[0].id;
           currentEp = sorted[0].id;
         } else {
           clearForm();
+          renderFinanceCharts(); // render empty charts
           renderFinanceHistory();
           return;
         }
@@ -5834,12 +5897,8 @@
       // 3. Render Header Info
       if (displayEp) displayEp.textContent = item.episode;
       if (displayStatus) {
-        // Determine status: 
-        // If all done -> Completed
-        // Else -> In Progress
         const totalSteps = financeTaskTemplate.length;
         const doneSteps = financeTaskTemplate.filter(step => item.workflow && item.workflow[step.stage]).length;
-
         if (doneSteps === totalSteps) {
           displayStatus.textContent = 'Completed';
           displayStatus.className = 'tag tag-success';
@@ -5857,46 +5916,27 @@
       if (formEpisode) formEpisode.value = item.episode;
       if (formTitle) formTitle.value = item.title;
       if (formDate) formDate.value = item.date;
+      if (formViews) formViews.value = item.views || '';
+      if (formTotal) formTotal.value = item.total || 260; // Default company total
       if (formNote) formNote.value = item.note || '';
 
-      // 5. Render Timeline
+      // 5. Render Components
       renderFinanceTimeline(item);
-
-      // 6. Render History Table
+      renderFinanceCharts();
+      renderFinanceHeatmap();
       renderFinanceHistory();
     }
 
     function renderFinanceTimeline(item) {
       const board = document.getElementById('financeTimelineBoard');
       if (!board) return;
-
       if (!item.workflow) item.workflow = {};
-
       board.innerHTML = financeTaskTemplate.map((step, index) => {
         const isDone = !!item.workflow[step.stage];
-
-        // Logic for 'active' state (current step to do)
-        // The first undone step is 'active'. But if this step is done, it's 'done'.
-        // Wait, users want to click to toggle.
-        // Visual: 
-        // - Done: Green/Gold check style
-        // - Active: Glowing Amber (next up)
-        // - Future: Dimmed
-
-        // Let's determine if this is the "Current Active" step
-        // Find first undone step index
         const firstUndoneIndex = financeTaskTemplate.findIndex(s => !item.workflow[s.stage]);
-        const isActive = !isDone && (index === firstUndoneIndex || firstUndoneIndex === -1);
-        // Actually, let's just make 'done' look done, and 'active' be the one user interacts with?
-        // User requested: "Click step to mark done. Next undone flashe".
-
-        // My simplified logic:
-        // Done = .done
-        // First Undone = .active (flashing/glowing)
-
         let className = 'fin-step';
         if (isDone) className += ' done';
-        else if (index === firstUndoneIndex) className += ' active';
+        else if (index === firstUndoneIndex || firstUndoneIndex === -1 && index === financeTaskTemplate.length - 1) className += ' active';
 
         return `
             <div class="${className}" onclick="toggleFinanceStep('${item.id}', '${step.stage}')">
@@ -5916,32 +5956,28 @@
       const item = state.financeWiki.find(i => i.id === id);
       if (!item) return;
       if (!item.workflow) item.workflow = {};
-
-      // Toggle
       item.workflow[stage] = !item.workflow[stage];
-
       persist();
       renderFinanceWiki();
     }
 
     function newFinanceEpisode() {
-      // Find max episode
       let maxEp = 0;
       if (state.financeWiki.length > 0) {
         maxEp = Math.max(...state.financeWiki.map(i => i.episode || 0));
       }
       const newEp = maxEp + 1;
-
       const newItem = {
         id: uid(),
         episode: newEp,
         title: `稳定币超入门 第${newEp}期`,
         date: new Date().toISOString().split('T')[0],
         note: '',
-        workflow: {}, // empty
+        views: 0,
+        total: 260,
+        workflow: {},
         project: 'Stablecoin 101'
       };
-
       state.financeWiki.push(newItem);
       state.currentFinanceEpisode = newItem.id;
       persist();
@@ -5949,53 +5985,130 @@
       showToast(`Started New Episode ${newEp}`, 'success');
     }
 
+    /* --- Finance Charts & History --- */
+    function renderFinanceCharts() {
+      const ctx = document.getElementById('financeTrendChart');
+      if (!ctx) return;
+
+      const data = [...state.financeWiki].sort((a, b) => a.episode - b.episode);
+      const labels = data.map(i => `第${i.episode}期`);
+      const rates = data.map(i => {
+        const v = Number(i.views) || 0;
+        const t = Number(i.total) || 260; // safely default
+        return t > 0 ? ((v / t) * 100).toFixed(1) : 0;
+      });
+      const views = data.map(i => Number(i.views) || 0);
+
+      if (financeChart) financeChart.destroy();
+      financeChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: '查看人数',
+              data: views,
+              backgroundColor: '#4B6E86',
+              yAxisID: 'y'
+            },
+            {
+              label: '查看率 %',
+              data: rates,
+              type: 'line',
+              borderColor: '#10B981',
+              borderWidth: 2,
+              pointBackgroundColor: '#fff',
+              yAxisID: 'y1'
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: { beginAtZero: true, display: true, position: 'left' },
+            y1: { beginAtZero: true, display: true, position: 'right', max: 100, grid: { drawOnChartArea: false } }
+          }
+        }
+      });
+    }
+
+    function renderFinanceHeatmap() {
+      const container = document.getElementById('financeHeatmap');
+      const select = document.getElementById('financeHeatmapYear');
+      if (!container || !select) return;
+
+      // Ensure year select populated
+      if (select.options.length === 0) {
+        const currentYear = new Date().getFullYear();
+        for (let y = currentYear; y >= currentYear - 2; y--) {
+          const opt = document.createElement('option');
+          opt.value = y;
+          opt.textContent = y + ' 年';
+          select.appendChild(opt);
+        }
+      }
+      const year = Number(select.value);
+      container.innerHTML = '';
+
+      // Generate heatmap grid
+      // Simplified: 53 weeks x 7 days
+      const dayMap = {};
+      state.financeWiki.forEach(item => {
+        if (!item.date) return;
+        const d = new Date(item.date);
+        if (d.getFullYear() === year) {
+          const key = item.date; // YYYY-MM-DD
+          dayMap[key] = (dayMap[key] || 0) + 1;
+        }
+      });
+
+      // Render squares (simplified visualization)
+      // Just rendered 365 squares roughly
+      const start = new Date(year, 0, 1);
+      const end = new Date(year, 11, 31);
+      let html = '';
+      for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+        const key = d.toISOString().split('T')[0];
+        const count = dayMap[key] || 0;
+        let color = '#ebedf0';
+        if (count > 0) color = '#40c463'; // simplified green
+        html += `<div class="heatmap-item" style="background:${color}" title="${key}: ${count} posts"></div>`;
+      }
+      container.innerHTML = html;
+    }
+
     function renderFinanceHistory() {
       const tbody = document.getElementById('financeTableBody');
       if (!tbody) return;
 
       tbody.innerHTML = state.financeWiki.sort((a, b) => b.episode - a.episode).map(item => {
-        const total = financeTaskTemplate.length;
-        const done = item.workflow ? Object.values(item.workflow).filter(Boolean).length : 0;
-        const progress = Math.round((done / total) * 100);
-        const statusColor = progress === 100 ? 'var(--fin-success)' : 'var(--fin-accent)';
-
+        const views = item.views || 0;
+        const total = item.total || 260;
+        const rate = total > 0 ? ((views / total) * 100).toFixed(1) + '%' : '0%';
         const isCurrent = state.currentFinanceEpisode === item.id;
-        const rowClass = isCurrent ? 'style="background:rgba(245,158,11,0.1)"' : '';
+        const activeClass = isCurrent ? 'class="active-row"' : ''; // assumes CSS for active row exists or we add it
+
+        // Style for active row
+        const styleIdx = isCurrent ? 'background-color: rgba(245, 158, 11, 0.1);' : '';
 
         return `
-           <tr ${rowClass} onclick="selectFinanceEpisode('${item.id}')" style="cursor:pointer; border-bottom: 1px solid var(--fin-border);">
-             <td style="color:white; font-weight:bold;">#${item.episode}</td>
-             <td style="color:var(--fin-text-sub);">${escapeHtml(item.title)}</td>
+           <tr style="${styleIdx}" onclick="selectFinanceEpisode('${item.id}')">
+             <td><strong>第 ${item.episode} 期</strong></td>
+             <td>${item.date}</td>
+             <td>${escapeHtml(item.title)}</td>
+             <td>${views}</td>
+             <td>${total}</td>
+             <td><span class="tag ${parseFloat(rate) >= 80 ? 'tag-success' : 'tag'}">${rate}</span></td>
+             <td class="text-muted" style="max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${escapeHtml(item.note || '-')}</td>
              <td>
-               <span class="tag" style="background:${statusColor}; color:#000; font-weight:600;">${progress}%</span>
-             </td>
-             <td style="color:var(--fin-text-sub);">${item.date}</td>
-             <td>
-               <button class="btn-icon-sm" onclick="event.stopPropagation(); deleteFinanceEpisode('${item.id}')" title="Delete">🗑</button>
+               <button class="btn btn-sm btn-delete" onclick="event.stopPropagation(); deleteFinanceEpisode('${item.id}')">删除</button>
              </td>
            </tr>
          `;
       }).join('');
     }
 
-    window.selectFinanceEpisode = function (id) {
-      state.currentFinanceEpisode = id;
-      persist();
-      renderFinanceWiki();
-      // scroll to top?
-    };
-
-    window.deleteFinanceEpisode = function (id) {
-      showConfirm('Delete this episode? linked data will be lost.', () => {
-        state.financeWiki = state.financeWiki.filter(i => i.id !== id);
-        if (state.currentFinanceEpisode === id) state.currentFinanceEpisode = null;
-        persist();
-        renderFinanceWiki();
-        showToast('Episode Deleted', 'success');
-      });
-    };
-
-    // Form Save
     document.getElementById('financeForm').addEventListener('submit', (e) => {
       e.preventDefault();
       if (!state.currentFinanceEpisode) return;
@@ -6003,27 +6116,13 @@
       if (item) {
         item.title = document.getElementById('finTitle').value;
         item.date = document.getElementById('finDate').value;
+        item.views = Number(document.getElementById('finViews').value);
+        item.total = Number(document.getElementById('finTotal').value);
         item.note = document.getElementById('finNote').value;
         persist();
-        renderFinanceWiki(); // refresh history list title
-        showToast('Episode Details Saved', 'success');
+        renderFinanceWiki(); // refresh all
+        showToast('Updated Successfully', 'success');
       }
-    });
-
-    // History Tab Toggle
-    document.getElementById('finTab-stablecoin').addEventListener('click', () => {
-      document.getElementById('fin-panel-stablecoin').style.display = 'block';
-      document.getElementById('fin-panel-history').style.display = 'none';
-      document.getElementById('finTab-stablecoin').classList.add('active');
-      document.getElementById('finTab-history').classList.remove('active');
-    });
-
-    document.getElementById('finTab-history').addEventListener('click', () => {
-      document.getElementById('fin-panel-stablecoin').style.display = 'none';
-      document.getElementById('fin-panel-history').style.display = 'block';
-      document.getElementById('finTab-history').classList.add('active');
-      document.getElementById('finTab-stablecoin').classList.remove('active');
-      renderFinanceHistory();
     });
 
   </script>
