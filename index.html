@@ -4195,14 +4195,14 @@
     ];
 
     const shareTaskTemplate = [
-      { name: '主题确定', stage: 'theme', tool: '需求对齐', output: '主题&目标', detail: '明确人群', owner: '徐浩' },
-      { name: '课程开发', stage: 'dev', tool: 'PPT/脚本', output: '课件', detail: '内容开发', owner: '徐浩' },
-      { name: '宣发物料', stage: 'material', tool: '设计/文案', output: '海报/二维码', detail: '物料准备', owner: '徐浩' },
-      { name: '首轮通知', stage: 'notify1', tool: '钉钉/飞书', output: '通知已发', detail: '周五预告', owner: '徐浩' },
-      { name: '二轮通知', stage: 'notify2', tool: '钉钉/飞书', output: '名单确认', detail: '周二/三确认', owner: '徐浩' },
-      { name: '建群倒计时', stage: 'group', tool: '社群运营', output: '群/倒计时', detail: '氛围营造', owner: '徐浩' },
-      { name: '培训执行', stage: 'execute', tool: '线下/直播', output: '培训完成', detail: '控场/录制', owner: '徐浩' },
-      { name: '数据归档', stage: 'archive', tool: '档案库', output: '归档记录', detail: '人数/资料', owner: '徐浩' }
+      { name: '主题确定', stage: 'theme', tool: '需求对齐', output: '主题&目标', detail: '明确人群', owner: '' },
+      { name: '课程开发', stage: 'dev', tool: 'PPT/脚本', output: '课件', detail: '内容开发', owner: '' },
+      { name: '宣发物料', stage: 'material', tool: '设计/文案', output: '海报/二维码', detail: '物料准备', owner: '' },
+      { name: '首轮通知', stage: 'notify1', tool: '钉钉/飞书', output: '通知已发', detail: '周五预告', owner: '' },
+      { name: '二轮通知', stage: 'notify2', tool: '钉钉/飞书', output: '名单确认', detail: '周二/三确认', owner: '' },
+      { name: '建群倒计时', stage: 'group', tool: '社群运营', output: '群/倒计时', detail: '氛围营造', owner: '' },
+      { name: '培训执行', stage: 'execute', tool: '线下/直播', output: '培训完成', detail: '控场/录制', owner: '' },
+      { name: '数据归档', stage: 'archive', tool: '档案库', output: '归档记录', detail: '人数/资料', owner: '' }
     ];
 
     const shareTaskAliases = {};
@@ -5139,7 +5139,8 @@
 
           // 查找模板详情以显示
           const template = shareTaskTemplate.find(t => t.stage === task.stage);
-          const ownerText = template ? template.owner : '徐浩';
+
+          const ownerText = template ? template.owner : '';
           const detailText = template ? template.detail : '';
 
           return `
@@ -5255,8 +5256,23 @@
     };
 
     window.deleteShare = function (id) {
-      showConfirm('确认删除这条分享月记录吗？此操作不可恢复。', () => {
+      const item = state.aiShares.find(s => s.id === id);
+      showConfirm('确认删除这条分享月记录吗？\n(关联的培训记录也将一并删除)', () => {
+        // 1. Delete share
         state.aiShares = state.aiShares.filter(s => s.id !== id);
+
+        // 2. Delete linked session if exists
+        if (item) {
+          const targetProjectName = `AI分享月(第${item.episode}期)`;
+          // 优先匹配 linkedSessionId，其次匹配特征
+          if (item.linkedSessionId) {
+            state.sessions = state.sessions.filter(s => s.id !== item.linkedSessionId);
+          } else {
+            // 兼容旧数据：尝试通过 项目名称+日期 匹配
+            state.sessions = state.sessions.filter(s => !(s.project === targetProjectName && s.date === item.date));
+          }
+        }
+
         persist();
         renderAIKnowledge();
         showToast('记录已删除', 'success');
@@ -5297,13 +5313,52 @@
         duration: Number(document.getElementById('shareDuration').value),
         note: document.getElementById('shareNote').value
       };
+
       const existing = state.aiShares.find(s => s.id === payload.id);
+
+      // --- 数据联动 Logic Start ---
+      // 1. 查找是否已有关联的 Session
+      let relatedSession = null;
+      if (existing && existing.linkedSessionId) {
+        relatedSession = state.sessions.find(s => s.id === existing.linkedSessionId);
+      }
+      // 2. 如果没找到关联ID，尝试通过“项目名+日期”模糊匹配（防止旧数据重复创建）
+      const projectName = `AI分享月(第${payload.episode}期)`;
+      if (!relatedSession) {
+        relatedSession = state.sessions.find(s => s.project === projectName && s.date === payload.date);
+      }
+
+      // 3. 构造 Session 数据
+      const sessionPayload = {
+        id: relatedSession ? relatedSession.id : uid(),
+        date: payload.date,
+        course: payload.title, // 课程名 = 主题
+        project: projectName,  // 项目名 = AI分享月(第X期)
+        lecturer: '',          // 默认留空，或可设置为当前用户
+        people: payload.attendees,
+        duration: (payload.duration / 60).toFixed(1), // 分钟 -> 小时
+        note: (payload.note || '') + ' [自动同步自AI分享月]',
+        source: 'ai_share'
+      };
+
+      // 4. 更新/插入 Session
+      if (relatedSession) {
+        Object.assign(relatedSession, sessionPayload);
+      } else {
+        state.sessions.push(sessionPayload);
+      }
+
+      // 5. 将 Session ID 回写到 Share 记录中
+      payload.linkedSessionId = sessionPayload.id;
+      // --- 数据联动 Logic End ---
+
       if (existing) Object.assign(existing, payload);
       else state.aiShares.push(payload);
+
       resetShareForm();
       persist();
       renderAIKnowledge();
-      showToast('分享月记录已保存', 'success');
+      showToast('分享月记录已保存 (并同步至培训管理)', 'success');
     });
 
     // 渲染所有AI知识库内容
