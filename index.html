@@ -1958,6 +1958,8 @@
       }
     }
 
+
+
     /* =========================================
        8. 交互组件 (Toast & Modal)
        ========================================= */
@@ -2625,14 +2627,16 @@
                   <div class="kanban-title-row">
                     <div class="kanban-episode" id="stationKanbanEpisode">未选择期次</div>
                     <button class="btn-icon-sm" type="button" onclick="toggleEpisodeEdit('station')" title="编辑主题">
-                      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+                      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor"
+                        stroke-width="2">
                         <path d="M12 20h9" />
                         <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z" />
                       </svg>
                     </button>
                   </div>
                   <div class="kanban-episode-control">
-                    <input type="number" id="stationEpisodePicker" class="select-sm" min="0" step="1" placeholder="期数" />
+                    <input type="number" id="stationEpisodePicker" class="select-sm" min="0" step="1"
+                      placeholder="期数" />
                     <input type="text" id="stationTitlePicker" class="select-sm" placeholder="本期主题" />
                     <button class="btn btn-sm btn-primary" type="button" onclick="confirmStationEpisode()">确定</button>
                   </div>
@@ -2828,7 +2832,8 @@
                   <div class="kanban-title-row">
                     <div class="kanban-episode" id="shareKanbanEpisode">未选择期次</div>
                     <button class="btn-icon-sm" type="button" onclick="toggleEpisodeEdit('share')" title="编辑主题">
-                      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+                      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor"
+                        stroke-width="2">
                         <path d="M12 20h9" />
                         <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z" />
                       </svg>
@@ -3053,6 +3058,7 @@
         <button class="btn btn-secondary" onclick="closeBackupModal()">关闭</button>
         <button class="btn btn-secondary" onclick="generateBackupCode()">生成备份码</button>
         <button class="btn btn-secondary" onclick="copyBackupCode()">复制</button>
+        <button class="btn btn-danger" onclick="forceClearCache()" title="清除本地缓存并重新拉取线上最新数据">强制刷新数据</button>
         <button class="btn btn-primary" onclick="restoreBackupCode()">导入</button>
       </div>
     </div>
@@ -3795,6 +3801,13 @@
       } catch (err) {
         showToast('导入失败：' + err.message, 'error');
       }
+    };
+
+    window.forceClearCache = function () {
+      showConfirm('确定要强制刷新吗？\n警告：这将清空本地所有缓存数据（包括您未导出的新记录），并强制重新拉取 GitHub 上的 data.json。\n\n建议操作前先点击「生成备份码」备份当前数据！', () => {
+        localStorage.clear();
+        location.reload();
+      });
     };
 
     if (backupCodeInput) {
