@@ -2489,9 +2489,11 @@
       overflow-x: auto;
       overflow-y: hidden;
       perspective: 1000px;
-      /* Ensure scroll works */
-      min-width: 100%;
+      width: 100%;
       align-items: flex-start;
+      /* Scrollbar styling */
+      scrollbar-width: thin;
+      scrollbar-color: var(--fin-accent) transparent;
     }
 
     .fin-step {
@@ -4066,13 +4068,6 @@
       document.getElementById('statYearHours').textContent = yearHours.toLocaleString();
       document.getElementById('statYearSpend').textContent = `¥${yearSpend.toLocaleString()}`;
 
-      // Update Special Project Stats
-      if (state.financeWiki) {
-        document.getElementById('statFinanceProgress').textContent = `${state.financeWiki.length}`;
-      }
-      if (state.aiShares) {
-        document.getElementById('statShareProgress').textContent = `${state.aiShares.length}`;
-      }
     }
 
     let hoursChart, budgetChart, costPie;
@@ -5824,9 +5819,6 @@
         renderAIKnowledge();
       }
     }, 100);
-    /* =========================================
-       New: 金融小百科 (Finance Encyclopedia) Logic
-       ========================================= */
     /* =========================================
        New: 金融小百科 (Finance Encyclopedia) Logic
        ========================================= */
