@@ -303,10 +303,127 @@
       "note": ""
     }
   ],
-  "aiStationTitles": {},
+  "aiStationTitles": {
+    "85": "港大"幽灵引用"论文撤稿、导师卸任：比AI幻觉更危险的是人类放弃自查"
+  },
   "aiShareTitles": {},
-  "aiStationTasks": [],
+  "aiStationTasks": [
+    {
+      "id": "vw89gvsa",
+      "episode": 24,
+      "name": "选题确定",
+      "done": false
+    },
+    {
+      "id": "oye2r1ie",
+      "episode": 24,
+      "name": "内容撰写",
+      "done": false
+    },
+    {
+      "id": "czl23emm",
+      "episode": 24,
+      "name": "制作发布",
+      "done": false
+    },
+    {
+      "id": "yovpcg9z",
+      "episode": 24,
+      "name": "数据回收",
+      "done": false
+    },
+    {
+      "id": "gnjpn33s",
+      "episode": 85,
+      "name": "选题确定",
+      "done": true
+    },
+    {
+      "id": "gkk9xhpz",
+      "episode": 85,
+      "name": "内容撰写",
+      "done": true
+    },
+    {
+      "id": "t1hiz7qb",
+      "episode": 85,
+      "name": "制作发布",
+      "done": false
+    },
+    {
+      "id": "f7cefqk6",
+      "episode": 85,
+      "name": "数据回收",
+      "done": false
+    },
+    {
+      "id": "pntiilqp",
+      "episode": 85,
+      "name": "飞书归档同步",
+      "stage": "sync",
+      "tool": "飞书文档",
+      "output": "归档记录",
+      "detail": "版本一致",
+      "owner": "归档",
+      "done": true
+    },
+    {
+      "id": "cwoa1ppa",
+      "episode": 85,
+      "name": "视觉海报制作",
+      "stage": "produce",
+      "tool": "Gemini",
+      "output": "海报/封面",
+      "detail": "主视觉",
+      "owner": "设计",
+      "done": false
+    },
+    {
+      "id": "cz58ku8c",
+      "episode": 85,
+      "name": "AI 播客制作",
+      "stage": "produce",
+      "tool": "豆包",
+      "output": "播客",
+      "detail": "音频成品",
+      "owner": "剪辑",
+      "done": false
+    },
+    {
+      "id": "ldj5yzpb",
+      "episode": 85,
+      "name": "全球 AI 新闻撰写",
+      "stage": "assemble",
+      "tool": "钉钉文档",
+      "output": "新闻区块",
+      "detail": "嵌入广播站",
+      "owner": "内容",
+      "done": false
+    },
+    {
+      "id": "cb4en1hk",
+      "episode": 85,
+      "name": "发刊词撰写",
+      "stage": "assemble",
+      "tool": "钉钉文档",
+      "output": "发刊词",
+      "detail": "开场引导",
+      "owner": "内容",
+      "done": false
+    },
+    {
+      "id": "u0hp7fgr",
+      "episode": 85,
+      "name": "复盘与改进",
+      "stage": "review",
+      "tool": "复盘模板",
+      "output": "优化清单",
+      "detail": "沉淀经验",
+      "owner": "复盘",
+      "done": false
+    }
+  ],
   "aiShareTasks": [],
-  "currentStationEpisode": null,
+  "currentStationEpisode": 85,
   "currentShareEpisode": null
 }
