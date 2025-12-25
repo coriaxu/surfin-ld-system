@@ -2208,6 +2208,220 @@
     body[data-theme="craft"] .topbar {
       background: rgba(245, 245, 245, 0.7);
     }
+
+    /* =========================================
+       New: AI分享月 - 线性时光轴 (Timeline) & 专属配色补丁
+       ========================================= */
+    body {
+      /* 默认 (深色) 配色 */
+      --share-primary: #8b5cf6;
+      /* 星云紫 */
+      --share-primary-glow: rgba(139, 92, 246, 0.5);
+      --share-gold: #fbbf24;
+      /* 流光金 */
+      --share-bg: rgba(30, 27, 75, 0.6);
+      --share-line-inactive: rgba(255, 255, 255, 0.1);
+      --share-card-bg: rgba(255, 255, 255, 0.03);
+      --share-card-border: rgba(255, 255, 255, 0.05);
+    }
+
+    body[data-theme="wine"],
+    body[data-theme="mint"] {
+      /* 浅色系适配 */
+      --share-primary: #7c3aed;
+      /* 深一点的紫 */
+      --share-primary-glow: rgba(124, 58, 237, 0.3);
+      --share-gold: #d97706;
+      /* 深一点的金 */
+      --share-bg: rgba(255, 255, 255, 0.5);
+      --share-line-inactive: rgba(0, 0, 0, 0.1);
+      --share-card-bg: rgba(255, 255, 255, 0.6);
+      --share-card-border: rgba(0, 0, 0, 0.05);
+    }
+
+    .share-timeline-container {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      padding: 1.5rem 0;
+      overflow-x: auto;
+      scrollbar-width: thin;
+      scrollbar-color: var(--share-primary) transparent;
+      margin-bottom: 1rem;
+    }
+
+    .share-timeline-container::-webkit-scrollbar {
+      height: 6px;
+    }
+
+    .share-timeline-container::-webkit-scrollbar-thumb {
+      background: var(--share-primary);
+      border-radius: 3px;
+    }
+
+    /* 时光轴轨道 */
+    .timeline-track {
+      display: flex;
+      align-items: flex-start;
+      position: relative;
+      padding: 0 1rem;
+      min-width: max-content;
+    }
+
+    /* 连接线背景 (灰色底线) */
+    .timeline-line-bg {
+      position: absolute;
+      top: 24px;
+      left: 3rem;
+      right: 3rem;
+      height: 2px;
+      background: var(--share-line-inactive);
+      z-index: 0;
+    }
+
+    /* 激活的连接线 (流光) */
+    .timeline-line-active {
+      position: absolute;
+      top: 24px;
+      left: 3rem;
+      height: 2px;
+      background: var(--share-primary);
+      z-index: 0;
+      box-shadow: 0 0 8px var(--share-primary);
+      transition: width 0.6s ease-in-out;
+    }
+
+    /* 步骤节点 */
+    .timeline-step {
+      position: relative;
+      z-index: 1;
+      width: 150px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-right: 0.5rem;
+      cursor: pointer;
+      opacity: 0.5;
+      /* 默认未激活稍微透明 */
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .timeline-step:hover {
+      opacity: 0.8;
+    }
+
+    .timeline-step:last-child {
+      margin-right: 0;
+    }
+
+    /* 步骤图标 (圆形) */
+    .step-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: var(--surface-card);
+      border: 2px solid var(--border-medium);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      /* 弹性效果 */
+      backdrop-filter: blur(8px);
+      box-shadow: var(--shadow-ambient);
+    }
+
+    .step-icon svg {
+      width: 22px;
+      height: 22px;
+    }
+
+    /* 步骤内容卡片 */
+    .step-card {
+      width: 90%;
+      background: var(--share-card-bg);
+      border: 1px solid var(--share-card-border);
+      border-radius: 12px;
+      padding: 0.8rem 0.5rem;
+      text-align: center;
+      transition: all 0.3s ease;
+      transform: translateY(0);
+    }
+
+    .step-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-body);
+      margin-bottom: 0.3rem;
+    }
+
+    .step-desc {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      line-height: 1.3;
+    }
+
+    /* 状态：进行中 (Active) */
+    .timeline-step.active {
+      opacity: 1;
+    }
+
+    .timeline-step.active .step-icon {
+      background: var(--share-primary);
+      border-color: var(--share-primary);
+      color: white;
+      box-shadow: 0 0 20px var(--share-primary-glow);
+      transform: scale(1.15);
+    }
+
+    .timeline-step.active .step-card {
+      background: rgba(139, 92, 246, 0.1);
+      border-color: var(--share-primary);
+      transform: translateY(-4px);
+    }
+
+    .timeline-step.active .step-title {
+      color: var(--share-primary);
+    }
+
+    /* 状态：已完成 (Done) */
+    .timeline-step.done {
+      opacity: 1;
+    }
+
+    .timeline-step.done .step-icon {
+      background: var(--surface-base);
+      border-color: var(--share-gold);
+      color: var(--share-gold);
+    }
+
+    .timeline-step.done .step-card {
+      border-color: var(--share-gold);
+    }
+
+    .timeline-step.done .step-title {
+      color: var(--share-gold);
+    }
+
+    /* 脉冲动画 */
+    @keyframes pulse-ring {
+      0% {
+        box-shadow: 0 0 0 0 rgba(139, 92, 246, 0.4);
+      }
+
+      70% {
+        box-shadow: 0 0 0 12px rgba(139, 92, 246, 0);
+      }
+
+      100% {
+        box-shadow: 0 0 0 0 rgba(139, 92, 246, 0);
+      }
+    }
+
+    .timeline-step.active .step-icon {
+      animation: pulse-ring 2s infinite;
+    }
   </style>
 </head>
 
@@ -2815,15 +3029,15 @@
         <div class="ai-panel" id="panel-share">
           <!-- 看板 + 图表 -->
           <div class="ai-top-grid">
-            <!-- 左侧看板 -->
+            <!-- 左侧看板 (改为线性时光轴) -->
             <div class="card ai-kanban-card">
               <div class="card-header">
                 <h3 class="card-title card-title-sm">
                   <span class="card-title-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
                       stroke-width="2">
-                      <path d="M9 11H3v10h6V11zM21 3h-6v18h6V3zM15 7H9v14h6V7z" />
+                      <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
                     </svg></span>
-                  本期看板
+                  本期推进 (Timeline)
                 </h3>
                 <button class="btn btn-sm btn-secondary" onclick="newShareEpisode()">+ 新建期次</button>
               </div>
@@ -2845,8 +3059,13 @@
                     <button class="btn btn-sm btn-primary" type="button" onclick="confirmShareEpisode()">确定</button>
                   </div>
                 </div>
-                <div class="kanban-summary" id="shareKanbanSummary"></div>
-                <div class="project-board" id="shareKanbanBoard"></div>
+
+                <!-- 新的 Timeline 容器 -->
+                <div class="share-timeline-container" id="shareTimelineBoard">
+                  <div style="padding: 2rem; text-align: center; color: var(--text-muted); width: 100%;">
+                    点击右上角「+ 新建期次」启动本期分享任务
+                  </div>
+                </div>
               </div>
             </div>
             <!-- 右侧图表 -->
@@ -3966,20 +4185,24 @@
 
     const shareStageDefs = [
       { id: 'theme', title: '主题确定', desc: '目标与受众', wip: 1, accent: 'var(--primary)' },
-      { id: 'prep', title: '内容准备', desc: '课件与脚本', wip: 1, accent: 'var(--primary-light)' },
-      { id: 'notify', title: '发布通知', desc: '宣发与报名', wip: 1, accent: 'var(--accent-warning)' },
-      { id: 'execute', title: '培训执行', desc: '现场与互动', wip: 1, accent: 'var(--accent-success)' },
-      { id: 'data', title: '数据回收', desc: '参与率统计', wip: 1, accent: 'var(--accent-success)' },
-      { id: 'review', title: '复盘总结', desc: '经验与改进', wip: 1, accent: 'var(--text-muted)' }
+      { id: 'dev', title: '课程开发', desc: '课件/脚本', wip: 1, accent: 'var(--primary-light)' },
+      { id: 'material', title: '宣发物料', desc: '文案/海报/码', wip: 1, accent: 'var(--accent-warning)' },
+      { id: 'notify1', title: '首轮通知', desc: '全员宣发(T-6)', wip: 1, accent: 'var(--accent-success)' },
+      { id: 'notify2', title: '二轮通知', desc: '提醒/确认(T-2)', wip: 1, accent: 'var(--accent-success)' },
+      { id: 'group', title: '建群倒计时', desc: '双群/海报', wip: 1, accent: 'var(--accent-info)' },
+      { id: 'execute', title: '培训执行', desc: '现场与互动', wip: 1, accent: 'var(--accent-danger)' },
+      { id: 'archive', title: '数据归档', desc: '人数与档案', wip: 1, accent: 'var(--text-muted)' }
     ];
 
     const shareTaskTemplate = [
-      { name: '主题确定', stage: 'theme', tool: '需求对齐', output: '主题&目标', detail: '明确人群', owner: '策划' },
-      { name: '课件准备', stage: 'prep', tool: 'PPT/脚本', output: '课件', detail: '内容结构', owner: '讲师' },
-      { name: '发布通知', stage: 'notify', tool: '钉钉/飞书', output: '通知', detail: '时间&报名', owner: '运营' },
-      { name: '培训执行', stage: 'execute', tool: '线下/线上', output: '培训', detail: '互动与记录', owner: '讲师' },
-      { name: '数据回收', stage: 'data', tool: '表单/统计', output: '参与率', detail: '参训数据', owner: '分析' },
-      { name: '复盘记录', stage: 'review', tool: '复盘模板', output: '优化建议', detail: '下期改进', owner: '复盘' }
+      { name: '主题确定', stage: 'theme', tool: '需求对齐', output: '主题&目标', detail: '明确人群', owner: '徐浩' },
+      { name: '课程开发', stage: 'dev', tool: 'PPT/脚本', output: '课件', detail: '内容开发', owner: '徐浩' },
+      { name: '宣发物料', stage: 'material', tool: '设计/文案', output: '海报/二维码', detail: '物料准备', owner: '徐浩' },
+      { name: '首轮通知', stage: 'notify1', tool: '钉钉/飞书', output: '通知已发', detail: '周五预告', owner: '徐浩' },
+      { name: '二轮通知', stage: 'notify2', tool: '钉钉/飞书', output: '名单确认', detail: '周二/三确认', owner: '徐浩' },
+      { name: '建群倒计时', stage: 'group', tool: '社群运营', output: '群/倒计时', detail: '氛围营造', owner: '徐浩' },
+      { name: '培训执行', stage: 'execute', tool: '线下/直播', output: '培训完成', detail: '控场/录制', owner: '徐浩' },
+      { name: '数据归档', stage: 'archive', tool: '档案库', output: '归档记录', detail: '人数/资料', owner: '徐浩' }
     ];
 
     const shareTaskAliases = {};
@@ -4809,9 +5032,17 @@
     }
 
     function renderShareKanban() {
+      // 0. 自动清理旧的测试数据 (如果发现旧的 stage 定义残留)
+      if (state.aiShares.length > 0 && state.aiShareTasks.some(t => t.stage === 'prep' || t.stage === 'data')) {
+        console.log('Cleaning legacy share data...');
+        state.aiShares = [];
+        state.aiShareTasks = [];
+        state.currentShareEpisode = null;
+        persist();
+      }
+
       const episodeEl = document.getElementById('shareKanbanEpisode');
-      const boardEl = document.getElementById('shareKanbanBoard');
-      const summaryEl = document.getElementById('shareKanbanSummary');
+      const boardEl = document.getElementById('shareTimelineBoard'); // 注意 ID 变了
       const headerEl = document.getElementById('shareKanbanHeader');
       const picker = document.getElementById('shareEpisodePicker');
       const hasEpisode = state.currentShareEpisode !== null && state.currentShareEpisode !== undefined;
@@ -4824,16 +5055,17 @@
           episodeEl.classList.remove('active');
         }
         if (headerEl) headerEl.classList.add('editing');
-        renderProjectBoard({
-          boardEl,
-          summaryEl,
-          tasks: [],
-          stageDefs: shareStageDefs,
-          templateMap: shareTaskTemplateMap,
-          aliasMap: shareTaskAliases,
-          toggleHandler: 'toggleShareTask',
-          emptyMessage: '点击「新建期次」开始'
-        });
+        // 显示空状态引导
+        if (boardEl) {
+          boardEl.innerHTML = `
+                <div style="padding: 3rem; text-align: center; color: var(--text-muted); width: 100%; display:flex; flex-direction:column; align-items:center; gap:1rem;">
+                    <div style="width:60px; height:60px; border-radius:50%; background:var(--surface-card); display:flex; align-items:center; justify-content:center; border:2px dashed var(--border-medium);">
+                        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+                    </div>
+                    <div>点击右上角「+ 新建期次」<br>启动 AI 分享月任务流</div>
+                </div>
+            `;
+        }
         return;
       }
 
@@ -4846,17 +5078,88 @@
 
       const seeded = ensureEpisodeTasks(state.aiShareTasks, state.currentShareEpisode, shareTaskTemplate, shareTaskAliases);
       if (seeded) persist();
+
       const tasks = state.aiShareTasks.filter(task => task.episode === state.currentShareEpisode);
-      renderProjectBoard({
-        boardEl,
-        summaryEl,
-        tasks,
-        stageDefs: shareStageDefs,
-        templateMap: shareTaskTemplateMap,
-        aliasMap: shareTaskAliases,
-        toggleHandler: 'toggleShareTask',
-        emptyMessage: '暂无任务'
+
+      // 按照 stageDefs 顺序排序
+      const sortedTasks = shareStageDefs.map(def => {
+        return tasks.find(t => t.stage === def.id) || {
+          id: 'temp_' + def.id,
+          stage: def.id,
+          name: def.title, // Fallback
+          done: false
+        };
       });
+
+      // 计算进度
+      const totalSteps = shareStageDefs.length;
+      let completedSteps = 0;
+      let activeIndex = -1; // 找到第一个未完成的设为 Active
+
+      sortedTasks.forEach((t, index) => {
+        if (t.done) completedSteps++;
+        if (!t.done && activeIndex === -1) activeIndex = index;
+      });
+      // 如果全部完成，最后一个保持 Active 或者是全绿
+      if (completedSteps === totalSteps) activeIndex = totalSteps;
+
+      // 渲染 Timeline
+      if (boardEl) {
+        const progressPercent = totalSteps > 1 ? (completedSteps / (totalSteps - 1)) * 100 : 0;
+
+        let html = `<div class="timeline-track">
+            <!-- 连线 -->
+            <div class="timeline-line-bg"></div>
+            <div class="timeline-line-active" style="width: ${Math.max(0, Math.min(100, (activeIndex / (totalSteps - 1)) * 100))}%; left: 3rem;"></div>
+          `;
+
+        html += sortedTasks.map((task, index) => {
+          const def = shareStageDefs.find(d => d.id === task.stage);
+          const isDone = task.done;
+          const isActive = (index === activeIndex) || (isDone && index === totalSteps - 1 && activeIndex === totalSteps);
+
+          // 状态类名
+          let statusClass = '';
+          if (isDone) statusClass = 'done';
+          else if (isActive) statusClass = 'active';
+
+          // 图标选择 (根据阶段ID匹配一些默认图标，或者通用图标)
+          let iconSvg = '';
+          switch (task.stage) {
+            case 'theme': iconSvg = '<path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>'; break; // Star
+            case 'dev': iconSvg = '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/>'; break; // File
+            case 'material': iconSvg = '<rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>'; break; // Image
+            case 'notify1': iconSvg = '<path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>'; break; // Bell
+            case 'notify2': iconSvg = '<path d="M22 17H2a3 3 0 0 0 3-3V9a7 7 0 0 1 14 0v5a3 3 0 0 0 3 3zm-8.27 4a2 2 0 0 1-3.46 0"/>'; break; // Bell 2
+            case 'group': iconSvg = '<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>'; break; // Users
+            case 'execute': iconSvg = '<polygon points="5 3 19 12 5 21 5 3"/>'; break; // Play
+            case 'archive': iconSvg = '<path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>'; break; // Folder
+            default: iconSvg = '<circle cx="12" cy="12" r="10"/>';
+          }
+
+          // 查找模板详情以显示
+          const template = shareTaskTemplate.find(t => t.stage === task.stage);
+          const ownerText = template ? template.owner : '徐浩';
+          const detailText = template ? template.detail : '';
+
+          return `
+                <div class="timeline-step ${statusClass}" onclick="toggleShareTask('${task.id}')" title="点击切换状态: ${task.name}">
+                  <div class="step-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        ${isDone ? '<polyline points="20 6 9 17 4 12"/>' : iconSvg}
+                    </svg>
+                  </div>
+                  <div class="step-card">
+                    <div class="step-title">${task.name}</div>
+                    <div class="step-desc">${detailText}<br><span style="opacity:0.7; font-size:0.65rem;">${ownerText}</span></div>
+                  </div>
+                </div>
+              `;
+        }).join('');
+
+        html += `</div>`; // end track
+        boardEl.innerHTML = html;
+      }
     }
 
     // 新建期次
