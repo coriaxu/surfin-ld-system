@@ -2396,9 +2396,241 @@
       color: var(--share-gold);
     }
 
-    .timeline-step.done .step-card {
-      border-color: var(--share-gold);
+    /* =========================================
+       New: 金融小百科 - UE5 质感 (Pro Finance)
+       Deep Emerald + Gold + Glassmorphism + Volumetric Glow
+       ========================================= */
+    body {
+      --fin-bg-start: #0f172a;
+      --fin-bg-end: #020617;
+      --fin-card-bg: rgba(30, 41, 59, 0.6);
+      --fin-border: rgba(255, 255, 255, 0.08);
+      --fin-accent: #f59e0b;
+      /* Amber 500 */
+      --fin-accent-glow: rgba(245, 158, 11, 0.4);
+      --fin-text-main: #f8fafc;
+      --fin-text-sub: #94a3b8;
+      --fin-success: #10b981;
     }
+
+    /* 浅色模式适配 (Keep it premium but light) */
+    body[data-theme="wine"],
+    body[data-theme="mint"],
+    body[data-theme="craft"] {
+      --fin-bg-start: #f8fafc;
+      --fin-bg-end: #e2e8f0;
+      --fin-card-bg: rgba(255, 255, 255, 0.8);
+      --fin-border: rgba(0, 0, 0, 0.06);
+      --fin-accent: #d97706;
+      /* Amber 600 */
+      --fin-accent-glow: rgba(217, 119, 6, 0.25);
+      --fin-text-main: #1e293b;
+      --fin-text-sub: #64748b;
+    }
+
+    .fin-container {
+      background: linear-gradient(135deg, var(--fin-bg-start) 0%, var(--fin-bg-end) 100%);
+      border-radius: 20px;
+      padding: 2rem;
+      min-height: 80vh;
+      color: var(--fin-text-main);
+      position: relative;
+      overflow: hidden;
+      box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.2);
+    }
+
+    /* 装饰性背景光 (Volumetric Light) */
+    .fin-container::before {
+      content: '';
+      position: absolute;
+      top: -100px;
+      right: -100px;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, var(--fin-accent-glow) 0%, transparent 70%);
+      opacity: 0.4;
+      pointer-events: none;
+      filter: blur(40px);
+    }
+
+    .fin-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 2.5rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .fin-title {
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, var(--fin-text-main) 30%, var(--fin-accent) 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .fin-subtitle {
+      font-size: 0.9rem;
+      color: var(--fin-text-sub);
+      margin-top: 0.5rem;
+      font-weight: 400;
+      opacity: 0.8;
+    }
+
+    /* 3D 悬浮时间轴 */
+    .fin-timeline-wrap {
+      display: flex;
+      gap: 1.5rem;
+      padding: 1rem 0.5rem 2rem 0.5rem;
+      overflow-x: auto;
+      perspective: 1000px;
+      /* 3D Perspective */
+    }
+
+    .fin-step {
+      flex: 0 0 160px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      position: relative;
+      transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      transform-style: preserve-3d;
+      cursor: pointer;
+      opacity: 0.6;
+    }
+
+    /* 卡片主体 */
+    .fin-card {
+      background: var(--fin-card-bg);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--fin-border);
+      border-radius: 16px;
+      padding: 1.25rem 1rem;
+      height: 140px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* 顶部高光条 (Metallic Shine) */
+    .fin-card::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .fin-step:hover {
+      opacity: 0.9;
+      transform: translateY(-4px) rotateX(4deg);
+    }
+
+    .fin-step:hover .fin-card {
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
+    }
+
+    /* 选中/进行中状态 */
+    .fin-step.active {
+      opacity: 1;
+      transform: translateY(-8px) scale(1.02);
+    }
+
+    .fin-step.active .fin-card {
+      border-color: var(--fin-accent);
+      background: linear-gradient(160deg, var(--fin-card-bg) 0%, rgba(245, 158, 11, 0.05) 100%);
+      box-shadow: 0 0 20px var(--fin-accent-glow), 0 0 0 1px var(--fin-accent) inset;
+    }
+
+    .fin-step.active .fin-card::after {
+      opacity: 1;
+    }
+
+    /* 完成状态 */
+    .fin-step.done .fin-card {
+      border-color: var(--fin-success);
+      box-shadow: 0 0 10px rgba(16, 185, 129, 0.2);
+    }
+
+    .fin-step.done .fin-icon {
+      color: var(--fin-success);
+    }
+
+    .fin-icon {
+      font-size: 1.5rem;
+      color: var(--fin-text-sub);
+      transition: color 0.3s;
+    }
+
+    .fin-step.active .fin-icon {
+      color: var(--fin-accent);
+      text-shadow: 0 0 10px var(--fin-accent);
+    }
+
+    .fin-label {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--fin-text-main);
+    }
+
+    .fin-meta {
+      font-size: 0.75rem;
+      color: var(--fin-text-sub);
+      margin-top: auto;
+    }
+
+    /* Episode Selector (Glass Pill) */
+    .fin-controls {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      background: rgba(0, 0, 0, 0.2);
+      padding: 6px;
+      border-radius: 999px;
+      border: 1px solid var(--fin-border);
+    }
+
+    .fin-btn {
+      background: transparent;
+      border: none;
+      color: var(--fin-text-sub);
+      padding: 8px 16px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: all 0.2s;
+    }
+
+    .fin-btn.active,
+    .fin-btn:hover {
+      background: var(--fin-card-bg);
+      color: var(--fin-text-main);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .fin-add-btn {
+      background: var(--fin-accent);
+      color: black;
+      font-weight: 600;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 999px;
+      cursor: pointer;
+      box-shadow: 0 0 12px var(--fin-accent-glow);
+    }
+
 
     .timeline-step.done .step-title {
       color: var(--share-gold);
@@ -2481,6 +2713,14 @@
             <line x1="12" y1="22.08" x2="12" y2="12" />
           </svg>
           <span>AI 知识库</span>
+        </div>
+        <div class="nav-item" data-page="finance">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
+            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+          </svg>
+          <span>金融小百科</span>
         </div>
         <div class="nav-item" data-page="budget">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -2686,6 +2926,40 @@
             </div>
             <div class="stat-value" id="statYearSpend">¥0</div>
             <div class="stat-desc">含常规与专项</div>
+          </div>
+        </section>
+
+        <section class="stats-grid"
+          style="margin-top: 24px; border-top: 1px dashed var(--border-medium); padding-top: 24px;">
+          <!-- Finance Wiki Stat -->
+          <div class="stat-card"
+            style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: white; border:1px solid rgba(255,255,255,0.1);">
+            <div class="stat-header">
+              <span class="stat-label" style="color: rgba(255, 255, 255, 0.7)">金融小百科 (Finance)</span>
+              <div class="stat-icon" style="color: #f59e0b">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
+                  <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+                </svg>
+              </div>
+            </div>
+            <div class="stat-value" id="statFinanceProgress" style="color: #f59e0b">0</div>
+            <div class="stat-desc" style="color: rgba(255, 255, 255, 0.5)">Stablecoin 101 Episodes</div>
+          </div>
+
+          <!-- AI Share Stat -->
+          <div class="stat-card"
+            style="background: linear-gradient(135deg, #4c1d95 0%, #5b21b6 100%); color: white; border:1px solid rgba(255,255,255,0.1);">
+            <div class="stat-header">
+              <span class="stat-label" style="color: rgba(255, 255, 255, 0.7)">AI 分享月 (Share)</span>
+              <div class="stat-icon" style="color: #fbbf24">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+                </svg>
+              </div>
+            </div>
+            <div class="stat-value" id="statShareProgress" style="color: #fbbf24">0</div>
+            <div class="stat-desc" style="color: rgba(255, 255, 255, 0.5)">Total Episodes</div>
           </div>
         </section>
 
@@ -3178,6 +3452,109 @@
         </div>
       </div>
 
+      <!-- 金融小百科 (全新 UE5 风格) -->
+      <div class="page" id="page-finance">
+        <div class="fin-container">
+          <div class="fin-header">
+            <div>
+              <div class="fin-title">金融小百科</div>
+              <div class="fin-subtitle">Financial Encryption Encyclopedia · 稳定币超入门</div>
+            </div>
+            <div class="fin-controls">
+              <button class="fin-btn active" id="finTab-stablecoin">稳定币 (Season 1)</button>
+              <button class="fin-btn" id="finTab-history">History</button>
+            </div>
+          </div>
+
+          <!-- 稳定币超入门面板 -->
+          <div id="fin-panel-stablecoin">
+            <!-- 顶部操作栏 -->
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+              <div style="display: flex; align-items: center; gap: 1rem;">
+                <h2 style="font-size: 1.5rem; font-weight: 700; color: white;">Episode <span
+                    id="finCurrentEpisodeDisplay">--</span></h2>
+                <span id="finCurrentStatusDisplay" class="tag tag-mixed">Planning</span>
+              </div>
+              <button class="fin-add-btn" onclick="newFinanceEpisode()">+ New Episode</button>
+            </div>
+
+            <!-- 3D 浮动时光轴 -->
+            <div class="fin-timeline-wrap" id="financeTimelineBoard">
+              <!-- 动态生成 -->
+              <div class="fin-step active">
+                <div class="fin-card">
+                  <div class="fin-icon">💡</div>
+                  <div>
+                    <div class="fin-label">Topic</div>
+                    <div class="fin-meta">选题策划</div>
+                  </div>
+                </div>
+              </div>
+              <div class="fin-step">
+                <div class="fin-card">
+                  <div class="fin-icon">📝</div>
+                  <div>
+                    <div class="fin-label">Draft</div>
+                    <div class="fin-meta">文案撰写</div>
+                  </div>
+                </div>
+              </div>
+              <!-- ... more steps ... -->
+            </div>
+
+            <!-- 剧集详情 / 数据录入 / 备注 -->
+            <div
+              style="margin-top: 3rem; background: rgba(0,0,0,0.2); padding: 1.5rem; border-radius: 16px; border: 1px solid var(--fin-border);">
+              <h3
+                style="color: var(--fin-text-sub); font-size: 0.9rem; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 1px;">
+                Episode Details</h3>
+              <form id="financeForm" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem;">
+                <div class="form-group">
+                  <label class="form-label" style="color: var(--fin-text-sub);">Episode No.</label>
+                  <input type="number" id="finEpisode" class="input-dark" placeholder="e.g. 9" required disabled>
+                </div>
+                <div class="form-group span-2">
+                  <label class="form-label" style="color: var(--fin-text-sub);">Title</label>
+                  <input type="text" id="finTitle" class="input-dark" placeholder="Episode Title" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" style="color: var(--fin-text-sub);">Publish Date</label>
+                  <input type="date" id="finDate">
+                </div>
+                <div class="form-group span-4">
+                  <label class="form-label" style="color: var(--fin-text-sub);">Notes / Remarks</label>
+                  <input type="text" id="finNote" class="input-dark" placeholder="Production notes...">
+                </div>
+                <div class="form-footer span-4" style="justify-content: flex-end; margin-top: 0;">
+                  <button class="fin-btn active" type="submit">Update Details</button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <!-- 历史列表 (隐藏) -->
+          <div id="fin-panel-history" style="display: none;">
+            <div class="table-wrap" style="background: rgba(0,0,0,0.2); border-radius: 12px;">
+              <table class="table-dark">
+                <thead>
+                  <tr>
+                    <th style="color: var(--fin-text-sub);">EP</th>
+                    <th style="color: var(--fin-text-sub);">Title</th>
+                    <th style="color: var(--fin-text-sub);">Status</th>
+                    <th style="color: var(--fin-text-sub);">Date</th>
+                    <th style="color: var(--fin-text-sub);">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="financeTableBody">
+                  <!-- JS Rendered -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
       <!-- 预算与开销 -->
       <div class="page" id="page-budget">
         <div class="card">
@@ -3389,12 +3766,16 @@
       budgets: [],
       aiStations: [],
       aiShares: [],
+      financeWiki: [],
       aiStationTitles: {},
       aiShareTitles: {},
+      financeTitles: {},
       aiStationTasks: [],
       aiShareTasks: [],
+      financeTasks: [],
       currentStationEpisode: null,
-      currentShareEpisode: null
+      currentShareEpisode: null,
+      currentFinanceEpisode: null
     };
 
     async function loadRemoteData() {
@@ -3629,6 +4010,14 @@
       document.getElementById('statYearPeople').textContent = yearPeople.toLocaleString();
       document.getElementById('statYearHours').textContent = yearHours.toLocaleString();
       document.getElementById('statYearSpend').textContent = `¥${yearSpend.toLocaleString()}`;
+
+      // Update Special Project Stats
+      if (state.financeWiki) {
+        document.getElementById('statFinanceProgress').textContent = `${state.financeWiki.length}`;
+      }
+      if (state.aiShares) {
+        document.getElementById('statShareProgress').textContent = `${state.aiShares.length}`;
+      }
     }
 
     let hoursChart, budgetChart, costPie;
@@ -4087,6 +4476,7 @@
       renderBudgets();
       renderStats();
       renderCharts();
+      renderFinanceWiki();
       persist();
     }
 
@@ -5379,6 +5769,263 @@
         renderAIKnowledge();
       }
     }, 100);
+    /* =========================================
+       New: 金融小百科 (Finance Encyclopedia) Logic
+       ========================================= */
+    const financeTaskTemplate = [
+      { name: '选题策划', stage: 'topic', icon: '💡', label: 'Topic' },
+      { name: '文案撰写', stage: 'draft', icon: '📝', label: 'Draft' },
+      { name: 'PPT制作', stage: 'ppt', icon: '📊', label: 'PPT' },
+      { name: '视频制作', stage: 'video', icon: '🎬', label: 'Video' },
+      { name: '宣发文案', stage: 'copy', icon: '📣', label: 'Copy' },
+      { name: '社群发布', stage: 'publish', icon: '🚀', label: 'Publish' },
+      { name: '数据归档', stage: 'data', icon: '📈', label: 'Data' }
+    ];
+
+    function renderFinanceWiki() {
+      // 1. Init Data
+      if (!state.financeWiki) state.financeWiki = [];
+
+      // 2. Identify Current Episode
+      // If we have history, maybe auto-select the latest one?
+      // Or use state.currentFinanceEpisode
+      let currentEp = state.currentFinanceEpisode;
+
+      const displayEp = document.getElementById('finCurrentEpisodeDisplay');
+      const displayStatus = document.getElementById('finCurrentStatusDisplay');
+      const timelineBoard = document.getElementById('financeTimelineBoard');
+      const formEpisode = document.getElementById('finEpisode');
+      const formTitle = document.getElementById('finTitle');
+      const formDate = document.getElementById('finDate');
+      const formNote = document.getElementById('finNote');
+
+      // Helper to clear form
+      const clearForm = () => {
+        if (formEpisode) formEpisode.value = '';
+        if (formTitle) formTitle.value = '';
+        if (formDate) formDate.value = '';
+        if (formNote) formNote.value = '';
+        if (displayEp) displayEp.textContent = '--';
+        if (displayStatus) { displayStatus.textContent = 'Waiting'; displayStatus.className = 'tag tag-muted'; }
+        if (timelineBoard) timelineBoard.innerHTML = '<div style="flex:1;text-align:center;color:var(--fin-text-sub);padding-top:2rem;">Click "+ New Episode" to start Season 1</div>';
+      };
+
+      if (!currentEp) {
+        // Auto-select latest if exists
+        if (state.financeWiki.length > 0) {
+          // Sort by episode desc
+          const sorted = [...state.financeWiki].sort((a, b) => b.episode - a.episode);
+          state.currentFinanceEpisode = sorted[0].id;
+          currentEp = sorted[0].id;
+        } else {
+          clearForm();
+          renderFinanceHistory();
+          return;
+        }
+      }
+
+      const item = state.financeWiki.find(i => i.id === currentEp);
+      if (!item) {
+        state.currentFinanceEpisode = null;
+        renderFinanceWiki(); // retry
+        return;
+      }
+
+      // 3. Render Header Info
+      if (displayEp) displayEp.textContent = item.episode;
+      if (displayStatus) {
+        // Determine status: 
+        // If all done -> Completed
+        // Else -> In Progress
+        const totalSteps = financeTaskTemplate.length;
+        const doneSteps = financeTaskTemplate.filter(step => item.workflow && item.workflow[step.stage]).length;
+
+        if (doneSteps === totalSteps) {
+          displayStatus.textContent = 'Completed';
+          displayStatus.className = 'tag tag-success';
+          displayStatus.style.backgroundColor = 'var(--fin-success)';
+          displayStatus.style.color = '#000';
+        } else {
+          displayStatus.textContent = `In Progress (${doneSteps}/${totalSteps})`;
+          displayStatus.className = 'tag';
+          displayStatus.style.backgroundColor = 'var(--fin-accent)';
+          displayStatus.style.color = '#000';
+        }
+      }
+
+      // 4. Fill Form
+      if (formEpisode) formEpisode.value = item.episode;
+      if (formTitle) formTitle.value = item.title;
+      if (formDate) formDate.value = item.date;
+      if (formNote) formNote.value = item.note || '';
+
+      // 5. Render Timeline
+      renderFinanceTimeline(item);
+
+      // 6. Render History Table
+      renderFinanceHistory();
+    }
+
+    function renderFinanceTimeline(item) {
+      const board = document.getElementById('financeTimelineBoard');
+      if (!board) return;
+
+      if (!item.workflow) item.workflow = {};
+
+      board.innerHTML = financeTaskTemplate.map((step, index) => {
+        const isDone = !!item.workflow[step.stage];
+
+        // Logic for 'active' state (current step to do)
+        // The first undone step is 'active'. But if this step is done, it's 'done'.
+        // Wait, users want to click to toggle.
+        // Visual: 
+        // - Done: Green/Gold check style
+        // - Active: Glowing Amber (next up)
+        // - Future: Dimmed
+
+        // Let's determine if this is the "Current Active" step
+        // Find first undone step index
+        const firstUndoneIndex = financeTaskTemplate.findIndex(s => !item.workflow[s.stage]);
+        const isActive = !isDone && (index === firstUndoneIndex || firstUndoneIndex === -1);
+        // Actually, let's just make 'done' look done, and 'active' be the one user interacts with?
+        // User requested: "Click step to mark done. Next undone flashe".
+
+        // My simplified logic:
+        // Done = .done
+        // First Undone = .active (flashing/glowing)
+
+        let className = 'fin-step';
+        if (isDone) className += ' done';
+        else if (index === firstUndoneIndex) className += ' active';
+
+        return `
+            <div class="${className}" onclick="toggleFinanceStep('${item.id}', '${step.stage}')">
+              <div class="fin-card">
+                <div class="fin-icon">${isDone ? '✅' : step.icon}</div>
+                <div>
+                  <div class="fin-label">${step.label}</div>
+                  <div class="fin-meta">${step.name}</div>
+                </div>
+              </div>
+            </div>
+          `;
+      }).join('');
+    }
+
+    function toggleFinanceStep(id, stage) {
+      const item = state.financeWiki.find(i => i.id === id);
+      if (!item) return;
+      if (!item.workflow) item.workflow = {};
+
+      // Toggle
+      item.workflow[stage] = !item.workflow[stage];
+
+      persist();
+      renderFinanceWiki();
+    }
+
+    function newFinanceEpisode() {
+      // Find max episode
+      let maxEp = 0;
+      if (state.financeWiki.length > 0) {
+        maxEp = Math.max(...state.financeWiki.map(i => i.episode || 0));
+      }
+      const newEp = maxEp + 1;
+
+      const newItem = {
+        id: uid(),
+        episode: newEp,
+        title: `稳定币超入门 第${newEp}期`,
+        date: new Date().toISOString().split('T')[0],
+        note: '',
+        workflow: {}, // empty
+        project: 'Stablecoin 101'
+      };
+
+      state.financeWiki.push(newItem);
+      state.currentFinanceEpisode = newItem.id;
+      persist();
+      renderFinanceWiki();
+      showToast(`Started New Episode ${newEp}`, 'success');
+    }
+
+    function renderFinanceHistory() {
+      const tbody = document.getElementById('financeTableBody');
+      if (!tbody) return;
+
+      tbody.innerHTML = state.financeWiki.sort((a, b) => b.episode - a.episode).map(item => {
+        const total = financeTaskTemplate.length;
+        const done = item.workflow ? Object.values(item.workflow).filter(Boolean).length : 0;
+        const progress = Math.round((done / total) * 100);
+        const statusColor = progress === 100 ? 'var(--fin-success)' : 'var(--fin-accent)';
+
+        const isCurrent = state.currentFinanceEpisode === item.id;
+        const rowClass = isCurrent ? 'style="background:rgba(245,158,11,0.1)"' : '';
+
+        return `
+           <tr ${rowClass} onclick="selectFinanceEpisode('${item.id}')" style="cursor:pointer; border-bottom: 1px solid var(--fin-border);">
+             <td style="color:white; font-weight:bold;">#${item.episode}</td>
+             <td style="color:var(--fin-text-sub);">${escapeHtml(item.title)}</td>
+             <td>
+               <span class="tag" style="background:${statusColor}; color:#000; font-weight:600;">${progress}%</span>
+             </td>
+             <td style="color:var(--fin-text-sub);">${item.date}</td>
+             <td>
+               <button class="btn-icon-sm" onclick="event.stopPropagation(); deleteFinanceEpisode('${item.id}')" title="Delete">🗑</button>
+             </td>
+           </tr>
+         `;
+      }).join('');
+    }
+
+    window.selectFinanceEpisode = function (id) {
+      state.currentFinanceEpisode = id;
+      persist();
+      renderFinanceWiki();
+      // scroll to top?
+    };
+
+    window.deleteFinanceEpisode = function (id) {
+      showConfirm('Delete this episode? linked data will be lost.', () => {
+        state.financeWiki = state.financeWiki.filter(i => i.id !== id);
+        if (state.currentFinanceEpisode === id) state.currentFinanceEpisode = null;
+        persist();
+        renderFinanceWiki();
+        showToast('Episode Deleted', 'success');
+      });
+    };
+
+    // Form Save
+    document.getElementById('financeForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (!state.currentFinanceEpisode) return;
+      const item = state.financeWiki.find(i => i.id === state.currentFinanceEpisode);
+      if (item) {
+        item.title = document.getElementById('finTitle').value;
+        item.date = document.getElementById('finDate').value;
+        item.note = document.getElementById('finNote').value;
+        persist();
+        renderFinanceWiki(); // refresh history list title
+        showToast('Episode Details Saved', 'success');
+      }
+    });
+
+    // History Tab Toggle
+    document.getElementById('finTab-stablecoin').addEventListener('click', () => {
+      document.getElementById('fin-panel-stablecoin').style.display = 'block';
+      document.getElementById('fin-panel-history').style.display = 'none';
+      document.getElementById('finTab-stablecoin').classList.add('active');
+      document.getElementById('finTab-history').classList.remove('active');
+    });
+
+    document.getElementById('finTab-history').addEventListener('click', () => {
+      document.getElementById('fin-panel-stablecoin').style.display = 'none';
+      document.getElementById('fin-panel-history').style.display = 'block';
+      document.getElementById('finTab-history').classList.add('active');
+      document.getElementById('finTab-stablecoin').classList.remove('active');
+      renderFinanceHistory();
+    });
+
   </script>
 </body>
 
