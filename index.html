@@ -3201,11 +3201,20 @@
       const savedVersion = localStorage.getItem(STORAGE_KEY + '_version');
 
       if (raw && savedVersion === String(DATA_VERSION)) {
-        // 版本号匹配，使用本地缓存数据
-        Object.assign(state, JSON.parse(raw));
-        if (!state.aiStationTitles || typeof state.aiStationTitles !== 'object') state.aiStationTitles = {};
-        if (!state.aiShareTitles || typeof state.aiShareTitles !== 'object') state.aiShareTitles = {};
-        return;
+        try {
+          const localData = JSON.parse(raw);
+          const hasLocalPayload = ['sessions', 'budgets', 'aiStations', 'aiShares', 'aiStationTasks', 'aiShareTasks']
+            .some(key => Array.isArray(localData[key]) && localData[key].length > 0);
+          if (hasLocalPayload) {
+            // 版本号匹配且有内容，使用本地缓存数据
+            Object.assign(state, localData);
+            if (!state.aiStationTitles || typeof state.aiStationTitles !== 'object') state.aiStationTitles = {};
+            if (!state.aiShareTitles || typeof state.aiShareTitles !== 'object') state.aiShareTitles = {};
+            return;
+          }
+        } catch (err) {
+          // ignore parse error, fallback to remote
+        }
       }
 
       const loaded = await loadRemoteData();
