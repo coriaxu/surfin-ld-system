@@ -7147,10 +7147,10 @@
     }
 
     // Main render function
-    // Main render function
     function renderFinanceWiki() {
       if (!state.financeWiki) state.financeWiki = [];
       renderFinanceKanban();
+      renderFinanceHeatmap(); // Also refresh the timeline
     }
 
     // --- Drag & Drop Handlers ---
