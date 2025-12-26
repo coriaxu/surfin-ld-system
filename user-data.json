@@ -687,7 +687,7 @@
         "ppt": true,
         "video": true,
         "review": false,
-        "publish": true,
+        "publish": false,
         "data": false,
         "copy": true
       }
