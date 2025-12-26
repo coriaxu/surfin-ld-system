@@ -667,10 +667,10 @@
       "views": 0,
       "total": 260,
       "workflow": {
-        "draft": true,
-        "topic": true,
-        "ppt": true,
-        "video": true,
+        "draft": false,
+        "topic": false,
+        "ppt": false,
+        "video": false,
         "copy": false,
         "publish": false,
         "data": false
