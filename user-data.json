@@ -1,6 +1,16 @@
 {
   "sessions": [
     {
+      "id": "kqdwlix8",
+      "date": "2024-08-12",
+      "course": "安全规范",
+      "project": "项目 Alpha",
+      "lecturer": "王工",
+      "people": 15,
+      "duration": 1.5,
+      "note": "设备安全"
+    },
+    {
       "id": "wauqqfqc",
       "date": "2024-08-05",
       "course": "新员工入职",
@@ -366,7 +376,7 @@
       "output": "海报/封面",
       "detail": "主视觉",
       "owner": "设计",
-      "done": true
+      "done": false
     },
     {
       "id": "cz58ku8c",
@@ -677,30 +687,23 @@
         "ppt": true,
         "video": true,
         "review": false,
-        "publish": true,
+        "publish": false,
         "data": false,
-        "copy": true
+        "copy": false
       }
     },
     {
       "id": "fuzfjc2g",
       "episode": 9,
-      "title": "企业怎么选稳定币：发行人、储备与赎回三件套",
-      "date": "2026-01-06",
+      "title": "稳定币超入门 第9期",
+      "date": "2025-12-26",
       "note": "",
       "views": 0,
       "total": 260,
       "workflow": {
-        "draft": false,
-        "topic": true,
-        "ppt": false,
-        "video": false,
-        "copy": false,
-        "publish": false,
-        "data": false
+        "draft": false
       },
       "project": "Stablecoin 101"
     }
-  ],
-  "currentFinanceEpisode": "fuzfjc2g"
+  ]
 }
