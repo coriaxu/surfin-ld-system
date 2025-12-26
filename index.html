@@ -3921,6 +3921,42 @@
 
           <!-- Statistics View -->
           <div id="finStatsView" style="display: none; padding-top: 1rem;">
+            <!-- Data Table -->
+            <div class="card" style="margin-bottom: 1.5rem;">
+              <div class="card-header">
+                <h3 class="card-title card-title-sm">稳定币 101 数据统计</h3>
+              </div>
+              <div class="card-body" style="overflow-x: auto;">
+                <table class="data-table" style="width: 100%; border-collapse: collapse;">
+                  <thead>
+                    <tr style="background: rgba(0,0,0,0.2); text-align: left;">
+                      <th style="padding: 12px 16px; border-bottom: 1px solid rgba(255,255,255,0.1);">期数</th>
+                      <th style="padding: 12px 16px; border-bottom: 1px solid rgba(255,255,255,0.1);">课程名称</th>
+                      <th
+                        style="padding: 12px 16px; border-bottom: 1px solid rgba(255,255,255,0.1); text-align: center;">
+                        未读人数</th>
+                      <th
+                        style="padding: 12px 16px; border-bottom: 1px solid rgba(255,255,255,0.1); text-align: center;">
+                        已读人数</th>
+                      <th
+                        style="padding: 12px 16px; border-bottom: 1px solid rgba(255,255,255,0.1); text-align: center;">
+                        查看率</th>
+                      <th
+                        style="padding: 12px 16px; border-bottom: 1px solid rgba(255,255,255,0.1); text-align: center;">
+                        下载人数</th>
+                      <th
+                        style="padding: 12px 16px; border-bottom: 1px solid rgba(255,255,255,0.1); text-align: center;">
+                        下载率</th>
+                    </tr>
+                  </thead>
+                  <tbody id="financeStatsTable">
+                    <!-- Data will be rendered by JS -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Charts Grid -->
             <div class="stats-dashboard-grid"
               style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 1.5rem;">
               <!-- Trend Chart -->
@@ -6915,20 +6951,40 @@
       showToast(`新建第 ${newEp} 期成功`, 'success');
     }
 
+    /* --- Finance Stats Table --- */
+    function renderFinanceStatsTable() {
+      const tbody = document.getElementById('financeStatsTable');
+      if (!tbody) return;
+      if (!state.financeWiki) state.financeWiki = [];
+
+      const data = [...state.financeWiki].sort((a, b) => a.episode - b.episode);
+
+      tbody.innerHTML = data.map(item => `
+        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+          <td style="padding: 12px 16px;">第 ${item.episode} 课</td>
+          <td style="padding: 12px 16px;">${escapeHtml(item.title || '')}</td>
+          <td style="padding: 12px 16px; text-align: center;">${item.unread !== null ? item.unread : '-'}</td>
+          <td style="padding: 12px 16px; text-align: center;">${item.read !== null ? item.read : '-'}</td>
+          <td style="padding: 12px 16px; text-align: center;">${item.viewRate !== null ? item.viewRate + '%' : '-'}</td>
+          <td style="padding: 12px 16px; text-align: center;">${item.downloads !== null ? item.downloads : '-'}</td>
+          <td style="padding: 12px 16px; text-align: center;">${item.downloadRate !== null ? item.downloadRate + '%' : '-'}</td>
+        </tr>
+      `).join('');
+    }
+
     /* --- Finance Charts --- */
     function renderFinanceCharts() {
+      // Also render the stats table
+      renderFinanceStatsTable();
+
       const ctx = document.getElementById('financeTrendChart');
       if (!ctx) return;
       if (!state.financeWiki) state.financeWiki = [];
 
-      const data = [...state.financeWiki].sort((a, b) => a.episode - b.episode);
-      const labels = data.map(i => `第${i.episode}期`);
-      const rates = data.map(i => {
-        const v = Number(i.views) || 0;
-        const t = Number(i.total) || 260;
-        return t > 0 ? ((v / t) * 100).toFixed(1) : 0;
-      });
-      const views = data.map(i => Number(i.views) || 0);
+      const data = [...state.financeWiki].filter(i => i.viewRate !== null).sort((a, b) => a.episode - b.episode);
+      const labels = data.map(i => `第${i.episode}课`);
+      const rates = data.map(i => i.viewRate || 0);
+      const reads = data.map(i => i.read || 0);
 
       // Create Gradient
       const chartCtx = ctx.getContext('2d');
@@ -6943,8 +6999,8 @@
           labels: labels,
           datasets: [
             {
-              label: '查看人数',
-              data: views,
+              label: '已读人数',
+              data: reads,
               backgroundColor: gradient,
               borderRadius: 4,
               order: 2,
