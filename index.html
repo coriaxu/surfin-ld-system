@@ -5180,6 +5180,8 @@
       const shareEpisode = parseEpisodeLike(payload.currentShareEpisode);
       state.currentStationEpisode = Number.isFinite(stationEpisode) ? stationEpisode : null;
       state.currentShareEpisode = Number.isFinite(shareEpisode) ? shareEpisode : null;
+      // 金融小百科数据
+      state.financeWiki = Array.isArray(payload.financeWiki) ? payload.financeWiki : [];
     }
 
     function encodeBackupPayload(payload) {
