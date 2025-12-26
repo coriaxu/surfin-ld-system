@@ -515,6 +515,18 @@
   ],
   "currentStationEpisode": 85,
   "currentShareEpisode": 13,
-  "financeWiki": [],
-  "currentFinanceEpisode": null
+  "financeWiki": [
+    {
+      "id": "fuzfjc2g",
+      "episode": 9,
+      "title": "稳定币超入门 第9期",
+      "date": "2025-12-26",
+      "note": "",
+      "views": 0,
+      "total": 260,
+      "workflow": {},
+      "project": "Stablecoin 101"
+    }
+  ],
+  "currentFinanceEpisode": "fuzfjc2g"
 }
