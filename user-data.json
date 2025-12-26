@@ -524,7 +524,9 @@
       "note": "",
       "views": 0,
       "total": 260,
-      "workflow": {},
+      "workflow": {
+        "draft": false
+      },
       "project": "Stablecoin 101"
     }
   ],
