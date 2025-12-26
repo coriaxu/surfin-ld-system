@@ -9,16 +9,6 @@
       "people": 15,
       "duration": 1.5,
       "note": "设备安全"
-    },
-    {
-      "id": "wauqqfqc",
-      "date": "2024-08-05",
-      "course": "新员工入职",
-      "project": "总部培训",
-      "lecturer": "刘老师",
-      "people": 20,
-      "duration": 2,
-      "note": "流程介绍"
     }
   ],
   "budgets": [
