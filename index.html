@@ -2477,59 +2477,51 @@
     }
 
     /* =========================================
-       New: 金融小百科 - UE5 质感 (Pro Finance)
-       Deep Emerald + Gold + Glassmorphism + Volumetric Glow
+       金融小百科 - 浅色通透风格 (Light & Airy)
+       极淡蓝灰背景 + 纯白卡片 + 清晰层级
        ========================================= */
     body {
-      --fin-bg-start: #0f172a;
-      --fin-bg-end: #020617;
-      --fin-card-bg: rgba(30, 41, 59, 0.6);
-      --fin-border: rgba(255, 255, 255, 0.08);
-      --fin-accent: #f59e0b;
-      /* Amber 500 */
-      --fin-accent-glow: rgba(245, 158, 11, 0.4);
-      --fin-text-main: #f8fafc;
-      --fin-text-sub: #94a3b8;
-      --fin-success: #10b981;
-    }
-
-    /* 浅色模式适配 (Keep it premium but light) */
-    body[data-theme="wine"],
-    body[data-theme="mint"],
-    body[data-theme="craft"] {
-      --fin-bg-start: #f8fafc;
-      --fin-bg-end: #e2e8f0;
-      --fin-card-bg: rgba(255, 255, 255, 0.8);
-      --fin-border: rgba(0, 0, 0, 0.06);
-      --fin-accent: #d97706;
-      /* Amber 600 */
-      --fin-accent-glow: rgba(217, 119, 6, 0.25);
-      --fin-text-main: #1e293b;
-      --fin-text-sub: #64748b;
+      /* 浅色主题变量 - 金融小百科专用 */
+      --fin-bg-body: #F5F7FA;
+      /* 整体大背景：极淡冷灰 */
+      --fin-bg-card: #FFFFFF;
+      /* 卡片背景：纯白 */
+      --fin-border: #E2E8F0;
+      /* 边框/分割线：极淡灰 */
+      --fin-text-main: #1E293B;
+      /* 主文字：深青灰 */
+      --fin-text-sub: #64748B;
+      /* 次要文字：专业蓝灰 */
+      --fin-accent: #F59E0B;
+      /* 强调色：琥珀金 */
+      --fin-accent-glow: rgba(245, 158, 11, 0.15);
+      --fin-success: #10B981;
+      /* 成功色：翠绿 */
+      --fin-table-header: #F8FAFC;
+      /* 表头背景 */
+      --fin-hover: #F1F5F9;
+      /* 悬停背景 */
     }
 
     /* Finance page specific - override main padding for consistent margins */
     #page-finance {
       margin: -24px -32px -40px -32px;
-      /* Counteract parent padding */
       padding: 24px;
-      /* Apply uniform 24px padding */
     }
 
     .fin-container {
-      background: linear-gradient(135deg, var(--fin-bg-start) 0%, var(--fin-bg-end) 100%);
+      background: var(--fin-bg-body);
       border-radius: 20px;
       padding: 24px;
-      /* Consistent padding on all sides */
       min-height: 80vh;
       color: var(--fin-text-main);
       position: relative;
       overflow: hidden;
-      /* Keep hidden to constrain children */
-      box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.2);
+      /* 去掉深色内阴影，添加微妙的外阴影 */
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
     }
 
-    /* 装饰性背景光 (Volumetric Light) */
+    /* 装饰性背景光 - 浅色版更柔和 */
     .fin-container::before {
       content: '';
       position: absolute;
@@ -2538,9 +2530,9 @@
       width: 400px;
       height: 400px;
       background: radial-gradient(circle, var(--fin-accent-glow) 0%, transparent 70%);
-      opacity: 0.4;
+      opacity: 0.3;
       pointer-events: none;
-      filter: blur(40px);
+      filter: blur(60px);
     }
 
     .fin-header {
@@ -2556,11 +2548,8 @@
       font-size: 2rem;
       font-weight: 800;
       letter-spacing: -0.5px;
-      background: linear-gradient(135deg, var(--fin-text-main) 30%, var(--fin-accent) 100%);
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-      text-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      color: var(--fin-text-main);
+      /* 浅色背景上用纯色更清晰 */
     }
 
     .fin-subtitle {
@@ -2568,7 +2557,6 @@
       color: var(--fin-text-sub);
       margin-top: 0.5rem;
       font-weight: 400;
-      opacity: 0.8;
     }
 
     /* 3D 悬浮时间轴 */
@@ -2599,10 +2587,9 @@
       opacity: 0.6;
     }
 
-    /* 卡片主体 */
+    /* 卡片主体 - 纯白 + 微投影 */
     .fin-card {
-      background: var(--fin-card-bg);
-      backdrop-filter: blur(12px);
+      background: var(--fin-bg-card);
       border: 1px solid var(--fin-border);
       border-radius: 16px;
       padding: 1.25rem 1rem;
@@ -2610,21 +2597,21 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
       transition: all 0.3s ease;
       position: relative;
       overflow: hidden;
     }
 
-    /* 顶部高光条 (Metallic Shine) */
+    /* 顶部高光条 - 浅色版用细边框代替 */
     .fin-card::after {
       content: '';
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+      height: 3px;
+      background: linear-gradient(90deg, transparent, var(--fin-accent), transparent);
       opacity: 0;
       transition: opacity 0.3s;
     }
@@ -2635,7 +2622,7 @@
     }
 
     .fin-step:hover .fin-card {
-      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
 
     /* 选中/进行中状态 */
@@ -2646,8 +2633,9 @@
 
     .fin-step.active .fin-card {
       border-color: var(--fin-accent);
-      background: linear-gradient(160deg, var(--fin-card-bg) 0%, rgba(245, 158, 11, 0.05) 100%);
-      box-shadow: 0 0 20px var(--fin-accent-glow), 0 0 0 1px var(--fin-accent) inset;
+      background: #FFFBEB;
+      /* 极淡琥珀色背景 */
+      box-shadow: 0 4px 12px var(--fin-accent-glow), 0 0 0 1px var(--fin-accent) inset;
     }
 
     .fin-step.active .fin-card::after {
@@ -2657,7 +2645,9 @@
     /* 完成状态 */
     .fin-step.done .fin-card {
       border-color: var(--fin-success);
-      box-shadow: 0 0 10px rgba(16, 185, 129, 0.2);
+      background: #ECFDF5;
+      /* 极淡翠绿背景 */
+      box-shadow: 0 2px 8px rgba(16, 185, 129, 0.15);
     }
 
     .fin-step.done .fin-icon {
@@ -2687,15 +2677,16 @@
       margin-top: auto;
     }
 
-    /* Episode Selector (Glass Pill) */
+    /* Episode Selector - 浅色胶囊按钮组 */
     .fin-controls {
       display: flex;
       gap: 12px;
       align-items: center;
-      background: rgba(0, 0, 0, 0.2);
+      background: var(--fin-bg-card);
       padding: 6px;
       border-radius: 999px;
       border: 1px solid var(--fin-border);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
     }
 
     .fin-btn {
@@ -2711,9 +2702,8 @@
 
     .fin-btn.active,
     .fin-btn:hover {
-      background: var(--fin-card-bg);
+      background: var(--fin-hover);
       color: var(--fin-text-main);
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 
     .fin-add-btn {
@@ -2756,10 +2746,11 @@
       display: flex;
       align-items: center;
       gap: 0.5rem;
-      background: rgba(0, 0, 0, 0.15);
+      background: var(--fin-bg-card);
       padding: 0.5rem;
       border-radius: 12px;
       border: 1px solid var(--fin-border);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
     }
 
     .fin-tab {
@@ -2778,7 +2769,7 @@
 
     .fin-tab.active,
     .fin-tab:hover {
-      background: var(--fin-card-bg);
+      background: var(--fin-hover);
       color: var(--fin-text-main);
     }
 
@@ -2797,9 +2788,9 @@
       overflow-x: auto;
       padding-bottom: 1rem;
       min-height: 400px;
-      /* Scrollbar Styling - High Contrast */
+      /* Scrollbar Styling - 浅色版 */
       scrollbar-width: thin;
-      scrollbar-color: rgba(255, 255, 255, 0.4) rgba(255, 255, 255, 0.05);
+      scrollbar-color: #CBD5E1 transparent;
     }
 
     .kanban-board::-webkit-scrollbar {
@@ -2807,17 +2798,17 @@
     }
 
     .kanban-board::-webkit-scrollbar-track {
-      background: rgba(255, 255, 255, 0.05);
+      background: #E2E8F0;
       border-radius: 4px;
     }
 
     .kanban-board::-webkit-scrollbar-thumb {
-      background: rgba(255, 255, 255, 0.35);
+      background: #94A3B8;
       border-radius: 4px;
     }
 
     .kanban-board::-webkit-scrollbar-thumb:hover {
-      background: rgba(255, 255, 255, 0.5);
+      background: #64748B;
     }
 
     .kanban-card[draggable="true"] {
@@ -2836,23 +2827,24 @@
     }
 
     .kanban-column.drag-over {
-      background: rgba(255, 255, 255, 0.05);
+      background: var(--fin-hover);
       box-shadow: inset 0 0 0 2px var(--fin-accent);
     }
 
     .kanban-column {
       flex: 0 0 280px;
-      /* Increased to force scroll */
-      background: rgba(0, 0, 0, 0.15);
+      background: var(--fin-bg-card);
       border-radius: 12px;
       border: 1px solid var(--fin-border);
       display: flex;
       flex-direction: column;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
     }
 
     .kanban-column.done {
-      background: rgba(16, 185, 129, 0.08);
-      border-color: rgba(16, 185, 129, 0.3);
+      background: #ECFDF5;
+      /* 极淡翠绿 */
+      border-color: rgba(16, 185, 129, 0.4);
     }
 
     .kanban-column-header {
@@ -2876,7 +2868,7 @@
 
     .kanban-count {
       margin-left: auto;
-      background: rgba(255, 255, 255, 0.1);
+      background: var(--fin-hover);
       padding: 2px 8px;
       border-radius: 999px;
       font-size: 0.75rem;
@@ -2893,17 +2885,18 @@
     }
 
     .kanban-card {
-      background: var(--fin-card-bg);
+      background: var(--fin-bg-card);
       border: 1px solid var(--fin-border);
       border-radius: 8px;
       padding: 12px;
       cursor: pointer;
       transition: all 0.2s ease;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
     }
 
     .kanban-card:hover {
       border-color: var(--fin-accent);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
       transform: translateY(-2px);
     }
 
@@ -2931,33 +2924,33 @@
       margin-top: 8px;
     }
 
-    /* Finance Modal - Uses base .modal-overlay styles */
+    /* Finance Modal - 浅色弹窗 */
 
     .modal-content.fin-modal {
-      background: var(--fin-card-bg);
+      background: var(--fin-bg-card);
       border: 1px solid var(--fin-border);
       border-radius: 16px;
       width: 100%;
       max-width: 500px;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-      backdrop-filter: blur(20px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
     }
 
-    .modal-header {
+    .modal-content.fin-modal .modal-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       padding: 16px 20px;
       border-bottom: 1px solid var(--fin-border);
+      background: var(--fin-table-header);
     }
 
-    .modal-header h3 {
+    .modal-content.fin-modal .modal-header h3 {
       color: var(--fin-text-main);
       font-size: 1.1rem;
       font-weight: 600;
     }
 
-    .modal-close {
+    .modal-content.fin-modal .modal-close {
       background: none;
       border: none;
       color: var(--fin-text-sub);
@@ -2966,12 +2959,35 @@
       line-height: 1;
     }
 
-    .modal-close:hover {
+    .modal-content.fin-modal .modal-close:hover {
       color: var(--fin-text-main);
     }
 
-    .modal-body {
+    .modal-content.fin-modal .modal-body {
       padding: 20px;
+      background: var(--fin-bg-card);
+    }
+
+    /* 弹窗表单输入框 - 浅色 */
+    .modal-content.fin-modal input,
+    .modal-content.fin-modal select,
+    .modal-content.fin-modal textarea {
+      background: var(--fin-bg-card) !important;
+      border: 1px solid var(--fin-border) !important;
+      color: var(--fin-text-main) !important;
+      border-radius: 8px;
+    }
+
+    .modal-content.fin-modal input:focus,
+    .modal-content.fin-modal select:focus,
+    .modal-content.fin-modal textarea:focus {
+      border-color: var(--fin-accent) !important;
+      outline: none;
+      box-shadow: 0 0 0 3px var(--fin-accent-glow);
+    }
+
+    .modal-content.fin-modal .form-label {
+      color: var(--fin-text-sub);
     }
 
     .fin-workflow-chips {
@@ -2990,19 +3006,92 @@
       font-size: 0.8rem;
       cursor: pointer;
       border: 1px solid var(--fin-border);
-      background: rgba(0, 0, 0, 0.2);
+      background: var(--fin-hover);
       color: var(--fin-text-sub);
       transition: all 0.2s ease;
     }
 
     .fin-chip.done {
       background: var(--fin-success);
-      color: #000;
+      color: #fff;
       border-color: var(--fin-success);
     }
 
     .fin-chip:hover {
       border-color: var(--fin-accent);
+    }
+
+    /* ===== 金融小百科 - 统计页面样式 ===== */
+
+    /* 统计视图内的卡片 - 浅色背景 */
+    #finStatsView .card {
+      background: var(--fin-bg-card);
+      border: 1px solid var(--fin-border);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    #finStatsView .card-header {
+      background: var(--fin-table-header);
+      border-bottom: 1px solid var(--fin-border);
+    }
+
+    #finStatsView .card-title {
+      color: var(--fin-text-main);
+    }
+
+    #finStatsView .card-body {
+      background: var(--fin-bg-card);
+    }
+
+    /* 统计表格样式 - 清晰通透 */
+    .fin-stats-table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    .fin-stats-table th {
+      background: var(--fin-table-header);
+      color: var(--fin-text-sub);
+      font-weight: 600;
+      padding: 12px 16px;
+      border-bottom: 2px solid var(--fin-border);
+      text-align: left;
+    }
+
+    .fin-stats-table td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--fin-border);
+      color: var(--fin-text-main);
+      background: transparent;
+    }
+
+    .fin-stats-table tr:hover td {
+      background: var(--fin-hover);
+    }
+
+    /* 去掉斑马纹，保持全白通透 */
+    .fin-stats-table tr:nth-child(even) td {
+      background: transparent;
+    }
+
+    .fin-stats-table tr:nth-child(even):hover td {
+      background: var(--fin-hover);
+    }
+
+    /* 热力图容器 - 浅色适配 */
+    #finStatsView .heatmap-container {
+      background: var(--fin-bg-card);
+    }
+
+    #finStatsView .heatmap-legend-label {
+      color: var(--fin-text-sub);
+    }
+
+    /* 下拉选择器 - 浅色 */
+    #finStatsView .select-sm {
+      background: var(--fin-bg-card);
+      border: 1px solid var(--fin-border);
+      color: var(--fin-text-main);
     }
   </style>
 </head>
@@ -3927,26 +4016,16 @@
                 <h3 class="card-title card-title-sm">稳定币超入门数据统计</h3>
               </div>
               <div class="card-body" style="overflow-x: auto;">
-                <table class="data-table" style="width: 100%; border-collapse: collapse;">
+                <table class="data-table fin-stats-table" style="width: 100%; border-collapse: collapse;">
                   <thead>
-                    <tr style="background: rgba(0,0,0,0.2); text-align: left;">
-                      <th style="padding: 12px 16px; border-bottom: 1px solid rgba(255,255,255,0.1);">期数</th>
-                      <th style="padding: 12px 16px; border-bottom: 1px solid rgba(255,255,255,0.1);">课程名称</th>
-                      <th
-                        style="padding: 12px 16px; border-bottom: 1px solid rgba(255,255,255,0.1); text-align: center;">
-                        未读人数</th>
-                      <th
-                        style="padding: 12px 16px; border-bottom: 1px solid rgba(255,255,255,0.1); text-align: center;">
-                        已读人数</th>
-                      <th
-                        style="padding: 12px 16px; border-bottom: 1px solid rgba(255,255,255,0.1); text-align: center;">
-                        查看率</th>
-                      <th
-                        style="padding: 12px 16px; border-bottom: 1px solid rgba(255,255,255,0.1); text-align: center;">
-                        下载人数</th>
-                      <th
-                        style="padding: 12px 16px; border-bottom: 1px solid rgba(255,255,255,0.1); text-align: center;">
-                        下载率</th>
+                    <tr>
+                      <th>期数</th>
+                      <th>课程名称</th>
+                      <th style="text-align: center;">未读人数</th>
+                      <th style="text-align: center;">已读人数</th>
+                      <th style="text-align: center;">查看率</th>
+                      <th style="text-align: center;">下载人数</th>
+                      <th style="text-align: center;">下载率</th>
                     </tr>
                   </thead>
                   <tbody id="financeStatsTable">
@@ -6962,14 +7041,14 @@
       const data = [...state.financeWiki].sort((a, b) => a.episode - b.episode);
 
       tbody.innerHTML = data.map(item => `
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-          <td style="padding: 12px 16px;">第 ${item.episode} 课</td>
-          <td style="padding: 12px 16px;">${escapeHtml(item.title || '')}</td>
-          <td style="padding: 12px 16px; text-align: center;">${item.unread !== null ? item.unread : '-'}</td>
-          <td style="padding: 12px 16px; text-align: center;">${item.read !== null ? item.read : '-'}</td>
-          <td style="padding: 12px 16px; text-align: center;">${item.viewRate !== null ? item.viewRate + '%' : '-'}</td>
-          <td style="padding: 12px 16px; text-align: center;">${item.downloads !== null ? item.downloads : '-'}</td>
-          <td style="padding: 12px 16px; text-align: center;">${item.downloadRate !== null ? item.downloadRate + '%' : '-'}</td>
+        <tr>
+          <td>第 ${item.episode} 课</td>
+          <td>${escapeHtml(item.title || '')}</td>
+          <td style="text-align: center;">${item.unread !== null ? item.unread : '-'}</td>
+          <td style="text-align: center;">${item.read !== null ? item.read : '-'}</td>
+          <td style="text-align: center;">${item.viewRate !== null ? item.viewRate + '%' : '-'}</td>
+          <td style="text-align: center;">${item.downloads !== null ? item.downloads : '-'}</td>
+          <td style="text-align: center;">${item.downloadRate !== null ? item.downloadRate + '%' : '-'}</td>
         </tr>
       `).join('');
     }
