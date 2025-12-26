@@ -521,7 +521,7 @@
       "episode": 1,
       "season": "stablecoin",
       "title": "为什么会有稳定币：全球结算的老问题",
-      "date": "2025-10-01",
+      "date": "2025-07-01",
       "unread": 26,
       "read": 317,
       "viewRate": 92.4,
@@ -536,7 +536,9 @@
         "publish": true,
         "data": false,
         "copy": true
-      }
+      },
+      "total": 260,
+      "note": ""
     },
     {
       "id": "fin02",
@@ -705,5 +707,6 @@
       },
       "project": "Stablecoin 101"
     }
-  ]
+  ],
+  "currentFinanceEpisode": "fin01"
 }
