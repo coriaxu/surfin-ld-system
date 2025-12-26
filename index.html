@@ -2053,6 +2053,86 @@
       color: var(--text-muted);
     }
 
+    /* Cloud Sync Modal */
+    .sync-modal {
+      width: 480px;
+      max-width: 92vw;
+    }
+
+    .sync-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 16px;
+      font-size: 13px;
+    }
+
+    .sync-status.connected {
+      background: rgba(16, 185, 129, 0.1);
+      color: #10b981;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .sync-status.disconnected {
+      background: rgba(239, 68, 68, 0.1);
+      color: #ef4444;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    .sync-status svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .sync-input-group {
+      margin-bottom: 16px;
+    }
+
+    .sync-input-group label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 6px;
+    }
+
+    .sync-input-group input {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 13px;
+      background: var(--bg-card);
+      color: var(--text-main);
+    }
+
+    .sync-input-group input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    }
+
+    .sync-hint {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 6px;
+      line-height: 1.5;
+    }
+
+    .sync-hint a {
+      color: var(--primary);
+      text-decoration: underline;
+    }
+
+    .sync-last-time {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-align: center;
+      margin-top: 12px;
+    }
+
     @keyframes toast-in {
       from {
         opacity: 0;
@@ -3048,6 +3128,12 @@
           </svg>
           JSON
         </button>
+        <button class="btn btn-secondary btn-sm" onclick="openSyncModal()" id="syncBtn" title="云同步设置">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z" />
+          </svg>
+          <span id="syncBtnText">云同步</span>
+        </button>
         <button class="btn btn-secondary btn-sm" onclick="openBackupModal()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <rect x="9" y="9" width="13" height="13" rx="2" />
@@ -4032,6 +4118,52 @@
     </div>
   </div>
 
+  <!-- Cloud Sync Modal -->
+  <div class="modal-overlay" id="syncModal">
+    <div class="modal sync-modal">
+      <div class="modal-header">☁️ 云同步设置</div>
+      <div class="modal-body">
+        <div class="sync-status disconnected" id="syncStatusBox">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z" />
+            <line x1="8" y1="8" x2="16" y2="16" />
+          </svg>
+          <span id="syncStatusText">未连接 - 请配置 GitHub Token</span>
+        </div>
+
+        <div class="sync-input-group">
+          <label>GitHub Personal Access Token</label>
+          <input type="password" id="githubTokenInput" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
+          <div class="sync-hint">
+            👉 <a href="https://github.com/settings/tokens/new?scopes=repo&description=Surfin%20LD%20System%20Sync"
+              target="_blank">点击这里创建 Token</a>（勾选 repo 权限即可）
+          </div>
+        </div>
+
+        <div class="sync-input-group">
+          <label>仓库名称</label>
+          <input type="text" id="githubRepoInput" placeholder="coriaxu/surfin-ld-system"
+            value="coriaxu/surfin-ld-system">
+          <div class="sync-hint">格式：用户名/仓库名</div>
+        </div>
+
+        <div class="sync-input-group">
+          <label>数据文件路径</label>
+          <input type="text" id="githubPathInput" placeholder="data.json" value="user-data.json">
+          <div class="sync-hint">数据将保存到这个文件</div>
+        </div>
+
+        <div class="sync-last-time" id="syncLastTime"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeSyncModal()">关闭</button>
+        <button class="btn btn-secondary" onclick="testSyncConnection()">测试连接</button>
+        <button class="btn btn-secondary" onclick="pullFromCloud()">从云端拉取</button>
+        <button class="btn btn-primary" onclick="saveSyncSettings()">保存并同步</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     const uid = () => Math.random().toString(36).slice(2, 10);
     const STORAGE_KEY = 'surfin_ld_system_v2';
@@ -4201,6 +4333,295 @@
 
 
     function persist() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+
+    // ========== Cloud Sync (GitHub API) ==========
+    const SYNC_SETTINGS_KEY = 'surfin_sync_settings';
+    let syncSettings = JSON.parse(localStorage.getItem(SYNC_SETTINGS_KEY) || 'null') || {
+      token: '',
+      repo: 'coriaxu/surfin-ld-system',
+      path: 'user-data.json',
+      lastSync: null,
+      enabled: false
+    };
+
+    // Debounce sync to avoid too many API calls
+    let syncTimeout = null;
+    function debouncedCloudSync() {
+      if (!syncSettings.enabled || !syncSettings.token) return;
+      if (syncTimeout) clearTimeout(syncTimeout);
+      syncTimeout = setTimeout(() => {
+        pushToCloud().catch(err => console.warn('Auto sync failed:', err));
+      }, 3000); // Wait 3 seconds after last change before syncing
+    }
+
+    // Enhanced persist function that triggers cloud sync
+    const originalPersist = persist;
+    window.persistWithSync = function () {
+      originalPersist();
+      debouncedCloudSync();
+    };
+
+    // Override persist to include sync
+    function persist() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      debouncedCloudSync();
+    }
+
+    // Push data to GitHub
+    async function pushToCloud() {
+      if (!syncSettings.token || !syncSettings.repo || !syncSettings.path) {
+        throw new Error('云同步未配置');
+      }
+
+      const content = JSON.stringify(state, null, 2);
+      const base64Content = btoa(unescape(encodeURIComponent(content)));
+
+      // First, try to get the current file SHA (needed for updates)
+      let sha = null;
+      try {
+        const getResponse = await fetch(
+          `https://api.github.com/repos/${syncSettings.repo}/contents/${syncSettings.path}`,
+          {
+            headers: {
+              'Authorization': `token ${syncSettings.token}`,
+              'Accept': 'application/vnd.github.v3+json'
+            }
+          }
+        );
+        if (getResponse.ok) {
+          const fileData = await getResponse.json();
+          sha = fileData.sha;
+        }
+      } catch (e) {
+        // File doesn't exist yet, that's ok
+      }
+
+      // Create or update the file
+      const body = {
+        message: `Sync data - ${new Date().toLocaleString('zh-CN')}`,
+        content: base64Content,
+        branch: 'main'
+      };
+      if (sha) body.sha = sha;
+
+      const response = await fetch(
+        `https://api.github.com/repos/${syncSettings.repo}/contents/${syncSettings.path}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Authorization': `token ${syncSettings.token}`,
+            'Accept': 'application/vnd.github.v3+json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(body)
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || '同步失败');
+      }
+
+      syncSettings.lastSync = new Date().toISOString();
+      localStorage.setItem(SYNC_SETTINGS_KEY, JSON.stringify(syncSettings));
+      updateSyncUI();
+      return true;
+    }
+
+    // Pull data from GitHub
+    async function pullFromCloudAPI() {
+      if (!syncSettings.token || !syncSettings.repo || !syncSettings.path) {
+        throw new Error('云同步未配置');
+      }
+
+      const response = await fetch(
+        `https://api.github.com/repos/${syncSettings.repo}/contents/${syncSettings.path}`,
+        {
+          headers: {
+            'Authorization': `token ${syncSettings.token}`,
+            'Accept': 'application/vnd.github.v3+json'
+          }
+        }
+      );
+
+      if (!response.ok) {
+        if (response.status === 404) {
+          throw new Error('云端暂无数据');
+        }
+        const errorData = await response.json();
+        throw new Error(errorData.message || '拉取失败');
+      }
+
+      const fileData = await response.json();
+      const content = decodeURIComponent(escape(atob(fileData.content)));
+      const cloudData = JSON.parse(content);
+
+      return cloudData;
+    }
+
+    // Test connection
+    async function testConnection() {
+      const token = document.getElementById('githubTokenInput').value.trim();
+      const repo = document.getElementById('githubRepoInput').value.trim();
+
+      if (!token || !repo) {
+        throw new Error('请填写 Token 和仓库名称');
+      }
+
+      const response = await fetch(
+        `https://api.github.com/repos/${repo}`,
+        {
+          headers: {
+            'Authorization': `token ${token}`,
+            'Accept': 'application/vnd.github.v3+json'
+          }
+        }
+      );
+
+      if (!response.ok) {
+        if (response.status === 401) {
+          throw new Error('Token 无效或已过期');
+        } else if (response.status === 404) {
+          throw new Error('仓库不存在或无权访问');
+        }
+        throw new Error('连接失败');
+      }
+
+      return true;
+    }
+
+    // Update sync UI
+    function updateSyncUI() {
+      const statusBox = document.getElementById('syncStatusBox');
+      const statusText = document.getElementById('syncStatusText');
+      const tokenInput = document.getElementById('githubTokenInput');
+      const repoInput = document.getElementById('githubRepoInput');
+      const pathInput = document.getElementById('githubPathInput');
+      const lastTimeEl = document.getElementById('syncLastTime');
+      const syncBtnText = document.getElementById('syncBtnText');
+
+      if (statusBox && statusText) {
+        if (syncSettings.enabled && syncSettings.token) {
+          statusBox.className = 'sync-status connected';
+          statusBox.innerHTML = `
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/>
+              <polyline points="8 14 11 17 16 12"/>
+            </svg>
+            <span id="syncStatusText">已连接 ✓</span>
+          `;
+        } else {
+          statusBox.className = 'sync-status disconnected';
+          statusBox.innerHTML = `
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/>
+              <line x1="8" y1="8" x2="16" y2="16"/>
+            </svg>
+            <span id="syncStatusText">未连接 - 请配置 GitHub Token</span>
+          `;
+        }
+      }
+
+      if (tokenInput) tokenInput.value = syncSettings.token || '';
+      if (repoInput) repoInput.value = syncSettings.repo || 'coriaxu/surfin-ld-system';
+      if (pathInput) pathInput.value = syncSettings.path || 'user-data.json';
+
+      if (lastTimeEl) {
+        if (syncSettings.lastSync) {
+          lastTimeEl.textContent = `上次同步: ${new Date(syncSettings.lastSync).toLocaleString('zh-CN')}`;
+        } else {
+          lastTimeEl.textContent = '';
+        }
+      }
+
+      if (syncBtnText) {
+        syncBtnText.textContent = syncSettings.enabled ? '云同步 ✓' : '云同步';
+      }
+    }
+
+    // Modal handlers
+    window.openSyncModal = function () {
+      const modal = document.getElementById('syncModal');
+      if (modal) {
+        modal.classList.add('active');
+        updateSyncUI();
+      }
+    };
+
+    window.closeSyncModal = function () {
+      const modal = document.getElementById('syncModal');
+      if (modal) modal.classList.remove('active');
+    };
+
+    window.testSyncConnection = async function () {
+      try {
+        await testConnection();
+        showToast('连接成功！', 'success');
+      } catch (err) {
+        showToast(err.message, 'error');
+      }
+    };
+
+    window.saveSyncSettings = async function () {
+      const token = document.getElementById('githubTokenInput').value.trim();
+      const repo = document.getElementById('githubRepoInput').value.trim();
+      const path = document.getElementById('githubPathInput').value.trim() || 'user-data.json';
+
+      if (!token || !repo) {
+        showToast('请填写 Token 和仓库名称', 'error');
+        return;
+      }
+
+      try {
+        // Test connection first
+        await testConnection();
+
+        // Save settings
+        syncSettings.token = token;
+        syncSettings.repo = repo;
+        syncSettings.path = path;
+        syncSettings.enabled = true;
+        localStorage.setItem(SYNC_SETTINGS_KEY, JSON.stringify(syncSettings));
+
+        // Push current data to cloud
+        showToast('正在同步数据到云端...', 'info');
+        await pushToCloud();
+
+        showToast('设置已保存，数据已同步到云端！', 'success');
+        updateSyncUI();
+        closeSyncModal();
+      } catch (err) {
+        showToast('保存失败: ' + err.message, 'error');
+      }
+    };
+
+    window.pullFromCloud = async function () {
+      if (!syncSettings.token) {
+        showToast('请先配置云同步设置', 'error');
+        return;
+      }
+
+      try {
+        showToast('正在从云端拉取数据...', 'info');
+        const cloudData = await pullFromCloudAPI();
+
+        // Apply cloud data
+        applyImportedState(cloudData);
+        originalPersist(); // Use original to avoid triggering sync
+        localStorage.setItem(STORAGE_KEY + '_version', String(DATA_VERSION));
+
+        showToast('已从云端恢复数据，页面将刷新', 'success');
+        setTimeout(() => location.reload(), 1500);
+      } catch (err) {
+        showToast('拉取失败: ' + err.message, 'error');
+      }
+    };
+
+    // Initialize sync UI on page load
+    document.addEventListener('DOMContentLoaded', () => {
+      updateSyncUI();
+    });
+    // ========== End Cloud Sync ==========
 
     function calcManHours(s) { return Number(s.people) * Number(s.duration); }
 
