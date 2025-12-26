@@ -1,26 +1,5 @@
 {
-  "sessions": [
-    {
-      "id": "kqdwlix8",
-      "date": "2024-08-12",
-      "course": "安全规范",
-      "project": "项目 Alpha",
-      "lecturer": "王工",
-      "people": 15,
-      "duration": 1.5,
-      "note": "设备安全"
-    },
-    {
-      "id": "wauqqfqc",
-      "date": "2024-08-05",
-      "course": "新员工入职",
-      "project": "总部培训",
-      "lecturer": "刘老师",
-      "people": 20,
-      "duration": 2,
-      "note": "流程介绍"
-    }
-  ],
+  "sessions": [],
   "budgets": [
     {
       "id": "wd3yzklf",
