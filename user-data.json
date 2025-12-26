@@ -545,7 +545,7 @@
       "episode": 2,
       "season": "stablecoin",
       "title": "区块链：稳定币的'硬核地基'",
-      "date": "2025-10-15",
+      "date": "2025-11-15",
       "unread": 16,
       "read": 327,
       "viewRate": 95.3,
@@ -560,7 +560,9 @@
         "publish": true,
         "data": false,
         "copy": true
-      }
+      },
+      "total": 260,
+      "note": ""
     },
     {
       "id": "fin03",
@@ -708,5 +710,5 @@
       "project": "Stablecoin 101"
     }
   ],
-  "currentFinanceEpisode": "fin01"
+  "currentFinanceEpisode": "fin02"
 }
