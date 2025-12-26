@@ -438,7 +438,7 @@
       box-shadow: 0 14px 30px rgba(15, 23, 42, 0.08);
     }
 
-    /* Finance Timeline Styles */
+    /* Finance Timeline Styles - Plan B: Emerald Gradient + Glassmorphism */
     .timeline-container {
       display: flex;
       flex-direction: column;
@@ -447,19 +447,22 @@
     }
 
     .timeline-progress-wrapper {
-      background: var(--surface-base);
+      background: rgba(16, 185, 129, 0.1);
       border-radius: 99px;
-      height: 12px;
+      height: 14px;
       position: relative;
       margin-bottom: 2rem;
       overflow: hidden;
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(16, 185, 129, 0.2);
     }
 
     .timeline-progress-bar {
-      background: linear-gradient(90deg, #10B981 0%, #34D399 100%);
+      background: linear-gradient(90deg, #059669 0%, #10B981 50%, #34D399 100%);
       height: 100%;
       border-radius: 99px;
       transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 0 20px rgba(16, 185, 129, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.3);
     }
 
     .timeline-nodes {
@@ -472,11 +475,11 @@
     .timeline-nodes::before {
       content: '';
       position: absolute;
-      top: 14px;
-      left: 20px;
-      right: 20px;
+      top: 18px;
+      left: 30px;
+      right: 30px;
       height: 2px;
-      background: var(--border-medium);
+      background: linear-gradient(90deg, rgba(16, 185, 129, 0.3) 0%, var(--border-medium) 50%, rgba(16, 185, 129, 0.1) 100%);
       z-index: 0;
     }
 
@@ -491,48 +494,54 @@
       transition: all 0.3s ease;
     }
 
+    /* Pending node - glassmorphism hollow style */
     .node-dot {
-      width: 30px;
-      height: 30px;
+      width: 36px;
+      height: 36px;
       border-radius: 50%;
-      background: var(--surface-card);
-      border: 2px solid var(--border-medium);
+      background: rgba(255, 255, 255, 0.6);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 2px dashed rgba(16, 185, 129, 0.5);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 12px;
+      font-size: 13px;
       font-weight: 600;
       color: var(--text-muted);
       transition: all 0.3s ease;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     }
 
     .node-label {
-      font-size: 12px;
+      font-size: 11px;
       color: var(--text-muted);
       font-weight: 500;
       opacity: 0.8;
+      white-space: nowrap;
     }
 
+    /* Completed node - emerald gradient with glow */
     .timeline-node.done .node-dot {
-      background: #10B981;
-      border-color: #10B981;
+      background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+      border: 2px solid transparent;
       color: #fff;
-      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+      box-shadow: 0 4px 16px rgba(16, 185, 129, 0.4), 0 0 24px rgba(16, 185, 129, 0.2);
     }
 
     .timeline-node.done .node-label {
-      color: var(--text-title);
+      color: #059669;
       opacity: 1;
       font-weight: 600;
     }
 
     .timeline-node:hover .node-dot {
-      transform: scale(1.15);
+      transform: scale(1.12);
+      box-shadow: 0 6px 20px rgba(16, 185, 129, 0.35);
     }
 
     .timeline-node:hover .node-label {
-      color: var(--primary);
+      color: #10B981;
     }
 
     .timeline-summary {
@@ -540,7 +549,7 @@
       align-items: center;
       justify-content: center;
       gap: 3rem;
-      margin-bottom: 1rem;
+      margin-bottom: 1.5rem;
     }
 
     .summary-item {
@@ -548,10 +557,14 @@
     }
 
     .summary-val {
-      font-size: 24px;
+      font-size: 26px;
       font-weight: 700;
       color: var(--text-title);
       margin-bottom: 4px;
+      background: linear-gradient(135deg, #059669 0%, #10B981 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
 
     .summary-lbl {
@@ -4372,7 +4385,7 @@
               <!-- Project Timeline -->
               <div class="card" style="min-height: 400px; display: flex; flex-direction: column;">
                 <div class="card-header">
-                  <h3 class="card-title card-title-sm">项目全景进度 (Season 1)</h3>
+                  <h3 class="card-title card-title-sm">项目全景进度</h3>
                 </div>
                 <div class="card-body"
                   style="display: flex; flex-direction: column; justify-content: center; padding: 2rem;">
@@ -7497,31 +7510,47 @@
       if (!state.financeWiki) state.financeWiki = [];
 
       // Calculate stats
-      const totalEpisodes = 12; // Fixed goal for Season 1
-      const published = state.financeWiki.length;
+      const totalEpisodes = 12; // Fixed goal
+      const publishedItems = state.financeWiki.filter(i => i.viewRate !== null && i.viewRate !== undefined);
+      const published = publishedItems.length;
       const progressPercent = Math.min((published / totalEpisodes) * 100, 100);
 
-      const views = state.financeWiki.filter(i => i.viewRate).map(i => i.viewRate);
+      const views = publishedItems.map(i => i.viewRate);
       const avgViewRate = views.length ? (views.reduce((a, b) => a + b, 0) / views.length).toFixed(1) : '-';
 
       const downloads = state.financeWiki.filter(i => i.downloads).map(i => i.downloads);
       const totalDownloads = downloads.reduce((a, b) => a + b, 0);
 
+      // Estimated schedule: biweekly starting from 2025-10-01
+      const startDate = new Date('2025-10-01');
+      function getEstimatedDate(ep) {
+        const d = new Date(startDate);
+        d.setDate(d.getDate() + (ep - 1) * 14); // biweekly
+        return d.toISOString().split('T')[0];
+      }
+
       // Identify nodes (1 to 12)
       let nodesHtml = '';
       for (let i = 1; i <= totalEpisodes; i++) {
         const item = state.financeWiki.find(x => x.episode === i);
-        const isDone = !!item;
+        const hasData = item && (item.viewRate !== null && item.viewRate !== undefined);
 
-        let tooltip = `第 ${i} 期: 待发布`;
-        if (isDone) {
-          tooltip = `第 ${i} 期: ${item.title} (查看率: ${item.viewRate || '-'}%)`;
+        let tooltip = '';
+        let labelText = '';
+
+        if (hasData) {
+          tooltip = `第 ${i} 期: ${item.title} (查看率: ${item.viewRate}%)`;
+          labelText = item.date ? item.date.slice(5) : '已发';
+        } else {
+          const estDate = getEstimatedDate(i);
+          tooltip = `第 ${i} 期: 预计 ${estDate}`;
+          labelText = '预计 ' + estDate.slice(5);
         }
 
         nodesHtml += `
-          <div class="timeline-node ${isDone ? 'done' : ''}" title="${escapeHtml(tooltip)}" onclick="${isDone ? `openFinanceModal('${item.id}')` : ''}">
+          <div class="timeline-node ${hasData ? 'done' : ''}" title="${escapeHtml(tooltip)}" onclick="${item ? `openFinanceModal('${item.id}')` : ''}">
             <div class="node-dot">${i}</div>
-            <div class="node-label">${isDone ? (item.date ? item.date.slice(5) : '已发') : '待定'}</div>
+            <div class="node-label">${labelText}</div>
           </div>
         `;
       }
@@ -7530,7 +7559,7 @@
         <div class="timeline-container">
           <div class="timeline-summary">
             <div class="summary-item">
-              <div class="summary-val" style="color: #10B981;">${published} / ${totalEpisodes}</div>
+              <div class="summary-val">${published} / ${totalEpisodes}</div>
               <div class="summary-lbl">发布进度</div>
             </div>
             <div class="summary-item">
