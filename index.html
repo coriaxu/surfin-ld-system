@@ -4596,19 +4596,60 @@
     };
 
     window.pullFromCloud = async function () {
-      if (!syncSettings.token) {
-        showToast('请先配置云同步设置', 'error');
+      // First try to get token from input field (for new browser setup)
+      const inputToken = document.getElementById('githubTokenInput')?.value.trim();
+      const inputRepo = document.getElementById('githubRepoInput')?.value.trim();
+      const inputPath = document.getElementById('githubPathInput')?.value.trim();
+
+      // Use input values if available, otherwise fall back to saved settings
+      const token = inputToken || syncSettings.token;
+      const repo = inputRepo || syncSettings.repo;
+      const path = inputPath || syncSettings.path || 'user-data.json';
+
+      if (!token) {
+        showToast('请先填写 GitHub Token', 'error');
         return;
       }
 
       try {
         showToast('正在从云端拉取数据...', 'info');
-        const cloudData = await pullFromCloudAPI();
+
+        // Fetch data using the provided credentials
+        const response = await fetch(
+          `https://api.github.com/repos/${repo}/contents/${path}`,
+          {
+            headers: {
+              'Authorization': `token ${token}`,
+              'Accept': 'application/vnd.github.v3+json'
+            }
+          }
+        );
+
+        if (!response.ok) {
+          if (response.status === 404) {
+            throw new Error('云端暂无数据');
+          } else if (response.status === 401) {
+            throw new Error('Token 无效或已过期');
+          }
+          throw new Error('拉取失败');
+        }
+
+        const fileData = await response.json();
+        const content = decodeURIComponent(escape(atob(fileData.content)));
+        const cloudData = JSON.parse(content);
 
         // Apply cloud data
         applyImportedState(cloudData);
         originalPersist(); // Use original to avoid triggering sync
         localStorage.setItem(STORAGE_KEY + '_version', String(DATA_VERSION));
+
+        // Save the sync settings so future syncs work automatically
+        syncSettings.token = token;
+        syncSettings.repo = repo;
+        syncSettings.path = path;
+        syncSettings.enabled = true;
+        syncSettings.lastSync = new Date().toISOString();
+        localStorage.setItem(SYNC_SETTINGS_KEY, JSON.stringify(syncSettings));
 
         showToast('已从云端恢复数据，页面将刷新', 'success');
         setTimeout(() => location.reload(), 1500);
