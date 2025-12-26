@@ -3133,44 +3133,52 @@
       font-weight: 500;
       letter-spacing: 0.5px;
       transition: all 0.2s;
+      /* 强制居中 */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border: none;
     }
 
-    /* 取消按钮 - 幽灵风格 */
+    /* 取消按钮 - 浅灰实心 */
     .modal-content.fin-modal .btn-secondary {
-      background: transparent;
-      border: 1px solid var(--fin-border);
-      color: var(--fin-text-sub);
+      background: #F1F5F9;
+      /* Slate 100 */
+      color: #475569;
+      /* Slate 600 */
+      border: 1px solid transparent;
     }
 
     .modal-content.fin-modal .btn-secondary:hover {
-      background: var(--fin-hover);
-      color: var(--fin-text-main);
-      border-color: #cbd5e1;
+      background: #E2E8F0;
+      /* Slate 200 */
+      color: #1E293B;
     }
 
     /* 删除按钮 - 柔和红 */
     .modal-content.fin-modal .btn-delete {
       background: #FEE2E2;
       color: #EF4444;
-      border: 1px solid #FECACA;
+      border: 1px solid transparent;
     }
 
     .modal-content.fin-modal .btn-delete:hover {
       background: #FECACA;
     }
 
-    /* 保存按钮 - 强呼吸感 */
+    /* 保存按钮 - 草绿色 */
     .modal-content.fin-modal .btn-primary {
-      background: #1E293B;
-      /* 深色主按钮 */
+      background: #10B981;
+      /* Emerald 500 - 草绿 */
       color: white;
-      box-shadow: 0 4px 12px rgba(30, 41, 59, 0.2);
+      box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.25);
     }
 
     .modal-content.fin-modal .btn-primary:hover {
-      background: #0F172A;
+      background: #059669;
+      /* Emerald 600 */
       transform: translateY(-1px);
-      box-shadow: 0 6px 16px rgba(15, 23, 42, 0.3);
+      box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.35);
     }
   </style>
 </head>
