@@ -281,28 +281,7 @@
       "note": ""
     }
   ],
-  "aiShares": [
-    {
-      "id": "rt8uuyen",
-      "episode": 12,
-      "date": "2024-12-10",
-      "title": "AI 提示词工程实战",
-      "attendees": 45,
-      "total": 320,
-      "duration": 60,
-      "note": ""
-    },
-    {
-      "id": "1dfksvqo",
-      "episode": 11,
-      "date": "2024-11-12",
-      "title": "ChatGPT 高级技巧",
-      "attendees": 52,
-      "total": 315,
-      "duration": 45,
-      "note": ""
-    }
-  ],
+  "aiShares": [],
   "aiStationTitles": {
     "85": "港大'幽灵引用'论文撤稿、导师卸任：比AI幻觉更危险的是人类放弃自查"
   },
