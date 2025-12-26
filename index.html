@@ -2977,17 +2977,27 @@
       /* Indigo 500 */
     }
 
-    /* 已完成栏：卡片变窄50%，双列排布 */
+    /* 已完成栏：占满剩余空间，卡片双列排布 */
+    .kanban-column[data-stage="data"] {
+      flex: 1 1 auto !important;
+      /* 占满剩余空间 */
+      min-width: 280px;
+      max-width: 100%;
+    }
+
     #finCards-data {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
+      display: flex !important;
+      flex-wrap: wrap !important;
+      gap: 8px !important;
+      align-content: flex-start;
     }
 
     #finCards-data .kanban-card {
-      width: calc(50% - 3px);
-      min-width: 0;
-      padding: 8px;
+      flex: 0 0 calc(50% - 4px) !important;
+      /* 双列 */
+      max-width: calc(50% - 4px) !important;
+      min-width: 120px;
+      padding: 10px !important;
     }
 
     #finCards-data .kanban-card-ep {
@@ -3004,9 +3014,9 @@
       /* 已完成的日期不重要，隐藏 */
     }
 
-    /* 看板容器：去掉右侧空白，靠左对齐 */
+    /* 看板容器：占满宽度，去掉右侧空白 */
     .kanban-board {
-      justify-content: flex-start;
+      width: 100% !important;
     }
 
     .kanban-column {
