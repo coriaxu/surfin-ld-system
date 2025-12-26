@@ -1,6 +1,44 @@
 {
-  "sessions": [],
-  "budgets": [],
+  "sessions": [
+    {
+      "id": "kqdwlix8",
+      "date": "2024-08-12",
+      "course": "安全规范",
+      "project": "项目 Alpha",
+      "lecturer": "王工",
+      "people": 15,
+      "duration": 1.5,
+      "note": "设备安全"
+    },
+    {
+      "id": "wauqqfqc",
+      "date": "2024-08-05",
+      "course": "新员工入职",
+      "project": "总部培训",
+      "lecturer": "刘老师",
+      "people": 20,
+      "duration": 2,
+      "note": "流程介绍"
+    }
+  ],
+  "budgets": [
+    {
+      "id": "wd3yzklf",
+      "month": "2024-08",
+      "type": "regular",
+      "amount": 15000,
+      "spent": 6200,
+      "note": "月度常规培训"
+    },
+    {
+      "id": "d3avcho5",
+      "month": "2024-08",
+      "type": "special",
+      "amount": 8000,
+      "spent": 4500,
+      "note": "专项技术提升"
+    }
+  ],
   "aiStations": [
     {
       "id": "ep23",
@@ -477,174 +515,6 @@
   ],
   "currentStationEpisode": 85,
   "currentShareEpisode": 13,
-  "financeWiki": [
-    {
-      "id": "fin01",
-      "episode": 1,
-      "season": "stablecoin",
-      "title": "为什么会有稳定币：全球结算的老问题",
-      "date": "2025-10-01",
-      "unread": 26,
-      "read": 317,
-      "viewRate": 92.4,
-      "downloads": 12,
-      "downloadRate": 3.5,
-      "workflow": {
-        "topic": true,
-        "draft": true,
-        "ppt": true,
-        "video": true,
-        "review": true,
-        "publish": true,
-        "data": true
-      }
-    },
-    {
-      "id": "fin02",
-      "episode": 2,
-      "season": "stablecoin",
-      "title": "区块链：稳定币的'硬核地基'",
-      "date": "2025-10-15",
-      "unread": 16,
-      "read": 327,
-      "viewRate": 95.3,
-      "downloads": 0,
-      "downloadRate": 0,
-      "workflow": {
-        "topic": true,
-        "draft": true,
-        "ppt": true,
-        "video": true,
-        "review": true,
-        "publish": true,
-        "data": true
-      }
-    },
-    {
-      "id": "fin03",
-      "episode": 3,
-      "season": "stablecoin",
-      "title": "稳定币怎么'稳'：美元霸权的数字延伸",
-      "date": "2025-11-01",
-      "unread": 33,
-      "read": 310,
-      "viewRate": 90.4,
-      "downloads": 8,
-      "downloadRate": 2.3,
-      "workflow": {
-        "topic": true,
-        "draft": true,
-        "ppt": true,
-        "video": true,
-        "review": true,
-        "publish": true,
-        "data": true
-      }
-    },
-    {
-      "id": "fin04",
-      "episode": 4,
-      "season": "stablecoin",
-      "title": "两场真实崩盘：为什么'稳定'币也会暴雷",
-      "date": "2025-11-15",
-      "unread": 40,
-      "read": 303,
-      "viewRate": 88.3,
-      "downloads": 13,
-      "downloadRate": 3.8,
-      "workflow": {
-        "topic": true,
-        "draft": true,
-        "ppt": true,
-        "video": true,
-        "review": true,
-        "publish": true,
-        "data": true
-      }
-    },
-    {
-      "id": "fin05",
-      "episode": 5,
-      "season": "stablecoin",
-      "title": "美国联邦框架_GENIUS_Act讲了什么",
-      "date": "2025-12-01",
-      "unread": 26,
-      "read": 317,
-      "viewRate": 92.4,
-      "downloads": 21,
-      "downloadRate": 6.1,
-      "workflow": {
-        "topic": true,
-        "draft": true,
-        "ppt": true,
-        "video": true,
-        "review": true,
-        "publish": true,
-        "data": true
-      }
-    },
-    {
-      "id": "fin06",
-      "episode": 6,
-      "season": "stablecoin",
-      "title": "香港路径-牌照、审慎与节奏管理",
-      "date": "2025-12-15",
-      "unread": 44,
-      "read": 299,
-      "viewRate": 87.2,
-      "downloads": 15,
-      "downloadRate": 4.4,
-      "workflow": {
-        "topic": true,
-        "draft": true,
-        "ppt": true,
-        "video": true,
-        "review": true,
-        "publish": true,
-        "data": true
-      }
-    },
-    {
-      "id": "fin07",
-      "episode": 7,
-      "season": "stablecoin",
-      "title": "全球合规共性：FATF旅行规则与风控基线",
-      "date": "",
-      "unread": null,
-      "read": null,
-      "viewRate": null,
-      "downloads": null,
-      "downloadRate": null,
-      "workflow": {
-        "topic": true,
-        "draft": true,
-        "ppt": false,
-        "video": false,
-        "review": false,
-        "publish": false,
-        "data": false
-      }
-    },
-    {
-      "id": "fin08",
-      "episode": 8,
-      "season": "stablecoin",
-      "title": "跨境支付与清算",
-      "date": "",
-      "unread": null,
-      "read": null,
-      "viewRate": null,
-      "downloads": null,
-      "downloadRate": null,
-      "workflow": {
-        "topic": true,
-        "draft": false,
-        "ppt": false,
-        "video": false,
-        "review": false,
-        "publish": false,
-        "data": false
-      }
-    }
-  ]
+  "financeWiki": [],
+  "currentFinanceEpisode": null
 }
