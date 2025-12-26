@@ -4283,6 +4283,28 @@
     };
 
     async function loadRemoteData() {
+      // First, try to load from cloud (user-data.json via raw.githubusercontent.com)
+      // This allows all visitors to see the latest synced data without needing a Token
+      try {
+        const cloudUrl = 'https://raw.githubusercontent.com/coriaxu/surfin-ld-system/main/user-data.json';
+        const cloudResponse = await fetch(cloudUrl + '?t=' + Date.now(), { cache: 'no-store' });
+        if (cloudResponse.ok) {
+          const cloudData = await cloudResponse.json();
+          const hasCloudPayload = ['sessions', 'budgets', 'aiStations', 'aiShares', 'aiStationTasks', 'aiShareTasks']
+            .some(key => Array.isArray(cloudData[key]));
+          if (hasCloudPayload) {
+            console.log('✅ 已从云端加载最新数据');
+            applyImportedState(cloudData);
+            persist();
+            localStorage.setItem(STORAGE_KEY + '_version', String(DATA_VERSION));
+            return true;
+          }
+        }
+      } catch (err) {
+        console.log('云端数据加载失败，尝试本地 data.json');
+      }
+
+      // Fallback: try local data.json
       try {
         const response = await fetch(`data.json?v=${DATA_VERSION}`, { cache: 'no-store' });
         if (!response.ok) return false;
@@ -4309,14 +4331,16 @@
     async function initData() {
       const raw = localStorage.getItem(STORAGE_KEY);
       const savedVersion = localStorage.getItem(STORAGE_KEY + '_version');
+      const syncConfig = JSON.parse(localStorage.getItem('surfin_sync_settings') || 'null');
+      const isAdmin = syncConfig && syncConfig.enabled && syncConfig.token;
 
-      if (raw && savedVersion === String(DATA_VERSION)) {
+      // For admins with sync enabled, use local cache (they have the latest data)
+      if (isAdmin && raw && savedVersion === String(DATA_VERSION)) {
         try {
           const localData = JSON.parse(raw);
           const hasLocalPayload = ['sessions', 'budgets', 'aiStations', 'aiShares', 'aiStationTasks', 'aiShareTasks']
             .some(key => Array.isArray(localData[key]) && localData[key].length > 0);
           if (hasLocalPayload) {
-            // 版本号匹配且有内容，使用本地缓存数据
             Object.assign(state, localData);
             if (!state.aiStationTitles || typeof state.aiStationTitles !== 'object') state.aiStationTitles = {};
             if (!state.aiShareTitles || typeof state.aiShareTitles !== 'object') state.aiShareTitles = {};
@@ -4327,8 +4351,24 @@
         }
       }
 
+      // For visitors (non-admin), always try to load from cloud first
+      // This ensures they see the latest synced data
       const loaded = await loadRemoteData();
-      if (!loaded) seedDefaultData();
+      if (!loaded) {
+        // If cloud load failed, try using local cache as fallback
+        if (raw && savedVersion === String(DATA_VERSION)) {
+          try {
+            const localData = JSON.parse(raw);
+            Object.assign(state, localData);
+            if (!state.aiStationTitles || typeof state.aiStationTitles !== 'object') state.aiStationTitles = {};
+            if (!state.aiShareTitles || typeof state.aiShareTitles !== 'object') state.aiShareTitles = {};
+            return;
+          } catch (err) {
+            // ignore
+          }
+        }
+        seedDefaultData();
+      }
     }
 
 
