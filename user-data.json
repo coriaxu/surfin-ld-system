@@ -656,11 +656,12 @@
       "workflow": {
         "topic": true,
         "draft": true,
-        "ppt": false,
+        "ppt": true,
         "video": false,
         "review": false,
         "publish": false,
-        "data": false
+        "data": false,
+        "copy": false
       }
     },
     {
@@ -676,12 +677,13 @@
       "downloadRate": null,
       "workflow": {
         "topic": true,
-        "draft": true,
+        "draft": false,
         "ppt": false,
         "video": false,
         "review": false,
         "publish": false,
-        "data": false
+        "data": false,
+        "copy": false
       }
     },
     {
