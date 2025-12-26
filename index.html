@@ -4369,22 +4369,14 @@
                   <canvas id="financeTrendChart"></canvas>
                 </div>
               </div>
-              <!-- Heatmap -->
-              <div class="card" style="min-height: 400px;">
+              <!-- Project Timeline -->
+              <div class="card" style="min-height: 400px; display: flex; flex-direction: column;">
                 <div class="card-header">
-                  <h3 class="card-title card-title-sm">
-                    <span>发布热力图</span>
-                    <select id="financeHeatmapYear" class="select-sm" onchange="renderFinanceHeatmap()"></select>
-                  </h3>
+                  <h3 class="card-title card-title-sm">项目全景进度 (Season 1)</h3>
                 </div>
-                <div class="card-body">
-                  <div class="heatmap-container" id="financeHeatmap"></div>
-                  <div class="heatmap-legend">
-                    <span class="heatmap-legend-label">Less</span>
-                    <span class="heatmap-legend-item" style="background:#ebedf0"></span>
-                    <span class="heatmap-legend-item" style="background:#40c463"></span>
-                    <span class="heatmap-legend-label">More</span>
-                  </div>
+                <div class="card-body"
+                  style="display: flex; flex-direction: column; justify-content: center; padding: 2rem;">
+                  <div id="financeTimeline"></div>
                 </div>
               </div>
             </div>
