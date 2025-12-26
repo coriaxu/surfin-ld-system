@@ -635,7 +635,7 @@
       "episode": 6,
       "season": "stablecoin",
       "title": "香港路径-牌照、审慎与节奏管理",
-      "date": "2025-12-15",
+      "date": "2025-12-22",
       "unread": 44,
       "read": 299,
       "viewRate": 87.2,
@@ -650,7 +650,9 @@
         "publish": true,
         "data": false,
         "copy": true
-      }
+      },
+      "total": 260,
+      "note": ""
     },
     {
       "id": "fin07",
@@ -710,5 +712,5 @@
       "project": "Stablecoin 101"
     }
   ],
-  "currentFinanceEpisode": "fin02"
+  "currentFinanceEpisode": "fin06"
 }
