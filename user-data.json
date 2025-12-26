@@ -1,0 +1,520 @@
+{
+  "sessions": [
+    {
+      "id": "kqdwlix8",
+      "date": "2024-08-12",
+      "course": "安全规范",
+      "project": "项目 Alpha",
+      "lecturer": "王工",
+      "people": 15,
+      "duration": 1.5,
+      "note": "设备安全"
+    },
+    {
+      "id": "wauqqfqc",
+      "date": "2024-08-05",
+      "course": "新员工入职",
+      "project": "总部培训",
+      "lecturer": "刘老师",
+      "people": 20,
+      "duration": 2,
+      "note": "流程介绍"
+    }
+  ],
+  "budgets": [
+    {
+      "id": "wd3yzklf",
+      "month": "2024-08",
+      "type": "regular",
+      "amount": 15000,
+      "spent": 6200,
+      "note": "月度常规培训"
+    },
+    {
+      "id": "d3avcho5",
+      "month": "2024-08",
+      "type": "special",
+      "amount": 8000,
+      "spent": 4500,
+      "note": "专项技术提升"
+    }
+  ],
+  "aiStations": [
+    {
+      "id": "ep23",
+      "episode": 23,
+      "date": "2024-08-01",
+      "title": "我被Gamma圈粉的八大亮点功能，绝对是 AI PPT 领域首选产品",
+      "views": 247,
+      "total": 260,
+      "category": "tool",
+      "note": ""
+    },
+    {
+      "id": "ep22",
+      "episode": 22,
+      "date": "2024-07-31",
+      "title": "OpenAI 发布 AI 搜索产品，有两大亮点不够惊艳",
+      "views": 238,
+      "total": 260,
+      "category": "news",
+      "note": ""
+    },
+    {
+      "id": "ep21",
+      "episode": 21,
+      "date": "2024-07-30",
+      "title": "两辆自动驾驶跑车展示《速度与激情》，AI 学会飘移只为一个极端场景",
+      "views": 230,
+      "total": 260,
+      "category": "news",
+      "note": ""
+    },
+    {
+      "id": "ep20",
+      "episode": 20,
+      "date": "2024-07-29",
+      "title": "AI 大神卡帕西公开神秘创业项目，专注 AI+教育，打造 AI原生学校",
+      "views": 251,
+      "total": 260,
+      "category": "news",
+      "note": ""
+    },
+    {
+      "id": "ep19",
+      "episode": 19,
+      "date": "2024-07-26",
+      "title": "日本总务省发布 AI白皮书：中国 AI 使用率领先全球，个人和企业都在用",
+      "views": 240,
+      "total": 260,
+      "category": "report",
+      "note": ""
+    },
+    {
+      "id": "ep18",
+      "episode": 18,
+      "date": "2024-07-25",
+      "title": "李飞飞自传《我看见的世界》，体验一次奇妙的阅读体验",
+      "views": 238,
+      "total": 260,
+      "category": "book",
+      "note": ""
+    },
+    {
+      "id": "ep17",
+      "episode": 17,
+      "date": "2024-07-24",
+      "title": "陈坤指导首部 AI 短剧《山海奇境之劈波斩浪》上映，分享 3 点观剧感受",
+      "views": 238,
+      "total": 260,
+      "category": "news",
+      "note": ""
+    },
+    {
+      "id": "ep16",
+      "episode": 16,
+      "date": "2024-07-23",
+      "title": "AI 投资人张津剑：三个关键词找到 AI 时代的机会信号",
+      "views": 239,
+      "total": 260,
+      "category": "news",
+      "note": ""
+    },
+    {
+      "id": "ep15",
+      "episode": 15,
+      "date": "2024-07-22",
+      "title": "OpenAI 发论文拿小学数学题开刀，AI 自问自答左右互搏攻防战",
+      "views": 244,
+      "total": 260,
+      "category": "paper",
+      "note": ""
+    },
+    {
+      "id": "ep14",
+      "episode": 14,
+      "date": "2024-07-19",
+      "title": "眼见不再为实？研究称仅六成用户能分清 AI 作品与人类作品",
+      "views": 240,
+      "total": 260,
+      "category": "report",
+      "note": ""
+    },
+    {
+      "id": "ep13",
+      "episode": 13,
+      "date": "2024-07-18",
+      "title": "畅想人形机器人的未来，这件事你必须知道",
+      "views": 234,
+      "total": 260,
+      "category": "news",
+      "note": ""
+    },
+    {
+      "id": "ep12",
+      "episode": 12,
+      "date": "2024-07-17",
+      "title": "OpenAI 内部推出 AI 能力五级模型，推理能力提升到底能给我们带来什么？",
+      "views": 199,
+      "total": 260,
+      "category": "news",
+      "note": ""
+    },
+    {
+      "id": "ep11",
+      "episode": 11,
+      "date": "2024-07-16",
+      "title": "萝卜快跑无人驾驶会是个抢人类饭碗的开始吗？",
+      "views": 245,
+      "total": 260,
+      "category": "news",
+      "note": ""
+    },
+    {
+      "id": "ep10",
+      "episode": 10,
+      "date": "2024-07-15",
+      "title": "中国 AI 教育类产品很能打，真题对比实测九章大模型和 GPT4o",
+      "views": 238,
+      "total": 260,
+      "category": "tool",
+      "note": ""
+    },
+    {
+      "id": "ep09",
+      "episode": 9,
+      "date": "2024-07-12",
+      "title": "AI 如何融入教育？看 MagicSchool深度定制教学场景",
+      "views": 248,
+      "total": 260,
+      "category": "tool",
+      "note": ""
+    },
+    {
+      "id": "ep08",
+      "episode": 8,
+      "date": "2024-07-11",
+      "title": "Kimi官方发布的浏览器插件！不完美但依旧值得推荐！",
+      "views": 250,
+      "total": 260,
+      "category": "tool",
+      "note": ""
+    },
+    {
+      "id": "ep07",
+      "episode": 7,
+      "date": "2024-07-10",
+      "title": "快手可灵 AI 生成视频五大特色让它成为 Sora 杀手",
+      "views": 227,
+      "total": 260,
+      "category": "tool",
+      "note": ""
+    },
+    {
+      "id": "ep06",
+      "episode": 6,
+      "date": "2024-07-09",
+      "title": "清华团队构建 AI 版主题医院，准确率达 93%",
+      "views": 236,
+      "total": 260,
+      "category": "paper",
+      "note": ""
+    },
+    {
+      "id": "ep05",
+      "episode": 5,
+      "date": "2024-07-08",
+      "title": "如何让机器人陪伴孤独老人",
+      "views": 230,
+      "total": 260,
+      "category": "news",
+      "note": ""
+    },
+    {
+      "id": "ep04",
+      "episode": 4,
+      "date": "2024-07-05",
+      "title": "2024 年全球最急需的 9 大技能",
+      "views": 250,
+      "total": 260,
+      "category": "report",
+      "note": ""
+    },
+    {
+      "id": "ep03",
+      "episode": 3,
+      "date": "2024-07-04",
+      "title": "设计软件 Figma 带来重大更新",
+      "views": 220,
+      "total": 260,
+      "category": "tool",
+      "note": ""
+    },
+    {
+      "id": "ep02",
+      "episode": 2,
+      "date": "2024-07-03",
+      "title": "麦当劳将关闭AI语音点餐系统",
+      "views": 236,
+      "total": 260,
+      "category": "news",
+      "note": ""
+    },
+    {
+      "id": "ep01",
+      "episode": 1,
+      "date": "2024-07-02",
+      "title": "推荐国产好用的垂直 AI 搜索引擎",
+      "views": 232,
+      "total": 260,
+      "category": "tool",
+      "note": ""
+    },
+    {
+      "id": "ep00",
+      "episode": 0,
+      "date": "2024-07-01",
+      "title": "Surfin AI 广播站发刊词",
+      "views": 230,
+      "total": 260,
+      "category": "news",
+      "note": ""
+    }
+  ],
+  "aiShares": [
+    {
+      "id": "rt8uuyen",
+      "episode": 12,
+      "date": "2024-12-10",
+      "title": "AI 提示词工程实战",
+      "attendees": 45,
+      "total": 320,
+      "duration": 60,
+      "note": ""
+    },
+    {
+      "id": "1dfksvqo",
+      "episode": 11,
+      "date": "2024-11-12",
+      "title": "ChatGPT 高级技巧",
+      "attendees": 52,
+      "total": 315,
+      "duration": 45,
+      "note": ""
+    }
+  ],
+  "aiStationTitles": {
+    "85": "港大'幽灵引用'论文撤稿、导师卸任：比AI幻觉更危险的是人类放弃自查"
+  },
+  "aiShareTitles": {},
+  "aiStationTasks": [
+    {
+      "id": "vw89gvsa",
+      "episode": 24,
+      "name": "选题确定",
+      "done": false
+    },
+    {
+      "id": "oye2r1ie",
+      "episode": 24,
+      "name": "内容撰写",
+      "done": false
+    },
+    {
+      "id": "czl23emm",
+      "episode": 24,
+      "name": "制作发布",
+      "done": false
+    },
+    {
+      "id": "yovpcg9z",
+      "episode": 24,
+      "name": "数据回收",
+      "done": false
+    },
+    {
+      "id": "gnjpn33s",
+      "episode": 85,
+      "name": "选题确定",
+      "done": true
+    },
+    {
+      "id": "gkk9xhpz",
+      "episode": 85,
+      "name": "内容撰写",
+      "done": true
+    },
+    {
+      "id": "t1hiz7qb",
+      "episode": 85,
+      "name": "制作发布",
+      "done": false
+    },
+    {
+      "id": "f7cefqk6",
+      "episode": 85,
+      "name": "数据回收",
+      "done": false
+    },
+    {
+      "id": "pntiilqp",
+      "episode": 85,
+      "name": "飞书归档同步",
+      "stage": "sync",
+      "tool": "飞书文档",
+      "output": "归档记录",
+      "detail": "版本一致",
+      "owner": "归档",
+      "done": true
+    },
+    {
+      "id": "cwoa1ppa",
+      "episode": 85,
+      "name": "视觉海报制作",
+      "stage": "produce",
+      "tool": "Gemini",
+      "output": "海报/封面",
+      "detail": "主视觉",
+      "owner": "设计",
+      "done": false
+    },
+    {
+      "id": "cz58ku8c",
+      "episode": 85,
+      "name": "AI 播客制作",
+      "stage": "produce",
+      "tool": "豆包",
+      "output": "播客",
+      "detail": "音频成品",
+      "owner": "剪辑",
+      "done": false
+    },
+    {
+      "id": "ldj5yzpb",
+      "episode": 85,
+      "name": "全球 AI 新闻撰写",
+      "stage": "assemble",
+      "tool": "钉钉文档",
+      "output": "新闻区块",
+      "detail": "嵌入广播站",
+      "owner": "内容",
+      "done": false
+    },
+    {
+      "id": "cb4en1hk",
+      "episode": 85,
+      "name": "发刊词撰写",
+      "stage": "assemble",
+      "tool": "钉钉文档",
+      "output": "发刊词",
+      "detail": "开场引导",
+      "owner": "内容",
+      "done": false
+    },
+    {
+      "id": "u0hp7fgr",
+      "episode": 85,
+      "name": "复盘与改进",
+      "stage": "review",
+      "tool": "复盘模板",
+      "output": "优化清单",
+      "detail": "沉淀经验",
+      "owner": "复盘",
+      "done": false
+    }
+  ],
+  "aiShareTasks": [
+    {
+      "id": "rn0gocqg",
+      "episode": 13,
+      "name": "主题确定",
+      "stage": "theme",
+      "tool": "需求对齐",
+      "output": "主题&目标",
+      "detail": "明确人群",
+      "owner": "",
+      "done": false
+    },
+    {
+      "id": "rxm3loja",
+      "episode": 13,
+      "name": "课程开发",
+      "stage": "dev",
+      "tool": "PPT/脚本",
+      "output": "课件",
+      "detail": "内容开发",
+      "owner": "",
+      "done": false
+    },
+    {
+      "id": "2pbrh8al",
+      "episode": 13,
+      "name": "宣发物料",
+      "stage": "material",
+      "tool": "设计/文案",
+      "output": "海报/二维码",
+      "detail": "物料准备",
+      "owner": "",
+      "done": false
+    },
+    {
+      "id": "uz94067p",
+      "episode": 13,
+      "name": "首轮通知",
+      "stage": "notify1",
+      "tool": "钉钉/飞书",
+      "output": "通知已发",
+      "detail": "周五预告",
+      "owner": "",
+      "done": false
+    },
+    {
+      "id": "g6elv6q4",
+      "episode": 13,
+      "name": "二轮通知",
+      "stage": "notify2",
+      "tool": "钉钉/飞书",
+      "output": "名单确认",
+      "detail": "周二/三确认",
+      "owner": "",
+      "done": false
+    },
+    {
+      "id": "m7nbph5s",
+      "episode": 13,
+      "name": "建群倒计时",
+      "stage": "group",
+      "tool": "社群运营",
+      "output": "群/倒计时",
+      "detail": "氛围营造",
+      "owner": "",
+      "done": false
+    },
+    {
+      "id": "2qzd2zx1",
+      "episode": 13,
+      "name": "培训执行",
+      "stage": "execute",
+      "tool": "线下/直播",
+      "output": "培训完成",
+      "detail": "控场/录制",
+      "owner": "",
+      "done": false
+    },
+    {
+      "id": "kb5vdvg1",
+      "episode": 13,
+      "name": "数据归档",
+      "stage": "archive",
+      "tool": "档案库",
+      "output": "归档记录",
+      "detail": "人数/资料",
+      "owner": "",
+      "done": false
+    }
+  ],
+  "currentStationEpisode": 85,
+  "currentShareEpisode": 13,
+  "financeWiki": [],
+  "currentFinanceEpisode": null
+}
