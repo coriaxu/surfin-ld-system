@@ -685,11 +685,11 @@
         "topic": true,
         "draft": true,
         "ppt": true,
-        "video": false,
+        "video": true,
         "review": false,
-        "publish": false,
+        "publish": true,
         "data": false,
-        "copy": false
+        "copy": true
       }
     },
     {
