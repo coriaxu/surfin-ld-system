@@ -701,9 +701,16 @@
       "views": 0,
       "total": 260,
       "workflow": {
-        "draft": false
+        "draft": false,
+        "topic": true,
+        "ppt": false,
+        "video": false,
+        "copy": false,
+        "publish": false,
+        "data": false
       },
       "project": "Stablecoin 101"
     }
-  ]
+  ],
+  "currentFinanceEpisode": "fuzfjc2g"
 }
