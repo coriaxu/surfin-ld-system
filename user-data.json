@@ -683,8 +683,8 @@
       "downloadRate": null,
       "workflow": {
         "topic": true,
-        "draft": false,
-        "ppt": false,
+        "draft": true,
+        "ppt": true,
         "video": false,
         "review": false,
         "publish": false,
