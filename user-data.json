@@ -613,7 +613,7 @@
       "episode": 5,
       "season": "stablecoin",
       "title": "美国联邦框架_GENIUS_Act讲了什么",
-      "date": "2025-12-01",
+      "date": "2025-12-13",
       "unread": 26,
       "read": 317,
       "viewRate": 92.4,
@@ -628,7 +628,9 @@
         "publish": true,
         "data": false,
         "copy": true
-      }
+      },
+      "total": 260,
+      "note": ""
     },
     {
       "id": "fin06",
@@ -712,5 +714,5 @@
       "project": "Stablecoin 101"
     }
   ],
-  "currentFinanceEpisode": "fin06"
+  "currentFinanceEpisode": "fin05"
 }
