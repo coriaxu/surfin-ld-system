@@ -667,7 +667,13 @@
       "views": 0,
       "total": 260,
       "workflow": {
-        "draft": false
+        "draft": true,
+        "topic": true,
+        "ppt": true,
+        "video": true,
+        "copy": false,
+        "publish": false,
+        "data": false
       },
       "project": "Stablecoin 101"
     }
