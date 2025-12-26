@@ -7533,22 +7533,29 @@
       let nodesHtml = '';
       for (let i = 1; i <= totalEpisodes; i++) {
         const item = state.financeWiki.find(x => x.episode === i);
-        const hasData = item && (item.viewRate !== null && item.viewRate !== undefined);
+        const hasViewRate = item && (item.viewRate !== null && item.viewRate !== undefined);
 
         let tooltip = '';
         let labelText = '';
 
-        if (hasData) {
-          tooltip = `第 ${i} 期: ${item.title} (查看率: ${item.viewRate}%)`;
-          labelText = item.date ? item.date.slice(5) : '已发';
+        if (item) {
+          // Item exists - use actual data
+          if (hasViewRate) {
+            tooltip = `第 ${i} 期: ${item.title} (查看率: ${item.viewRate}%)`;
+          } else {
+            tooltip = `第 ${i} 期: ${item.title || '待填写主题'}`;
+          }
+          // Display actual date if set, otherwise show "待定"
+          labelText = item.date ? item.date.slice(5) : '待定';
         } else {
+          // Item doesn't exist - show estimated date
           const estDate = getEstimatedDate(i);
           tooltip = `第 ${i} 期: 预计 ${estDate}`;
           labelText = '预计 ' + estDate.slice(5);
         }
 
         nodesHtml += `
-          <div class="timeline-node ${hasData ? 'done' : ''}" title="${escapeHtml(tooltip)}" onclick="${item ? `openFinanceModal('${item.id}')` : ''}">
+          <div class="timeline-node ${hasViewRate ? 'done' : ''}" title="${escapeHtml(tooltip)}" onclick="${item ? `openFinanceModal('${item.id}')` : ''}">
             <div class="node-dot">${i}</div>
             <div class="node-label">${labelText}</div>
           </div>
