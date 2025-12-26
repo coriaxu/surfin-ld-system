@@ -2977,50 +2977,60 @@
       /* Indigo 500 */
     }
 
-    /* 已完成栏：占满剩余空间，卡片双列排布 */
-    .kanban-column[data-stage="data"] {
-      flex: 1 1 auto !important;
-      /* 占满剩余空间 */
-      min-width: 280px;
-      max-width: 100%;
-    }
+    /* ===== 已完成栏：极致紧凑列表样式 ===== */
 
+    /* 已完成栏的卡片：压缩成紧凑列表项 */
     #finCards-data {
-      display: flex !important;
-      flex-wrap: wrap !important;
-      gap: 8px !important;
-      align-content: flex-start;
+      gap: 4px !important;
+      /* 卡片间距缩小 */
     }
 
     #finCards-data .kanban-card {
-      flex: 0 0 calc(50% - 4px) !important;
-      /* 双列 */
-      max-width: calc(50% - 4px) !important;
-      min-width: 120px;
-      padding: 10px !important;
+      padding: 6px 10px !important;
+      /* 极小内边距 */
+      border-radius: 6px;
     }
 
     #finCards-data .kanban-card-ep {
-      font-size: 0.75rem;
+      font-size: 0.7rem;
+      margin-bottom: 1px !important;
+      /* 期数和标题紧贴 */
     }
 
     #finCards-data .kanban-card-title {
       font-size: 0.8rem;
+      line-height: 1.2;
       -webkit-line-clamp: 1;
     }
 
+    /* 空日期隐藏，不占位置 */
+    #finCards-data .kanban-card-date:empty,
+    #finCards-data .kanban-card-date[data-empty="true"] {
+      display: none !important;
+    }
+
     #finCards-data .kanban-card-date {
-      display: none;
-      /* 已完成的日期不重要，隐藏 */
+      margin-top: 2px;
+      font-size: 0.65rem;
     }
 
-    /* 看板容器：占满宽度，去掉右侧空白 */
+    /* ===== 修复右侧空白 ===== */
+
+    /* 看板容器：紧凑布局，去掉多余padding */
     .kanban-board {
-      width: 100% !important;
+      padding-right: 16px !important;
+      /* 只保留小边距 */
     }
 
-    .kanban-column {
-      flex-shrink: 0;
+    /* 已完成列：不要自动撑大，保持固定宽度 */
+    .kanban-column[data-stage="data"] {
+      flex: 0 0 280px !important;
+      /* 恢复固定宽度 */
+    }
+
+    /* 确保容器不会有隐形占位 */
+    .kanban-column:last-child {
+      margin-right: 0 !important;
     }
 
     /* Finance Modal - 浅色弹窗 */
@@ -7105,7 +7115,7 @@
                  ondragend="financeDragEnd(event)">
               <div class="kanban-card-ep">第 ${item.episode} 期</div>
               <div class="kanban-card-title">${escapeHtml(item.title)}</div>
-              <div class="kanban-card-date">${item.date || '--'}</div>
+              ${item.date ? `<div class="kanban-card-date">${item.date}</div>` : ''}
             </div>
           `).join('');
         }
