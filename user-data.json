@@ -689,7 +689,7 @@
         "review": false,
         "publish": false,
         "data": false,
-        "copy": true
+        "copy": false
       }
     },
     {
