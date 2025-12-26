@@ -2698,9 +2698,9 @@
       overflow-x: auto;
       padding-bottom: 1rem;
       min-height: 400px;
-      /* Scrollbar Styling */
+      /* Scrollbar Styling - High Contrast */
       scrollbar-width: thin;
-      scrollbar-color: rgba(0, 0, 0, 0.2) rgba(0, 0, 0, 0.05);
+      scrollbar-color: rgba(255, 255, 255, 0.4) rgba(255, 255, 255, 0.05);
     }
 
     .kanban-board::-webkit-scrollbar {
@@ -2708,17 +2708,17 @@
     }
 
     .kanban-board::-webkit-scrollbar-track {
-      background: rgba(0, 0, 0, 0.05);
+      background: rgba(255, 255, 255, 0.05);
       border-radius: 4px;
     }
 
     .kanban-board::-webkit-scrollbar-thumb {
-      background: rgba(0, 0, 0, 0.2);
+      background: rgba(255, 255, 255, 0.35);
       border-radius: 4px;
     }
 
     .kanban-board::-webkit-scrollbar-thumb:hover {
-      background: rgba(0, 0, 0, 0.3);
+      background: rgba(255, 255, 255, 0.5);
     }
 
     .kanban-card[draggable="true"] {
@@ -2742,7 +2742,8 @@
     }
 
     .kanban-column {
-      flex: 0 0 200px;
+      flex: 0 0 280px;
+      /* Increased to force scroll */
       background: rgba(0, 0, 0, 0.15);
       border-radius: 12px;
       border: 1px solid var(--fin-border);
