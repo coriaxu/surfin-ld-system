@@ -2508,10 +2508,19 @@
       --fin-text-sub: #64748b;
     }
 
+    /* Finance page specific - override main padding for consistent margins */
+    #page-finance {
+      margin: -24px -32px -40px -32px;
+      /* Counteract parent padding */
+      padding: 24px;
+      /* Apply uniform 24px padding */
+    }
+
     .fin-container {
       background: linear-gradient(135deg, var(--fin-bg-start) 0%, var(--fin-bg-end) 100%);
       border-radius: 20px;
-      padding: 2rem;
+      padding: 24px;
+      /* Consistent padding on all sides */
       min-height: 80vh;
       color: var(--fin-text-main);
       position: relative;
