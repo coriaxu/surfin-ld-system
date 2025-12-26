@@ -438,6 +438,129 @@
       box-shadow: 0 14px 30px rgba(15, 23, 42, 0.08);
     }
 
+    /* Finance Timeline Styles */
+    .timeline-container {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      padding: 1rem 0;
+    }
+
+    .timeline-progress-wrapper {
+      background: var(--surface-base);
+      border-radius: 99px;
+      height: 12px;
+      position: relative;
+      margin-bottom: 2rem;
+      overflow: hidden;
+    }
+
+    .timeline-progress-bar {
+      background: linear-gradient(90deg, #10B981 0%, #34D399 100%);
+      height: 100%;
+      border-radius: 99px;
+      transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .timeline-nodes {
+      display: flex;
+      justify-content: space-between;
+      position: relative;
+      padding: 0 10px;
+    }
+
+    .timeline-nodes::before {
+      content: '';
+      position: absolute;
+      top: 14px;
+      left: 20px;
+      right: 20px;
+      height: 2px;
+      background: var(--border-medium);
+      z-index: 0;
+    }
+
+    .timeline-node {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .node-dot {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: var(--surface-card);
+      border: 2px solid var(--border-medium);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    .node-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 500;
+      opacity: 0.8;
+    }
+
+    .timeline-node.done .node-dot {
+      background: #10B981;
+      border-color: #10B981;
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+
+    .timeline-node.done .node-label {
+      color: var(--text-title);
+      opacity: 1;
+      font-weight: 600;
+    }
+
+    .timeline-node:hover .node-dot {
+      transform: scale(1.15);
+    }
+
+    .timeline-node:hover .node-label {
+      color: var(--primary);
+    }
+
+    .timeline-summary {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    .summary-item {
+      text-align: center;
+    }
+
+    .summary-val {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--text-title);
+      margin-bottom: 4px;
+    }
+
+    .summary-lbl {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
     .topbar-left {
       display: flex;
       align-items: center;
@@ -7376,60 +7499,67 @@
     }
 
     function renderFinanceHeatmap() {
-      const container = document.getElementById('financeHeatmap');
-      const select = document.getElementById('financeHeatmapYear');
-      if (!container || !select) return;
+      // Replaced by Timeline View
+      const container = document.getElementById('financeTimeline');
+      if (!container) return;
       if (!state.financeWiki) state.financeWiki = [];
 
-      if (select.options.length === 0) {
-        const currentYear = new Date().getFullYear();
-        for (let y = currentYear; y >= currentYear - 2; y--) {
-          const opt = document.createElement('option');
-          opt.value = y;
-          opt.textContent = y + ' 年';
-          select.appendChild(opt);
+      // Calculate stats
+      const totalEpisodes = 12; // Fixed goal for Season 1
+      const published = state.financeWiki.length;
+      const progressPercent = Math.min((published / totalEpisodes) * 100, 100);
+
+      const views = state.financeWiki.filter(i => i.viewRate).map(i => i.viewRate);
+      const avgViewRate = views.length ? (views.reduce((a, b) => a + b, 0) / views.length).toFixed(1) : '-';
+
+      const downloads = state.financeWiki.filter(i => i.downloads).map(i => i.downloads);
+      const totalDownloads = downloads.reduce((a, b) => a + b, 0);
+
+      // Identify nodes (1 to 12)
+      let nodesHtml = '';
+      for (let i = 1; i <= totalEpisodes; i++) {
+        const item = state.financeWiki.find(x => x.episode === i);
+        const isDone = !!item;
+
+        let tooltip = `第 ${i} 期: 待发布`;
+        if (isDone) {
+          tooltip = `第 ${i} 期: ${item.title} (查看率: ${item.viewRate || '-'}%)`;
         }
+
+        nodesHtml += `
+          <div class="timeline-node ${isDone ? 'done' : ''}" title="${escapeHtml(tooltip)}" onclick="${isDone ? `openFinanceModal('${item.id}')` : ''}">
+            <div class="node-dot">${i}</div>
+            <div class="node-label">${isDone ? (item.date ? item.date.slice(5) : '已发') : '待定'}</div>
+          </div>
+        `;
       }
-      const year = Number(select.value);
-      container.innerHTML = '';
 
-      const dayMap = {};
-      let maxCount = 0;
-      state.financeWiki.forEach(item => {
-        if (!item.date) return;
-        const d = new Date(item.date);
-        if (d.getFullYear() === year) {
-          const key = item.date;
-          dayMap[key] = (dayMap[key] || 0) + 1;
-          if (dayMap[key] > maxCount) maxCount = dayMap[key];
-        }
-      });
+      container.innerHTML = `
+        <div class="timeline-container">
+          <div class="timeline-summary">
+            <div class="summary-item">
+              <div class="summary-val" style="color: #10B981;">${published} / ${totalEpisodes}</div>
+              <div class="summary-lbl">发布进度</div>
+            </div>
+            <div class="summary-item">
+              <div class="summary-val">${avgViewRate}%</div>
+              <div class="summary-lbl">平均查看率</div>
+            </div>
+            <div class="summary-item">
+              <div class="summary-val">${totalDownloads}</div>
+              <div class="summary-lbl">总下载量</div>
+            </div>
+          </div>
 
-      // Prevent divide by zero
-      if (maxCount === 0) maxCount = 1;
+          <div class="timeline-progress-wrapper" title="总体进度 ${progressPercent.toFixed(0)}%">
+            <div class="timeline-progress-bar" style="width: ${progressPercent}%"></div>
+          </div>
 
-      const start = new Date(year, 0, 1);
-      const end = new Date(year, 11, 31);
-      let html = '';
-      for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
-        const key = d.toISOString().split('T')[0];
-        const count = dayMap[key] || 0;
-
-        // Calculate color intensity (GitHub style)
-        // 0: #ebedf0
-        // >0: shades of green
-        let color = '#ebedf0';
-        if (count > 0) {
-          const ratio = count / maxCount;
-          if (ratio <= 0.25) color = '#9be9a8';
-          else if (ratio <= 0.5) color = '#40c463';
-          else if (ratio <= 0.75) color = '#30a14e';
-          else color = '#216e39';
-        }
-
-        html += `<div class="heatmap-item" style="background:${color}" title="${key}: ${count} 期"></div>`;
-      }
-      container.innerHTML = html;
+          <div class="timeline-nodes">
+            ${nodesHtml}
+          </div>
+        </div>
+      `;
     }
 
     // Form Submit (Save from Modal)
