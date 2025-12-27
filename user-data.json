@@ -1,6 +1,23 @@
 {
   "sessions": [],
-  "budgets": [],
+  "budgets": [
+    {
+      "id": "wd3yzklf",
+      "month": "2024-08",
+      "type": "regular",
+      "amount": 15000,
+      "spent": 6200,
+      "note": "月度常规培训"
+    },
+    {
+      "id": "d3avcho5",
+      "month": "2024-08",
+      "type": "special",
+      "amount": 8000,
+      "spent": 4500,
+      "note": "专项技术提升"
+    }
+  ],
   "aiStations": [
     {
       "id": "ep23",
@@ -243,28 +260,7 @@
       "note": ""
     }
   ],
-  "aiShares": [
-    {
-      "id": "rt8uuyen",
-      "episode": 12,
-      "date": "2024-12-10",
-      "title": "AI 提示词工程实战",
-      "attendees": 45,
-      "total": 320,
-      "duration": 60,
-      "note": ""
-    },
-    {
-      "id": "1dfksvqo",
-      "episode": 11,
-      "date": "2024-11-12",
-      "title": "ChatGPT 高级技巧",
-      "attendees": 52,
-      "total": 315,
-      "duration": 45,
-      "note": ""
-    }
-  ],
+  "aiShares": [],
   "aiStationTitles": {
     "85": "港大'幽灵引用'论文撤稿、导师卸任：比AI幻觉更危险的是人类放弃自查"
   },
@@ -483,7 +479,7 @@
       "episode": 1,
       "season": "stablecoin",
       "title": "为什么会有稳定币：全球结算的老问题",
-      "date": "2025-10-01",
+      "date": "2025-07-03",
       "unread": 26,
       "read": 317,
       "viewRate": 92.4,
@@ -498,14 +494,16 @@
         "publish": true,
         "data": false,
         "copy": true
-      }
+      },
+      "total": 260,
+      "note": ""
     },
     {
       "id": "fin02",
       "episode": 2,
       "season": "stablecoin",
       "title": "区块链：稳定币的'硬核地基'",
-      "date": "2025-10-15",
+      "date": "2025-11-15",
       "unread": 16,
       "read": 327,
       "viewRate": 95.3,
@@ -520,7 +518,9 @@
         "publish": true,
         "data": false,
         "copy": true
-      }
+      },
+      "total": 260,
+      "note": ""
     },
     {
       "id": "fin03",
@@ -571,7 +571,7 @@
       "episode": 5,
       "season": "stablecoin",
       "title": "美国联邦框架_GENIUS_Act讲了什么",
-      "date": "2025-12-01",
+      "date": "2025-12-13",
       "unread": 26,
       "read": 317,
       "viewRate": 92.4,
@@ -586,14 +586,16 @@
         "publish": true,
         "data": false,
         "copy": true
-      }
+      },
+      "total": 260,
+      "note": ""
     },
     {
       "id": "fin06",
       "episode": 6,
       "season": "stablecoin",
       "title": "香港路径-牌照、审慎与节奏管理",
-      "date": "2025-12-15",
+      "date": "2025-12-25",
       "unread": 44,
       "read": 299,
       "viewRate": 87.2,
@@ -608,7 +610,9 @@
         "publish": true,
         "data": false,
         "copy": true
-      }
+      },
+      "total": 260,
+      "note": ""
     },
     {
       "id": "fin07",
@@ -657,14 +661,14 @@
     {
       "id": "fuzfjc2g",
       "episode": 9,
-      "title": "企业怎么选稳定币：发行人、储备与赎回三件套",
-      "date": "2026-01-06",
+      "title": "稳定币超入门 第9期",
+      "date": "2025-12-26",
       "note": "",
       "views": 0,
       "total": 260,
       "workflow": {
         "draft": false,
-        "topic": true,
+        "topic": false,
         "ppt": false,
         "video": false,
         "copy": false,
@@ -674,5 +678,5 @@
       "project": "Stablecoin 101"
     }
   ],
-  "currentFinanceEpisode": "fuzfjc2g"
+  "currentFinanceEpisode": "fin05"
 }
