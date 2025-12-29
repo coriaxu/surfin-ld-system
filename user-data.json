@@ -1,23 +1,6 @@
 {
   "sessions": [],
-  "budgets": [
-    {
-      "id": "wd3yzklf",
-      "month": "2024-08",
-      "type": "regular",
-      "amount": 15000,
-      "spent": 6200,
-      "note": "月度常规培训"
-    },
-    {
-      "id": "d3avcho5",
-      "month": "2024-08",
-      "type": "special",
-      "amount": 8000,
-      "spent": 4500,
-      "note": "专项技术提升"
-    }
-  ],
+  "budgets": [],
   "aiStations": [
     {
       "id": "ep23",
@@ -667,8 +650,8 @@
       "views": 0,
       "total": 260,
       "workflow": {
-        "draft": false,
-        "topic": false,
+        "draft": true,
+        "topic": true,
         "ppt": false,
         "video": false,
         "copy": false,
