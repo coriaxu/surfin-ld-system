@@ -650,8 +650,8 @@
       "views": 0,
       "total": 260,
       "workflow": {
-        "draft": false,
-        "topic": false,
+        "draft": true,
+        "topic": true,
         "ppt": false,
         "video": false,
         "copy": false,
