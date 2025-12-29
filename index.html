@@ -5042,28 +5042,9 @@
     async function initData() {
       const raw = localStorage.getItem(STORAGE_KEY);
       const savedVersion = localStorage.getItem(STORAGE_KEY + '_version');
-      const syncConfig = JSON.parse(localStorage.getItem('surfin_sync_settings') || 'null');
-      const isAdmin = syncConfig && syncConfig.enabled && syncConfig.token;
 
-      // For admins with sync enabled, use local cache (they have the latest data)
-      if (isAdmin && raw && savedVersion === String(DATA_VERSION)) {
-        try {
-          const localData = JSON.parse(raw);
-          const hasLocalPayload = ['sessions', 'budgets', 'aiStations', 'aiShares', 'aiStationTasks', 'aiShareTasks']
-            .some(key => Array.isArray(localData[key]) && localData[key].length > 0);
-          if (hasLocalPayload) {
-            Object.assign(state, localData);
-            if (!state.aiStationTitles || typeof state.aiStationTitles !== 'object') state.aiStationTitles = {};
-            if (!state.aiShareTitles || typeof state.aiShareTitles !== 'object') state.aiShareTitles = {};
-            return;
-          }
-        } catch (err) {
-          // ignore parse error, fallback to remote
-        }
-      }
-
-      // For visitors (non-admin), always try to load from cloud first
-      // This ensures they see the latest synced data
+      // Always try to load from cloud first (both admin & visitor)
+      // This ensures every browser sees the latest synced data by default.
       const loaded = await loadRemoteData();
       if (!loaded) {
         // If cloud load failed, try using local cache as fallback
