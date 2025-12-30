@@ -2637,6 +2637,24 @@
       /* 表头背景 */
       --fin-hover: #F1F5F9;
       /* 悬停背景 */
+
+      /* =========================================
+         PM 案例库 - 琥珀智库主题
+         ========================================= */
+      --case-primary: #B8860B;
+      /* 主色-暗金 */
+      --case-primary-light: #DAA520;
+      /* 亮金-悬停态 */
+      --case-accent: #FFF8DC;
+      /* 浅金背景 */
+      --case-surface: rgba(255, 248, 220, 0.6);
+      /* 毛玻璃底色 */
+      --case-border: rgba(184, 134, 11, 0.2);
+      /* 边框色 */
+      --case-text-main: #1E293B;
+      /* 主文字 */
+      --case-text-sub: #64748B;
+      /* 次要文字 */
     }
 
     /* Finance page specific - override main padding for consistent margins */
@@ -3429,6 +3447,397 @@
     }
 
     /* =========================================
+       PM 案例库 - 琥珀智库样式
+       ========================================= */
+    #page-caselib {
+      margin: -24px -32px -40px -32px;
+      padding: 24px;
+    }
+
+    .case-container {
+      background: linear-gradient(135deg, #FFFBF0 0%, #FFF8DC 50%, #FFEFD5 100%);
+      border-radius: 20px;
+      padding: 32px;
+      min-height: 80vh;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* 装饰性背景光 */
+    .case-container::before {
+      content: '';
+      position: absolute;
+      top: -150px;
+      right: -150px;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(218, 165, 32, 0.15) 0%, transparent 70%);
+      pointer-events: none;
+      filter: blur(80px);
+    }
+
+    .case-container::after {
+      content: '';
+      position: absolute;
+      bottom: -100px;
+      left: -100px;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(184, 134, 11, 0.1) 0%, transparent 70%);
+      pointer-events: none;
+      filter: blur(60px);
+    }
+
+    /* Hero Banner */
+    .case-hero {
+      text-align: center;
+      padding: 40px 20px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .case-hero-title {
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--case-text-main);
+      margin-bottom: 8px;
+      letter-spacing: -0.5px;
+    }
+
+    .case-hero-subtitle {
+      font-size: 16px;
+      color: var(--case-primary);
+      font-weight: 500;
+      margin-bottom: 16px;
+    }
+
+    .case-hero-desc {
+      font-size: 14px;
+      color: var(--case-text-sub);
+      max-width: 600px;
+      margin: 0 auto 32px;
+      line-height: 1.6;
+    }
+
+    /* 统计卡片 */
+    .case-stats {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .case-stat-card {
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(184, 134, 11, 0.15);
+      border-radius: 16px;
+      padding: 20px 28px;
+      text-align: center;
+      transition: all 0.3s ease;
+      min-width: 120px;
+    }
+
+    .case-stat-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px rgba(184, 134, 11, 0.15);
+      border-color: var(--case-primary-light);
+    }
+
+    .case-stat-number {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--case-primary);
+      margin-bottom: 4px;
+    }
+
+    .case-stat-label {
+      font-size: 13px;
+      color: var(--case-text-sub);
+    }
+
+    /* 区块标题 */
+    .case-section {
+      margin-top: 48px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .case-section-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .case-section-icon {
+      font-size: 24px;
+    }
+
+    .case-section-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--case-text-main);
+    }
+
+    /* Tab 切换 */
+    .case-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 24px;
+      background: rgba(255, 255, 255, 0.6);
+      padding: 6px;
+      border-radius: 12px;
+      width: fit-content;
+    }
+
+    .case-tab {
+      padding: 10px 20px;
+      border: none;
+      background: transparent;
+      color: var(--case-text-sub);
+      font-size: 14px;
+      font-weight: 500;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: inherit;
+    }
+
+    .case-tab:hover {
+      color: var(--case-text-main);
+      background: rgba(255, 255, 255, 0.5);
+    }
+
+    .case-tab.active {
+      background: white;
+      color: var(--case-primary);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    /* 案例卡片网格 */
+    .case-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+
+    @media (max-width: 1200px) {
+      .case-cards-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media (max-width: 900px) {
+      .case-cards-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 600px) {
+      .case-cards-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* 案例卡片 */
+    .case-card {
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(184, 134, 11, 0.12);
+      border-radius: 16px;
+      padding: 24px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .case-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 40px rgba(184, 134, 11, 0.18);
+      border-color: var(--case-primary-light);
+    }
+
+    .case-card-icon {
+      font-size: 32px;
+      margin-bottom: 4px;
+    }
+
+    .case-card-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--case-text-main);
+      line-height: 1.4;
+    }
+
+    .case-card-dilemma {
+      font-size: 13px;
+      color: var(--case-text-sub);
+      line-height: 1.5;
+      padding: 10px 12px;
+      background: rgba(184, 134, 11, 0.06);
+      border-radius: 8px;
+      border-left: 3px solid var(--case-primary-light);
+    }
+
+    .case-card-cta {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--case-primary);
+      font-size: 13px;
+      font-weight: 500;
+      margin-top: auto;
+      transition: gap 0.2s ease;
+    }
+
+    .case-card:hover .case-card-cta {
+      gap: 10px;
+    }
+
+    /* Tab 面板 */
+    .case-tab-panel {
+      display: none;
+    }
+
+    .case-tab-panel.active {
+      display: block;
+    }
+
+    /* 国家手册区 */
+    .case-playbooks-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    @media (max-width: 900px) {
+      .case-playbooks-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 600px) {
+      .case-playbooks-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .case-playbook-card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(184, 134, 11, 0.12);
+      border-radius: 20px;
+      padding: 32px 24px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .case-playbook-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 40px rgba(184, 134, 11, 0.18);
+      border-color: var(--case-primary-light);
+    }
+
+    .case-playbook-flag {
+      font-size: 56px;
+      margin-bottom: 16px;
+      transition: transform 0.3s ease;
+    }
+
+    .case-playbook-card:hover .case-playbook-flag {
+      transform: scale(1.1);
+    }
+
+    .case-playbook-name {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--case-text-main);
+      margin-bottom: 4px;
+    }
+
+    .case-playbook-name-en {
+      font-size: 13px;
+      color: var(--case-text-sub);
+      margin-bottom: 12px;
+    }
+
+    .case-playbook-quote {
+      font-size: 13px;
+      color: var(--case-primary);
+      font-style: italic;
+      line-height: 1.5;
+      padding: 12px 16px;
+      background: rgba(184, 134, 11, 0.06);
+      border-radius: 10px;
+      margin-bottom: 16px;
+    }
+
+    .case-playbook-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--case-primary);
+      font-size: 14px;
+      font-weight: 500;
+      transition: gap 0.2s ease;
+    }
+
+    .case-playbook-card:hover .case-playbook-cta {
+      gap: 10px;
+    }
+
+    /* 底部 CTA */
+    .case-footer {
+      margin-top: 56px;
+      text-align: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    .case-footer-text {
+      font-size: 14px;
+      color: var(--case-text-sub);
+      margin-bottom: 20px;
+    }
+
+    .case-footer-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 16px 40px;
+      background: linear-gradient(135deg, var(--case-primary-light) 0%, var(--case-primary) 100%);
+      color: white;
+      border: none;
+      border-radius: 14px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: inherit;
+      box-shadow: 0 8px 24px rgba(184, 134, 11, 0.3);
+    }
+
+    .case-footer-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 32px rgba(184, 134, 11, 0.4);
+    }
+
+    .case-footer-btn svg {
+      transition: transform 0.2s ease;
+    }
+
+    .case-footer-btn:hover svg {
+      transform: translateX(4px);
+    }
+
+    /* =========================================
        密码保护层样式
        ========================================= */
     .auth-overlay {
@@ -3753,6 +4162,16 @@
             <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
           </svg>
           <span>金融小百科</span>
+        </div>
+        <div class="nav-item" data-page="caselib">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+            <path d="M8 7h8" />
+            <path d="M8 11h6" />
+          </svg>
+          <span>PM 案例库</span>
         </div>
       </div>
     </nav>
@@ -4712,6 +5131,243 @@
         </div>
       </div>
 
+      <!-- PM 案例库 - 琥珀智库 -->
+      <div class="page" id="page-caselib">
+        <div class="case-container">
+          <!-- Hero Banner -->
+          <div class="case-hero">
+            <h1 class="case-hero-title">Surfin 管理训练营优秀案例库</h1>
+            <div class="case-hero-subtitle">Management Training Camp Case Library</div>
+            <p class="case-hero-desc">
+              来自一线管理者的实战智慧 · 跨越国界的管理经验沉淀<br>
+              Practical wisdom from frontline managers · Cross-border management insights
+            </p>
+            
+            <!-- 统计卡片 -->
+            <div class="case-stats">
+              <div class="case-stat-card">
+                <div class="case-stat-number">8+</div>
+                <div class="case-stat-label">实战案例</div>
+              </div>
+              <div class="case-stat-card">
+                <div class="case-stat-number">6+</div>
+                <div class="case-stat-label">管理主题</div>
+              </div>
+              <div class="case-stat-card">
+                <div class="case-stat-number">3</div>
+                <div class="case-stat-label">国家手册</div>
+              </div>
+              <div class="case-stat-card">
+                <div class="case-stat-number">双语</div>
+                <div class="case-stat-label">中英对照</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 精选案例区 -->
+          <div class="case-section">
+            <div class="case-section-header">
+              <span class="case-section-icon">⭐</span>
+              <h2 class="case-section-title">精选案例 Featured Cases</h2>
+            </div>
+            
+            <!-- Tab 切换 -->
+            <div class="case-tabs">
+              <button class="case-tab active" onclick="switchCaseTab('crosscultural')">🌍 跨文化管理</button>
+              <button class="case-tab" onclick="switchCaseTab('manager')">👔 管理者智慧</button>
+            </div>
+
+            <!-- 跨文化管理 Panel -->
+            <div class="case-tab-panel active" id="case-panel-crosscultural">
+              <div class="case-cards-grid">
+                <div class="case-card" onclick="openCaseLibrary()">
+                  <div class="case-card-icon">🇰🇪</div>
+                  <div class="case-card-title">肯尼亚高风险环境下的管理实践</div>
+                  <div class="case-card-dilemma">
+                    <strong>管理者两难：</strong>外部暴乱通勤危险，业务不能停，人命输不起
+                  </div>
+                  <div class="case-card-cta">
+                    查看详情 
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                      <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                  </div>
+                </div>
+                <div class="case-card" onclick="openCaseLibrary()">
+                  <div class="case-card-icon">🎯</div>
+                  <div class="case-card-title">一次"让对方会做"的跨文化任务辅导</div>
+                  <div class="case-card-dilemma">
+                    <strong>管理者两难：</strong>催促还是代劳？如何让外籍员工真正掌握技能
+                  </div>
+                  <div class="case-card-cta">
+                    查看详情 
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                      <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                  </div>
+                </div>
+                <div class="case-card" onclick="openCaseLibrary()">
+                  <div class="case-card-icon">🧱</div>
+                  <div class="case-card-title">如何拆掉一堵"隐形的墙"</div>
+                  <div class="case-card-dilemma">
+                    <strong>管理者两难：</strong>硬推还是放任？跨文化团队的信任建立
+                  </div>
+                  <div class="case-card-cta">
+                    查看详情 
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                      <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                  </div>
+                </div>
+                <div class="case-card" onclick="openCaseLibrary()">
+                  <div class="case-card-icon">🌐</div>
+                  <div class="case-card-title">跨文化绩效沟通：从零散面谈到固定对齐</div>
+                  <div class="case-card-dilemma">
+                    <strong>管理者两难：</strong>绩效不透明，聊了也不落地，如何建立反馈机制
+                  </div>
+                  <div class="case-card-cta">
+                    查看详情 
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                      <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 管理者智慧 Panel -->
+            <div class="case-tab-panel" id="case-panel-manager">
+              <div class="case-cards-grid">
+                <div class="case-card" onclick="openCaseLibrary()">
+                  <div class="case-card-icon">👔</div>
+                  <div class="case-card-title">从超级PM到指挥官的转型之路</div>
+                  <div class="case-card-dilemma">
+                    <strong>管理者两难：</strong>自己干还是放手？如何把个人能力复制给团队
+                  </div>
+                  <div class="case-card-cta">
+                    查看详情 
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                      <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                  </div>
+                </div>
+                <div class="case-card" onclick="openCaseLibrary()">
+                  <div class="case-card-icon">📋</div>
+                  <div class="case-card-title">如何高效布置工作</div>
+                  <div class="case-card-dilemma">
+                    <strong>管理者两难：</strong>交代还是盯人？任务布置后效果差，如何解决
+                  </div>
+                  <div class="case-card-cta">
+                    查看详情 
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                      <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                  </div>
+                </div>
+                <div class="case-card" onclick="openCaseLibrary()">
+                  <div class="case-card-icon">💬</div>
+                  <div class="case-card-title">把批评变成建设性冲突</div>
+                  <div class="case-card-dilemma">
+                    <strong>管理者两难：</strong>避冲突还是直怼？如何让批评真正有效
+                  </div>
+                  <div class="case-card-cta">
+                    查看详情 
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                      <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                  </div>
+                </div>
+                <div class="case-card" onclick="openCaseLibrary()">
+                  <div class="case-card-icon">🎯</div>
+                  <div class="case-card-title">批评员工：把"避责"变成"对齐"</div>
+                  <div class="case-card-dilemma">
+                    <strong>管理者两难：</strong>不查=失控，猛批=堵心，如何建立正向循环
+                  </div>
+                  <div class="case-card-cta">
+                    查看详情 
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                      <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 国家管理手册区 -->
+          <div class="case-section">
+            <div class="case-section-header">
+              <span class="case-section-icon">🗺️</span>
+              <h2 class="case-section-title">国家管理手册 Country Playbooks</h2>
+            </div>
+            <p style="color: var(--case-text-sub); margin-bottom: 24px; font-size: 14px;">
+              目标国家跨文化管理使用手册 —— 管理不同市场团队的"说明书"
+            </p>
+            
+            <div class="case-playbooks-grid">
+              <div class="case-playbook-card" onclick="openCaseLibrary()">
+                <div class="case-playbook-flag">🇮🇩</div>
+                <div class="case-playbook-name">印度尼西亚</div>
+                <div class="case-playbook-name-en">Indonesia</div>
+                <div class="case-playbook-quote">
+                  "经营关系网络和和谐生态"<br>
+                  Managing a web of relationships and harmony
+                </div>
+                <div class="case-playbook-cta">
+                  阅读手册 
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                  </svg>
+                </div>
+              </div>
+              <div class="case-playbook-card" onclick="openCaseLibrary()">
+                <div class="case-playbook-flag">🇰🇪</div>
+                <div class="case-playbook-name">肯尼亚</div>
+                <div class="case-playbook-name-en">Kenya</div>
+                <div class="case-playbook-quote">
+                  "多元文化中建立信任边界"<br>
+                  Building trust across diverse cultures
+                </div>
+                <div class="case-playbook-cta">
+                  阅读手册 
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                  </svg>
+                </div>
+              </div>
+              <div class="case-playbook-card" onclick="openCaseLibrary()">
+                <div class="case-playbook-flag">🇳🇬</div>
+                <div class="case-playbook-name">尼日利亚</div>
+                <div class="case-playbook-name-en">Nigeria</div>
+                <div class="case-playbook-quote">
+                  "灵活务实，短期激励"<br>
+                  Flexible, pragmatic, and incentive-driven
+                </div>
+                <div class="case-playbook-cta">
+                  阅读手册 
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 底部 CTA -->
+          <div class="case-footer">
+            <p class="case-footer-text">探索更多管理智慧 · Explore More Management Wisdom</p>
+            <button class="case-footer-btn" onclick="openCaseLibrary()">
+              🚀 进入完整案例库
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                <polyline points="15 3 21 3 21 9"/>
+                <line x1="10" y1="14" x2="21" y2="3"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
 
       <!-- 预算与开销 -->
       <div class="page" id="page-budget">
@@ -4885,7 +5541,9 @@
       dashboard: '培训大屏',
       training: '培训管理',
       aiknowledge: 'AI 知识库',
-      budget: '预算与开销'
+      budget: '预算与开销',
+      finance: '金融小百科',
+      caselib: 'PM 案例库'
     };
 
     /* =========================================
@@ -7352,6 +8010,34 @@
         renderAIKnowledge();
       }
     }, 100);
+
+    /* =========================================
+       PM 案例库 (Case Library) - 交互逻辑
+       ========================================= */
+
+    // 案例库外链地址
+    const CASE_LIBRARY_URL = 'https://coriaxu.github.io/surfin-case-library/';
+
+    // Tab 切换函数
+    function switchCaseTab(tabName) {
+      // 切换 Tab 按钮状态
+      document.querySelectorAll('.case-tab').forEach(tab => {
+        tab.classList.remove('active');
+      });
+      event.target.classList.add('active');
+
+      // 切换 Panel 显示
+      document.querySelectorAll('.case-tab-panel').forEach(panel => {
+        panel.classList.remove('active');
+      });
+      document.getElementById(`case-panel-${tabName}`).classList.add('active');
+    }
+
+    // 打开案例库外链
+    function openCaseLibrary() {
+      window.open(CASE_LIBRARY_URL, '_blank');
+    }
+
     /* =========================================
        New: 金融小百科 (Finance Encyclopedia) - Kanban Logic
        ========================================= */
