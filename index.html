@@ -4251,6 +4251,16 @@
           </svg>
           导入
         </button>
+        <button class="btn btn-primary btn-sm" onclick="openMonthlyReportModal()" style="background: linear-gradient(135deg, #0ea5e9, #0f3d5e);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+            <line x1="16" y1="2" x2="16" y2="6" />
+            <line x1="8" y1="2" x2="8" y2="6" />
+            <line x1="3" y1="10" x2="21" y2="10" />
+            <path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01M16 18h.01" />
+          </svg>
+          月度总结
+        </button>
         <button class="btn btn-primary btn-sm" onclick="exportPdf()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
@@ -5520,6 +5530,72 @@
     </div>
   </div>
 
+  <!-- 月度总结报告弹窗 -->
+  <div class="modal-overlay" id="monthlyReportModal">
+    <div class="modal" style="max-width: 480px;">
+      <div class="modal-header" style="background: linear-gradient(135deg, #0f172a, #1e3a5f); color: white; border-radius: 12px 12px 0 0;">
+        📊 生成月度总结报告
+      </div>
+      <div class="modal-body" style="padding: 24px;">
+        <div style="margin-bottom: 20px;">
+          <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text);">选择月份</label>
+          <select id="reportMonthSelect" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--card-bg); color: var(--text); font-size: 14px;">
+            <!-- 动态生成选项 -->
+          </select>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+          <label style="display: block; margin-bottom: 12px; font-weight: 600; color: var(--text);">导出格式</label>
+          <div style="display: flex; gap: 12px;">
+            <label style="flex: 1; display: flex; align-items: center; gap: 8px; padding: 12px; border-radius: 8px; border: 2px solid #0ea5e9; background: rgba(14, 165, 233, 0.1); cursor: pointer;">
+              <input type="checkbox" id="exportPdfCheck" checked style="width: 18px; height: 18px; accent-color: #0ea5e9;">
+              <div>
+                <div style="font-weight: 600; color: var(--text);">📄 PDF</div>
+                <div style="font-size: 11px; color: var(--text-muted);">咨询报告风格</div>
+              </div>
+            </label>
+            <label style="flex: 1; display: flex; align-items: center; gap: 8px; padding: 12px; border-radius: 8px; border: 2px solid #10b981; background: rgba(16, 185, 129, 0.1); cursor: pointer;">
+              <input type="checkbox" id="exportExcelCheck" checked style="width: 18px; height: 18px; accent-color: #10b981;">
+              <div>
+                <div style="font-weight: 600; color: var(--text);">📊 Excel</div>
+                <div style="font-size: 11px; color: var(--text-muted);">多Sheet数据源</div>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 16px;">
+          <label style="display: block; margin-bottom: 12px; font-weight: 600; color: var(--text);">包含内容</label>
+          <div style="display: grid; gap: 8px;">
+            <label style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 6px; background: var(--bg); cursor: pointer;">
+              <input type="checkbox" id="includeTraining" checked style="width: 16px; height: 16px;">
+              <span style="color: var(--text);">👩‍🏫 培训场次数据</span>
+            </label>
+            <label style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 6px; background: var(--bg); cursor: pointer;">
+              <input type="checkbox" id="includeBudget" checked style="width: 16px; height: 16px;">
+              <span style="color: var(--text);">💰 预算与开销</span>
+            </label>
+            <label style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 6px; background: var(--bg); cursor: pointer;">
+              <input type="checkbox" id="includeAI" checked style="width: 16px; height: 16px;">
+              <span style="color: var(--text);">🤖 AI 知识库活动</span>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer" style="border-top: 1px solid var(--border); padding: 16px 24px;">
+        <button class="btn btn-secondary" onclick="closeMonthlyReportModal()">取消</button>
+        <button class="btn btn-primary" onclick="generateMonthlyReport()" style="background: linear-gradient(135deg, #0ea5e9, #0f3d5e);">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 6px;">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+            <polyline points="7 10 12 15 17 10" />
+            <line x1="12" y1="15" x2="12" y2="3" />
+          </svg>
+          一键生成
+        </button>
+      </div>
+    </div>
+  </div>
+
   <script>
     const uid = () => Math.random().toString(36).slice(2, 10);
     const STORAGE_KEY = 'surfin_ld_system_v2';
@@ -5942,6 +6018,269 @@
       const modal = document.getElementById('syncModal');
       if (modal) modal.classList.remove('active');
     };
+
+    /* =========================================
+       月度总结报告功能
+       ========================================= */
+
+    // 打开月度报告弹窗
+    window.openMonthlyReportModal = function () {
+      const modal = document.getElementById('monthlyReportModal');
+      if (modal) {
+        populateMonthOptions();
+        modal.classList.add('active');
+      }
+    };
+
+    // 关闭月度报告弹窗
+    window.closeMonthlyReportModal = function () {
+      const modal = document.getElementById('monthlyReportModal');
+      if (modal) modal.classList.remove('active');
+    };
+
+    // 填充月份选项（最近12个月）
+    function populateMonthOptions() {
+      const select = document.getElementById('reportMonthSelect');
+      if (!select) return;
+      select.innerHTML = '';
+      const now = new Date();
+      for (let i = 0; i < 12; i++) {
+        const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+        const value = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+        const label = `${d.getFullYear()}年${d.getMonth() + 1}月`;
+        const option = document.createElement('option');
+        option.value = value;
+        option.textContent = label;
+        if (i === 0) option.selected = true;
+        select.appendChild(option);
+      }
+    }
+
+    // 获取指定月份数据
+    function getMonthlyData(yearMonth) {
+      const [year, month] = yearMonth.split('-').map(Number);
+      const monthStr = String(month).padStart(2, '0');
+
+      // 培训数据
+      const trainingSessions = state.sessions.filter(s => {
+        if (!s.date) return false;
+        return s.date.startsWith(`${year}-${monthStr}`);
+      });
+      const totalSessions = trainingSessions.length;
+      const totalPeople = trainingSessions.reduce((sum, s) => sum + (Number(s.people) || 0), 0);
+      const totalHours = trainingSessions.reduce((sum, s) => sum + ((Number(s.people) || 0) * (Number(s.duration) || 0)), 0);
+
+      // 预算数据
+      const budgetData = state.budgets.filter(b => b.month === yearMonth);
+      const totalBudget = budgetData.reduce((sum, b) => sum + (Number(b.budget) || 0), 0);
+      const totalSpend = budgetData.reduce((sum, b) => sum + (Number(b.spend) || 0), 0);
+
+      // AI 知识库数据
+      const aiStationCount = state.aiStations.filter(a => {
+        if (!a.date) return false;
+        return a.date.startsWith(`${year}-${monthStr}`);
+      }).length;
+
+      return {
+        yearMonth,
+        year,
+        month,
+        training: { sessions: trainingSessions, totalSessions, totalPeople, totalHours },
+        budget: { data: budgetData, totalBudget, totalSpend, remaining: totalBudget - totalSpend },
+        ai: { stationCount: aiStationCount }
+      };
+    }
+
+    // 生成月度报告
+    window.generateMonthlyReport = async function () {
+      const yearMonth = document.getElementById('reportMonthSelect').value;
+      const exportPdf = document.getElementById('exportPdfCheck').checked;
+      const exportExcel = document.getElementById('exportExcelCheck').checked;
+      const includeTraining = document.getElementById('includeTraining').checked;
+      const includeBudget = document.getElementById('includeBudget').checked;
+      const includeAI = document.getElementById('includeAI').checked;
+
+      if (!exportPdf && !exportExcel) {
+        showToast('请至少选择一种导出格式', 'error');
+        return;
+      }
+
+      showToast('正在生成咨询级月度报告...', 'info');
+      closeMonthlyReportModal();
+
+      const data = getMonthlyData(yearMonth);
+
+      try {
+        if (exportExcel) {
+          await generateMonthlyExcel(data, { includeTraining, includeBudget, includeAI });
+        }
+        if (exportPdf) {
+          await generateMonthlyPdf(data, { includeTraining, includeBudget, includeAI });
+        }
+        showToast('月度报告生成成功！', 'success');
+      } catch (err) {
+        console.error(err);
+        showToast('报告生成失败: ' + err.message, 'error');
+      }
+    };
+
+    // 生成 Excel 报告
+    async function generateMonthlyExcel(data, opts) {
+      const wb = XLSX.utils.book_new();
+
+      // Sheet 1: 概览
+      const overviewData = [
+        ['Surfin L&D 学习发展系统 - 月度数据总结'],
+        [`报告月份: ${data.year}年${data.month}月`],
+        [`生成时间: ${new Date().toLocaleString('zh-CN')}`],
+        [],
+        ['核心指标', '数值'],
+        ['培训场次', data.training.totalSessions],
+        ['总人时', data.training.totalHours],
+        ['参与人数', data.training.totalPeople],
+        ['月度预算', `¥${data.budget.totalBudget.toLocaleString()}`],
+        ['实际支出', `¥${data.budget.totalSpend.toLocaleString()}`],
+        ['预算剩余', `¥${data.budget.remaining.toLocaleString()}`],
+        ['AI广播站发布', `${data.ai.stationCount}期`]
+      ];
+      const wsOverview = XLSX.utils.aoa_to_sheet(overviewData);
+      XLSX.utils.book_append_sheet(wb, wsOverview, '概览');
+
+      // Sheet 2: 培训明细
+      if (opts.includeTraining && data.training.sessions.length > 0) {
+        const trainingHeader = ['日期', '课程名称', '项目', '讲师', '人数', '时长(h)', '人时'];
+        const trainingRows = data.training.sessions.map(s => [
+          s.date, s.course, s.project, s.trainer,
+          s.people, s.duration, (Number(s.people) || 0) * (Number(s.duration) || 0)
+        ]);
+        const wsTraining = XLSX.utils.aoa_to_sheet([trainingHeader, ...trainingRows]);
+        XLSX.utils.book_append_sheet(wb, wsTraining, '培训明细');
+      }
+
+      // Sheet 3: 预算开销
+      if (opts.includeBudget && data.budget.data.length > 0) {
+        const budgetHeader = ['月份', '类型', '预算', '支出', '剩余'];
+        const budgetRows = data.budget.data.map(b => [
+          b.month, b.type, b.budget, b.spend, (Number(b.budget) || 0) - (Number(b.spend) || 0)
+        ]);
+        const wsBudget = XLSX.utils.aoa_to_sheet([budgetHeader, ...budgetRows]);
+        XLSX.utils.book_append_sheet(wb, wsBudget, '预算开销');
+      }
+
+      const fileName = `Surfin_Monthly_Report_${data.yearMonth}.xlsx`;
+      XLSX.writeFile(wb, fileName);
+    }
+
+    // 生成 PDF 报告 (咨询公司风格)
+    async function generateMonthlyPdf(data, opts) {
+      // 创建隐藏的渲染容器
+      const container = document.createElement('div');
+      container.id = 'pdf-render-container';
+      container.style.cssText = `
+        position: fixed; left: -9999px; top: 0;
+        width: 794px; height: 1123px;
+        background: linear-gradient(180deg, #0f172a 0%, #1e3a5f 100%);
+        padding: 40px; box-sizing: border-box;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        color: white;
+      `;
+
+      container.innerHTML = `
+        <div style="text-align: center; margin-bottom: 30px;">
+          <div style="font-size: 12px; letter-spacing: 4px; color: rgba(255,255,255,0.6); margin-bottom: 8px;">SURFIN L&D SYSTEM</div>
+          <div style="font-size: 28px; font-weight: 700; background: linear-gradient(90deg, #0ea5e9, #38bdf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">月度数据洞察报告</div>
+          <div style="font-size: 14px; color: rgba(255,255,255,0.7); margin-top: 8px;">${data.year}年${data.month}月 · Monthly Insight</div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 30px;">
+          <div style="background: rgba(14, 165, 233, 0.2); border: 1px solid rgba(14, 165, 233, 0.4); border-radius: 12px; padding: 20px; text-align: center;">
+            <div style="font-size: 32px; font-weight: 700; color: #0ea5e9;">${data.training.totalSessions}</div>
+            <div style="font-size: 12px; color: rgba(255,255,255,0.7); margin-top: 4px;">培训场次</div>
+          </div>
+          <div style="background: rgba(16, 185, 129, 0.2); border: 1px solid rgba(16, 185, 129, 0.4); border-radius: 12px; padding: 20px; text-align: center;">
+            <div style="font-size: 32px; font-weight: 700; color: #10b981;">${data.training.totalHours}</div>
+            <div style="font-size: 12px; color: rgba(255,255,255,0.7); margin-top: 4px;">总人时</div>
+          </div>
+          <div style="background: rgba(251, 146, 60, 0.2); border: 1px solid rgba(251, 146, 60, 0.4); border-radius: 12px; padding: 20px; text-align: center;">
+            <div style="font-size: 32px; font-weight: 700; color: #fb923c;">${data.training.totalPeople}</div>
+            <div style="font-size: 12px; color: rgba(255,255,255,0.7); margin-top: 4px;">参与人数</div>
+          </div>
+          <div style="background: rgba(239, 68, 68, 0.2); border: 1px solid rgba(239, 68, 68, 0.4); border-radius: 12px; padding: 20px; text-align: center;">
+            <div style="font-size: 32px; font-weight: 700; color: #ef4444;">¥${(data.budget.totalSpend / 1000).toFixed(1)}K</div>
+            <div style="font-size: 12px; color: rgba(255,255,255,0.7); margin-top: 4px;">本月支出</div>
+          </div>
+        </div>
+
+        ${opts.includeTraining && data.training.sessions.length > 0 ? `
+        <div style="background: rgba(255,255,255,0.05); border-radius: 12px; padding: 20px; margin-bottom: 20px;">
+          <div style="font-size: 14px; font-weight: 600; color: #0ea5e9; margin-bottom: 12px;">👩‍🏫 培训场次明细</div>
+          <table style="width: 100%; border-collapse: collapse; font-size: 11px;">
+            <tr style="background: rgba(14, 165, 233, 0.2);">
+              <th style="padding: 8px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.1);">日期</th>
+              <th style="padding: 8px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.1);">课程</th>
+              <th style="padding: 8px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.1);">讲师</th>
+              <th style="padding: 8px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1);">人数</th>
+              <th style="padding: 8px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1);">人时</th>
+            </tr>
+            ${data.training.sessions.slice(0, 8).map((s, i) => `
+            <tr style="background: ${i % 2 === 0 ? 'transparent' : 'rgba(255,255,255,0.02)'};">
+              <td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.05);">${s.date || '-'}</td>
+              <td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.05);">${s.course || '-'}</td>
+              <td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.05);">${s.trainer || '-'}</td>
+              <td style="padding: 8px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.05);">${s.people || 0}</td>
+              <td style="padding: 8px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.05);">${(Number(s.people) || 0) * (Number(s.duration) || 0)}</td>
+            </tr>
+            `).join('')}
+          </table>
+        </div>
+        ` : ''}
+
+        ${opts.includeBudget ? `
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
+          <div style="background: rgba(255,255,255,0.05); border-radius: 12px; padding: 20px;">
+            <div style="font-size: 14px; font-weight: 600; color: #10b981; margin-bottom: 12px;">💰 预算执行</div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+              <span style="color: rgba(255,255,255,0.7);">月度预算</span>
+              <span style="font-weight: 600;">¥${data.budget.totalBudget.toLocaleString()}</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+              <span style="color: rgba(255,255,255,0.7);">实际支出</span>
+              <span style="font-weight: 600; color: #ef4444;">¥${data.budget.totalSpend.toLocaleString()}</span>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+              <span style="color: rgba(255,255,255,0.7);">剩余预算</span>
+              <span style="font-weight: 600; color: ${data.budget.remaining >= 0 ? '#10b981' : '#ef4444'};">¥${data.budget.remaining.toLocaleString()}</span>
+            </div>
+          </div>
+          <div style="background: rgba(255,255,255,0.05); border-radius: 12px; padding: 20px;">
+            <div style="font-size: 14px; font-weight: 600; color: #8b5cf6; margin-bottom: 12px;">🤖 AI 知识库</div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+              <span style="color: rgba(255,255,255,0.7);">广播站发布</span>
+              <span style="font-weight: 600;">${data.ai.stationCount}期</span>
+            </div>
+          </div>
+        </div>
+        ` : ''}
+
+        <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1);">
+          <div style="font-size: 10px; color: rgba(255,255,255,0.4);">Generated by Surfin L&D System · ${new Date().toLocaleDateString('zh-CN')}</div>
+        </div>
+      `;
+
+      document.body.appendChild(container);
+
+      // 使用 html2canvas 渲染
+      const canvas = await html2canvas(container, { scale: 2, useCORS: true, backgroundColor: null });
+      document.body.removeChild(container);
+
+      // 生成 PDF
+      const pdf = new jspdf.jsPDF('p', 'mm', 'a4');
+      const imgData = canvas.toDataURL('image/png');
+      const pdfWidth = 210;
+      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+      pdf.save(`Surfin_Monthly_Insight_${data.yearMonth}.pdf`);
+    }
 
     window.testSyncConnection = async function () {
       try {
