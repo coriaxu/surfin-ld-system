@@ -348,7 +348,7 @@
       "output": "新闻区块",
       "detail": "嵌入广播站",
       "owner": "内容",
-      "done": false
+      "done": true
     },
     {
       "id": "cb4en1hk",
@@ -359,7 +359,7 @@
       "output": "发刊词",
       "detail": "开场引导",
       "owner": "内容",
-      "done": false
+      "done": true
     },
     {
       "id": "u0hp7fgr",
