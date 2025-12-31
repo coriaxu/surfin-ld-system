@@ -3749,10 +3749,27 @@
       font-size: 56px;
       margin-bottom: 16px;
       transition: transform 0.3s ease;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 80px; /* Ensure space for image */
+    }
+
+    .flag-3d {
+      width: 80px;
+      height: 80px;
+      object-fit: contain;
+      filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.15)); /* 3D depth shadow */
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Bouncy pop */
     }
 
     .case-playbook-card:hover .case-playbook-flag {
-      transform: scale(1.1);
+      transform: none; /* Disable default scale on container to handle image separately */
+    }
+
+    .case-playbook-card:hover .flag-3d {
+      transform: scale(1.15) rotate(2deg) translateY(-4px);
+      filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.22)); /* Enhanced shadow on hover */
     }
 
     .case-playbook-name {
@@ -5191,7 +5208,9 @@
             <div class="case-tab-panel active" id="case-panel-crosscultural">
               <div class="case-cards-grid">
                 <div class="case-card" onclick="openCaseLibrary()">
-                  <div class="case-card-icon">🇰🇪</div>
+                  <div class="case-card-icon">
+                    <img src="assets/flags-3d/kenya.png" alt="Kenya Flag" class="flag-3d" style="width: 48px; height: 48px;">
+                  </div>
                   <div class="case-card-title">肯尼亚高风险环境下的管理实践</div>
                   <div class="case-card-dilemma">
                     <strong>管理者两难：</strong>外部暴乱通勤危险，业务不能停，人命输不起
@@ -5316,7 +5335,9 @@
             
             <div class="case-playbooks-grid">
               <div class="case-playbook-card" onclick="openCaseLibrary()">
-                <div class="case-playbook-flag">🇮🇩</div>
+                <div class="case-playbook-flag">
+                  <img src="assets/flags-3d/indonesia.png" alt="Indonesia Flag" class="flag-3d">
+                </div>
                 <div class="case-playbook-name">印度尼西亚</div>
                 <div class="case-playbook-name-en">Indonesia</div>
                 <div class="case-playbook-quote">
@@ -5331,7 +5352,9 @@
                 </div>
               </div>
               <div class="case-playbook-card" onclick="openCaseLibrary()">
-                <div class="case-playbook-flag">🇰🇪</div>
+                <div class="case-playbook-flag">
+                   <img src="assets/flags-3d/kenya.png" alt="Kenya Flag" class="flag-3d">
+                </div>
                 <div class="case-playbook-name">肯尼亚</div>
                 <div class="case-playbook-name-en">Kenya</div>
                 <div class="case-playbook-quote">
@@ -5346,7 +5369,9 @@
                 </div>
               </div>
               <div class="case-playbook-card" onclick="openCaseLibrary()">
-                <div class="case-playbook-flag">🇳🇬</div>
+                <div class="case-playbook-flag">
+                  <img src="assets/flags-3d/nigeria.png" alt="Nigeria Flag" class="flag-3d">
+                </div>
                 <div class="case-playbook-name">尼日利亚</div>
                 <div class="case-playbook-name-en">Nigeria</div>
                 <div class="case-playbook-quote">
