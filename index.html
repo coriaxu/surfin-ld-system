@@ -5579,6 +5579,10 @@
               <input type="checkbox" id="includeAI" checked style="width: 16px; height: 16px;">
               <span style="color: var(--text);">🤖 AI 知识库活动</span>
             </label>
+            <label style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 6px; background: var(--bg); cursor: pointer;">
+              <input type="checkbox" id="includeFinance" checked style="width: 16px; height: 16px;">
+              <span style="color: var(--text);">📚 金融小百科</span>
+            </label>
           </div>
         </div>
       </div>
@@ -6081,13 +6085,22 @@
         return a.date.startsWith(`${year}-${monthStr}`);
       }).length;
 
+      // 金融小百科数据
+      const financeItems = (state.financeWiki || []).filter(f => {
+        if (!f.date) return false;
+        return f.date.startsWith(`${year}-${monthStr}`);
+      });
+      const financeTotal = financeItems.length;
+      const financePublished = financeItems.filter(f => f.status === 'done' || f.viewRate !== null).length;
+
       return {
         yearMonth,
         year,
         month,
         training: { sessions: trainingSessions, totalSessions, totalPeople, totalHours },
         budget: { data: budgetData, totalBudget, totalSpend, remaining: totalBudget - totalSpend },
-        ai: { stationCount: aiStationCount }
+        ai: { stationCount: aiStationCount },
+        finance: { items: financeItems, total: financeTotal, published: financePublished }
       };
     }
 
@@ -6099,6 +6112,7 @@
       const includeTraining = document.getElementById('includeTraining').checked;
       const includeBudget = document.getElementById('includeBudget').checked;
       const includeAI = document.getElementById('includeAI').checked;
+      const includeFinance = document.getElementById('includeFinance').checked;
 
       if (!exportPdf && !exportExcel) {
         showToast('请至少选择一种导出格式', 'error');
@@ -6112,10 +6126,10 @@
 
       try {
         if (exportExcel) {
-          await generateMonthlyExcel(data, { includeTraining, includeBudget, includeAI });
+          await generateMonthlyExcel(data, { includeTraining, includeBudget, includeAI, includeFinance });
         }
         if (exportPdf) {
-          await generateMonthlyPdf(data, { includeTraining, includeBudget, includeAI });
+          await generateMonthlyPdf(data, { includeTraining, includeBudget, includeAI, includeFinance });
         }
         showToast('月度报告生成成功！', 'success');
       } catch (err) {
@@ -6141,7 +6155,8 @@
         ['月度预算', `¥${data.budget.totalBudget.toLocaleString()}`],
         ['实际支出', `¥${data.budget.totalSpend.toLocaleString()}`],
         ['预算剩余', `¥${data.budget.remaining.toLocaleString()}`],
-        ['AI广播站发布', `${data.ai.stationCount}期`]
+        ['AI广播站发布', `${data.ai.stationCount}期`],
+        ['金融小百科发布', `${data.finance.published}期`]
       ];
       const wsOverview = XLSX.utils.aoa_to_sheet(overviewData);
       XLSX.utils.book_append_sheet(wb, wsOverview, '概览');
@@ -6165,6 +6180,20 @@
         ]);
         const wsBudget = XLSX.utils.aoa_to_sheet([budgetHeader, ...budgetRows]);
         XLSX.utils.book_append_sheet(wb, wsBudget, '预算开销');
+      }
+
+      // Sheet 4: 金融小百科
+      if (opts.includeFinance && data.finance.items.length > 0) {
+        const financeHeader = ['期数', '标题', '状态', '查看率', '发布日期'];
+        const financeRows = data.finance.items.map(f => [
+          f.episode || '-',
+          f.title || '-',
+          f.status === 'done' ? '已发布' : (f.status === 'pending' ? '待发布' : f.status || '-'),
+          f.viewRate !== null ? `${f.viewRate}%` : '-',
+          f.date || '-'
+        ]);
+        const wsFinance = XLSX.utils.aoa_to_sheet([financeHeader, ...financeRows]);
+        XLSX.utils.book_append_sheet(wb, wsFinance, '金融小百科');
       }
 
       const fileName = `Surfin_Monthly_Report_${data.yearMonth}.xlsx`;
@@ -6258,6 +6287,20 @@
               <span style="color: rgba(255,255,255,0.7);">广播站发布</span>
               <span style="font-weight: 600;">${data.ai.stationCount}期</span>
             </div>
+          </div>
+        </div>
+        ` : ''}
+
+        ${opts.includeFinance ? `
+        <div style="background: rgba(255,255,255,0.05); border-radius: 12px; padding: 20px; margin-bottom: 20px;">
+          <div style="font-size: 14px; font-weight: 600; color: #059669; margin-bottom: 12px;">📚 金融小百科</div>
+          <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+            <span style="color: rgba(255,255,255,0.7);">本月发布期数</span>
+            <span style="font-weight: 600;">${data.finance.published}期</span>
+          </div>
+          <div style="display: flex; justify-content: space-between;">
+            <span style="color: rgba(255,255,255,0.7);">总规划期数</span>
+            <span style="font-weight: 600;">${data.finance.total}期</span>
           </div>
         </div>
         ` : ''}
