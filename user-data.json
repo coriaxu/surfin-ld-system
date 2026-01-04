@@ -12,6 +12,16 @@
   ],
   "aiStations": [
     {
+      "id": "lmbp1hlm",
+      "episode": 85,
+      "date": "2025-12-31",
+      "title": "港大'幽灵引用'论文撤稿、导师卸任：比AI幻觉更危险的是人类放弃自查",
+      "views": 33,
+      "total": 346,
+      "category": "paper",
+      "note": ""
+    },
+    {
       "id": "ep23",
       "episode": 23,
       "date": "2024-08-01",
