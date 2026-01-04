@@ -314,7 +314,7 @@
       "id": "f7cefqk6",
       "episode": 85,
       "name": "数据回收",
-      "done": false
+      "done": true
     },
     {
       "id": "pntiilqp",
@@ -380,7 +380,7 @@
       "output": "优化清单",
       "detail": "沉淀经验",
       "owner": "复盘",
-      "done": false
+      "done": true
     }
   ],
   "aiShareTasks": [
