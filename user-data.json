@@ -9,7 +9,16 @@
       "note": "包括 25 年 12 月未提报的开销以及金融小百科的视频费用"
     }
   ],
-  "expenses": [],
+  "expenses": [
+    {
+      "id": "mr6lv19o",
+      "date": "2026-01-05",
+      "month": "2026-01",
+      "type": "regular",
+      "amount": 154.5,
+      "desc": "金融小百科-稳定币开销"
+    }
+  ],
   "aiStations": [
     {
       "id": "lmbp1hlm",
