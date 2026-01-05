@@ -1317,6 +1317,133 @@
       display: block;
     }
 
+    /* 预算与开销 Tab 样式 */
+    .budget-tabs {
+      display: flex;
+      gap: 4px;
+      background: var(--surface-elevated);
+      padding: 4px;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-ambient);
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(16px) saturate(160%);
+      -webkit-backdrop-filter: blur(16px) saturate(160%);
+      width: fit-content;
+      margin-bottom: 20px;
+    }
+
+    .budget-tab {
+      padding: 10px 24px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 14px;
+      font-weight: 600;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+
+    .budget-tab:hover {
+      color: var(--text-body);
+      background: var(--surface-elevated);
+    }
+
+    .budget-tab.active {
+      background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 100%);
+      color: white;
+      box-shadow: var(--shadow-ambient);
+    }
+
+    .budget-panel {
+      display: none;
+    }
+
+    .budget-panel.active {
+      display: block;
+    }
+
+    /* 预实对比样式 */
+    .compare-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .compare-card {
+      background: var(--surface-card);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      border: 1px solid var(--glass-border);
+    }
+
+    .compare-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .compare-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-title);
+    }
+
+    .compare-badge {
+      font-size: 12px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-weight: 500;
+    }
+
+    .compare-badge.surplus {
+      background: rgba(16, 185, 129, 0.15);
+      color: #10b981;
+    }
+
+    .compare-badge.deficit {
+      background: rgba(239, 68, 68, 0.15);
+      color: #ef4444;
+    }
+
+    .compare-progress {
+      height: 10px;
+      background: var(--surface-elevated);
+      border-radius: 5px;
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+
+    .compare-progress-bar {
+      height: 100%;
+      border-radius: 5px;
+      transition: width 0.5s ease;
+    }
+
+    .compare-progress-bar.safe {
+      background: linear-gradient(90deg, #10b981, #34d399);
+    }
+
+    .compare-progress-bar.warning {
+      background: linear-gradient(90deg, #f59e0b, #fbbf24);
+    }
+
+    .compare-progress-bar.danger {
+      background: linear-gradient(90deg, #ef4444, #f87171);
+    }
+
+    .compare-stats {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .compare-amount {
+      font-weight: 600;
+      color: var(--text-body);
+    }
+
     .ai-top-grid {
       display: grid;
       grid-template-columns: 1fr;
@@ -5417,54 +5544,118 @@
             </h2>
           </div>
           <div class="card-body">
-            <p class="card-intro">按月度记录预算与实际开销，区分常规项目与特殊项目，自动计算剩余金额。</p>
-            <form id="budgetForm">
-              <div class="form-grid">
-                <div class="form-group">
-                  <label class="form-label">月份</label>
-                  <input type="month" id="budgetMonth" required />
-                </div>
-                <div class="form-group">
-                  <label class="form-label">类型</label>
-                  <select id="budgetType">
-                    <option value="regular">常规项目</option>
-                    <option value="special">特殊项目</option>
-                  </select>
-                </div>
-                <div class="form-group">
-                  <label class="form-label">预算金额（元）</label>
-                  <input type="number" min="0" id="budgetAmount" required />
-                </div>
-                <div class="form-group">
-                  <label class="form-label">实际开销（元）</label>
-                  <input type="number" min="0" id="budgetSpent" />
-                </div>
-                <div class="form-group span-full">
-                  <label class="form-label">备注</label>
-                  <textarea id="budgetNote" placeholder="预算说明或开销原因"></textarea>
-                </div>
-                <input type="hidden" id="budgetId" />
-                <div class="form-footer">
-                  <button class="btn btn-primary" type="submit">保存记录</button>
-                </div>
-              </div>
-            </form>
-            <div class="table-wrap">
-              <table>
-                <thead>
-                  <tr>
-                    <th>月份</th>
-                    <th>类型</th>
-                    <th>预算</th>
-                    <th>实际</th>
-                    <th>剩余</th>
-                    <th>备注</th>
-                    <th>操作</th>
-                  </tr>
-                </thead>
-                <tbody id="budgetTable"></tbody>
-              </table>
+            <!-- Tab 导航 -->
+            <div class="budget-tabs">
+              <button class="budget-tab active" data-tab="budget-plan">📊 预算计划</button>
+              <button class="budget-tab" data-tab="expense-list">💳 开销记录</button>
+              <button class="budget-tab" data-tab="budget-compare">📈 预实对比</button>
             </div>
+
+            <!-- 预算计划 Tab -->
+            <div class="budget-panel active" id="panel-budget-plan">
+              <p class="card-intro">按月度设定预算上限，区分常规项目与特殊项目。</p>
+              <form id="budgetForm">
+                <div class="form-grid">
+                  <div class="form-group">
+                    <label class="form-label">月份</label>
+                    <input type="month" id="budgetMonth" required />
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">类型</label>
+                    <select id="budgetType">
+                      <option value="regular">常规项目</option>
+                      <option value="special">特殊项目</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">预算金额（元）</label>
+                    <input type="number" min="0" id="budgetAmount" required />
+                  </div>
+                  <div class="form-group span-full">
+                    <label class="form-label">备注</label>
+                    <textarea id="budgetNote" placeholder="预算说明"></textarea>
+                  </div>
+                  <input type="hidden" id="budgetId" />
+                  <div class="form-footer">
+                    <button class="btn btn-primary" type="submit">保存预算</button>
+                  </div>
+                </div>
+              </form>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>月份</th>
+                      <th>类型</th>
+                      <th>预算额</th>
+                      <th>已支出</th>
+                      <th>剩余</th>
+                      <th>备注</th>
+                      <th>操作</th>
+                    </tr>
+                  </thead>
+                  <tbody id="budgetTable"></tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- 开销记录 Tab -->
+            <div class="budget-panel" id="panel-expense-list">
+              <p class="card-intro">逐笔记录实际支出，支持分类追踪和明细查看。</p>
+              <form id="expenseForm">
+                <div class="form-grid">
+                  <div class="form-group">
+                    <label class="form-label">开销日期</label>
+                    <input type="date" id="expenseDate" required />
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">归属月份</label>
+                    <input type="month" id="expenseMonth" required />
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">分类</label>
+                    <select id="expenseType">
+                      <option value="regular">常规项目</option>
+                      <option value="special">特殊项目</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">金额（元）</label>
+                    <input type="number" min="0" step="0.01" id="expenseAmount" required />
+                  </div>
+                  <div class="form-group span-full">
+                    <label class="form-label">用途说明</label>
+                    <textarea id="expenseDesc" placeholder="这笔钱花在哪里" required></textarea>
+                  </div>
+                  <input type="hidden" id="expenseId" />
+                  <div class="form-footer">
+                    <button class="btn btn-primary" type="submit">保存开销</button>
+                  </div>
+                </div>
+              </form>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>日期</th>
+                      <th>归属月份</th>
+                      <th>分类</th>
+                      <th>金额</th>
+                      <th>用途说明</th>
+                      <th>操作</th>
+                    </tr>
+                  </thead>
+                  <tbody id="expenseTable"></tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- 预实对比 Tab -->
+            <div class="budget-panel" id="panel-budget-compare">
+              <p class="card-intro">预算与实际支出对比分析，一目了然掌握预算执行情况。</p>
+              <div id="budgetCompareContainer"></div>
+            </div>
+
           </div>
         </div>
       </div>
@@ -5632,6 +5823,7 @@
     const state = {
       sessions: [],
       budgets: [],
+      expenses: [],  // 新增：独立的开销记录表
       aiStations: [],
       aiShares: [],
       aiStationTitles: {},
@@ -6544,15 +6736,17 @@
         return;
       }
       state.budgets.sort((a, b) => b.month.localeCompare(a.month)).forEach(item => {
-        const remain = Number(item.amount) - Number(item.spent);
+        // 从 expenses 中计算该月份+类型的实际支出
+        const spent = getSpentByMonthType(item.month, item.type);
+        const remain = Number(item.amount) - spent;
         const typeLabel = item.type === 'regular' ? '<span class="tag tag-primary">常规</span>' : '<span class="tag tag-warning">特殊</span>';
         const remainClass = remain >= 0 ? 'val-positive' : 'val-negative';
         const row = document.createElement('tr');
         row.innerHTML = `
           <td>${item.month}</td>
           <td>${typeLabel}</td>
-          <td>¥${item.amount.toLocaleString()}</td>
-          <td>¥${item.spent.toLocaleString()}</td>
+          <td>¥${Number(item.amount).toLocaleString()}</td>
+          <td>¥${spent.toLocaleString()}</td>
           <td class="${remainClass}">¥${remain.toLocaleString()}</td>
           <td>${item.note || '-'}</td>
           <td>
@@ -6566,8 +6760,114 @@
       });
     }
 
+    // 辅助函数：计算指定月份+类型的总支出
+    function getSpentByMonthType(month, type) {
+      if (!state.expenses || !Array.isArray(state.expenses)) return 0;
+      return state.expenses
+        .filter(e => e.month === month && e.type === type)
+        .reduce((sum, e) => sum + (Number(e.amount) || 0), 0);
+    }
+
+    // 辅助函数：计算指定月份的总支出
+    function getSpentByMonth(month) {
+      if (!state.expenses || !Array.isArray(state.expenses)) return 0;
+      return state.expenses
+        .filter(e => e.month === month)
+        .reduce((sum, e) => sum + (Number(e.amount) || 0), 0);
+    }
+
+    // 渲染开销记录表格
+    function renderExpenses() {
+      const tbody = document.getElementById('expenseTable');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+      if (!state.expenses || state.expenses.length === 0) {
+        tbody.innerHTML = '<tr><td class="empty-cell" colspan="6">暂无开销记录</td></tr>';
+        return;
+      }
+      state.expenses.sort((a, b) => new Date(b.date) - new Date(a.date)).forEach(item => {
+        const typeLabel = item.type === 'regular' ? '<span class="tag tag-primary">常规</span>' : '<span class="tag tag-warning">特殊</span>';
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${item.date}</td>
+          <td>${item.month}</td>
+          <td>${typeLabel}</td>
+          <td>¥${Number(item.amount).toLocaleString()}</td>
+          <td>${item.desc || '-'}</td>
+          <td>
+            <div class="actions-row">
+              <button class="btn btn-edit" onclick="editExpense('${item.id}')">编辑</button>
+              <button class="btn btn-delete" onclick="deleteExpense('${item.id}')">删除</button>
+            </div>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    // 渲染预实对比视图
+    function renderBudgetCompare() {
+      const container = document.getElementById('budgetCompareContainer');
+      if (!container) return;
+
+      // 按月份分组统计
+      const months = [...new Set(state.budgets.map(b => b.month))].sort().reverse();
+
+      if (months.length === 0) {
+        container.innerHTML = '<div class="empty-state">暂无预算数据，请先在"预算计划"中添加预算</div>';
+        return;
+      }
+
+      let html = '<div class="compare-grid">';
+
+      months.forEach(month => {
+        const monthBudgets = state.budgets.filter(b => b.month === month);
+
+        monthBudgets.forEach(budget => {
+          const spent = getSpentByMonthType(month, budget.type);
+          const remain = Number(budget.amount) - spent;
+          const percent = budget.amount > 0 ? Math.min((spent / budget.amount) * 100, 100) : 0;
+          const typeLabel = budget.type === 'regular' ? '常规项目' : '特殊项目';
+
+          let progressClass = 'safe';
+          if (percent >= 90) progressClass = 'danger';
+          else if (percent >= 70) progressClass = 'warning';
+
+          const badgeClass = remain >= 0 ? 'surplus' : 'deficit';
+          const badgeText = remain >= 0 ? `结余 ¥${remain.toLocaleString()}` : `超支 ¥${Math.abs(remain).toLocaleString()}`;
+
+          html += `
+            <div class="compare-card">
+              <div class="compare-header">
+                <span class="compare-title">${month} · ${typeLabel}</span>
+                <span class="compare-badge ${badgeClass}">${badgeText}</span>
+              </div>
+              <div class="compare-progress">
+                <div class="compare-progress-bar ${progressClass}" style="width: ${percent}%"></div>
+              </div>
+              <div class="compare-stats">
+                <span>预算 <span class="compare-amount">¥${Number(budget.amount).toLocaleString()}</span></span>
+                <span>已用 <span class="compare-amount">¥${spent.toLocaleString()}</span> (${percent.toFixed(1)}%)</span>
+              </div>
+            </div>
+          `;
+        });
+      });
+
+      html += '</div>';
+      container.innerHTML = html;
+    }
+
     function resetSessionForm() { document.getElementById('sessionForm').reset(); document.getElementById('sessionId').value = ''; }
     function resetBudgetForm() { document.getElementById('budgetForm').reset(); document.getElementById('budgetId').value = ''; }
+    function resetExpenseForm() { 
+      document.getElementById('expenseForm').reset(); 
+      document.getElementById('expenseId').value = ''; 
+      // 默认设置日期为今天，归属月份为当月
+      const today = new Date();
+      document.getElementById('expenseDate').value = today.toISOString().split('T')[0];
+      document.getElementById('expenseMonth').value = today.toISOString().slice(0, 7);
+    }
 
     window.editSession = function (id) {
       const item = state.sessions.find(s => s.id === id);
@@ -6598,9 +6898,10 @@
       document.getElementById('budgetMonth').value = item.month;
       document.getElementById('budgetType').value = item.type;
       document.getElementById('budgetAmount').value = item.amount;
-      document.getElementById('budgetSpent').value = item.spent;
-      document.getElementById('budgetNote').value = item.note;
+      document.getElementById('budgetNote').value = item.note || '';
+      // 切换到预算页面并激活预算计划Tab
       document.querySelector('.nav-item[data-page="budget"]').click();
+      switchBudgetTab('budget-plan');
     };
 
     window.deleteBudget = function (id) {
@@ -6610,6 +6911,44 @@
         showToast('记录已删除', 'success');
       });
     };
+
+    // 开销编辑功能
+    window.editExpense = function (id) {
+      const item = state.expenses.find(e => e.id === id);
+      if (!item) return;
+      document.getElementById('expenseId').value = item.id;
+      document.getElementById('expenseDate').value = item.date;
+      document.getElementById('expenseMonth').value = item.month;
+      document.getElementById('expenseType').value = item.type;
+      document.getElementById('expenseAmount').value = item.amount;
+      document.getElementById('expenseDesc').value = item.desc || '';
+      // 切换到预算页面并激活开销记录Tab
+      document.querySelector('.nav-item[data-page="budget"]').click();
+      switchBudgetTab('expense-list');
+    };
+
+    // 开销删除功能
+    window.deleteExpense = function (id) {
+      showConfirm('确认删除这条开销记录吗？此操作不可恢复。', () => {
+        state.expenses = state.expenses.filter(e => e.id !== id);
+        persist(); renderAll();
+        showToast('开销已删除', 'success');
+      });
+    };
+
+    // 预算模块Tab切换函数
+    function switchBudgetTab(tabId) {
+      document.querySelectorAll('.budget-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.budget-panel').forEach(p => p.classList.remove('active'));
+      const tab = document.querySelector(`.budget-tab[data-tab="${tabId}"]`);
+      if (tab) tab.classList.add('active');
+      const panel = document.getElementById('panel-' + tabId);
+      if (panel) panel.classList.add('active');
+      // 切换到预实对比时刷新数据
+      if (tabId === 'budget-compare') {
+        renderBudgetCompare();
+      }
+    }
 
     function renderStats() {
       const now = new Date();
@@ -6624,7 +6963,8 @@
       document.getElementById('statUpcoming').textContent = latest ? `最近：${latest.course}` : '最近培训：-';
 
       const monthBudgets = state.budgets.filter(b => b.month === monthStr);
-      const spentTotal = monthBudgets.reduce((s, b) => s + (Number(b.spent) || 0), 0);
+      // 从 expenses 中计算本月实际支出
+      const spentTotal = getSpentByMonth(monthStr);
 
       document.getElementById('statMonthPeople').textContent = monthPeople.toLocaleString();
       document.getElementById('statMonthSpend').textContent = `¥${spentTotal.toLocaleString()}`;
@@ -6635,7 +6975,9 @@
       const yearBudgets = state.budgets.filter(b => b.month.startsWith(yearPrefix));
       const yearPeople = yearSessions.reduce((sum, s) => sum + (Number(s.people) || 0), 0);
       const yearHours = yearSessions.reduce((sum, s) => sum + calcManHours(s), 0);
-      const yearSpend = yearBudgets.reduce((sum, b) => sum + (Number(b.spent) || 0), 0);
+      // 从 expenses 中计算年度实际支出
+      const yearExpenses = state.expenses ? state.expenses.filter(e => e.month && e.month.startsWith(yearPrefix)) : [];
+      const yearSpend = yearExpenses.reduce((sum, e) => sum + (Number(e.amount) || 0), 0);
 
       document.getElementById('statYearSessions').textContent = yearSessions.length;
       document.getElementById('statYearPeople').textContent = yearPeople.toLocaleString();
@@ -6704,7 +7046,8 @@
 
       const months = [...new Set(state.budgets.map(b => b.month))].sort();
       const budgetAmount = months.map(m => state.budgets.filter(b => b.month === m).reduce((s, b) => s + Number(b.amount), 0));
-      const budgetSpent = months.map(m => state.budgets.filter(b => b.month === m).reduce((s, b) => s + Number(b.spent), 0));
+      // 从 expenses 计算每月实际支出
+      const budgetSpent = months.map(m => getSpentByMonth(m));
 
       if (budgetChart) budgetChart.destroy();
       budgetChart = new Chart(document.getElementById('budgetChart'), {
@@ -6727,8 +7070,9 @@
         }
       });
 
-      const costRegular = state.budgets.filter(b => b.type === 'regular').reduce((s, b) => s + Number(b.spent), 0);
-      const costSpecial = state.budgets.filter(b => b.type === 'special').reduce((s, b) => s + Number(b.spent), 0);
+      // 从 expenses 计算常规/特殊开销
+      const costRegular = state.expenses ? state.expenses.filter(e => e.type === 'regular').reduce((s, e) => s + Number(e.amount), 0) : 0;
+      const costSpecial = state.expenses ? state.expenses.filter(e => e.type === 'special').reduce((s, e) => s + Number(e.amount), 0) : 0;
       const totalSpent = costRegular + costSpecial;
 
       // 圆心文字插件
@@ -6897,6 +7241,7 @@
     function applyImportedState(payload) {
       state.sessions = Array.isArray(payload.sessions) ? payload.sessions : [];
       state.budgets = Array.isArray(payload.budgets) ? payload.budgets : [];
+      state.expenses = Array.isArray(payload.expenses) ? payload.expenses : [];  // 新增：加载开销数据
       state.aiStations = Array.isArray(payload.aiStations) ? normalizeEpisodeList(payload.aiStations) : [];
       state.aiShares = Array.isArray(payload.aiShares) ? normalizeEpisodeList(payload.aiShares) : [];
       state.aiStationTasks = Array.isArray(payload.aiStationTasks) ? normalizeTaskEpisodes(payload.aiStationTasks) : [];
@@ -7072,16 +7417,30 @@
       XLSX.utils.book_append_sheet(wb, ws1, '培训记录');
 
       // 预算记录表
-      const budgetsData = state.budgets.map(b => ({
-        '月份': b.month,
-        '类型': b.type === 'regular' ? '常规' : '特殊',
-        '预算': b.amount,
-        '实际': b.spent,
-        '剩余': b.amount - b.spent,
-        '备注': b.note || ''
-      }));
+      const budgetsData = state.budgets.map(b => {
+        const spent = getSpentByMonthType(b.month, b.type);
+        return {
+          '月份': b.month,
+          '类型': b.type === 'regular' ? '常规' : '特殊',
+          '预算': b.amount,
+          '实际': spent,
+          '剩余': b.amount - spent,
+          '备注': b.note || ''
+        };
+      });
       const ws2 = XLSX.utils.json_to_sheet(budgetsData);
-      XLSX.utils.book_append_sheet(wb, ws2, '预算开销');
+      XLSX.utils.book_append_sheet(wb, ws2, '预算计划');
+
+      // 开销明细表
+      const expensesData = (state.expenses || []).map(e => ({
+        '日期': e.date,
+        '归属月份': e.month,
+        '分类': e.type === 'regular' ? '常规' : '特殊',
+        '金额': e.amount,
+        '用途说明': e.desc || ''
+      }));
+      const ws3 = XLSX.utils.json_to_sheet(expensesData);
+      XLSX.utils.book_append_sheet(wb, ws3, '开销明细');
 
       XLSX.writeFile(wb, 'Surfin学习发展数据.xlsx');
     };
@@ -7105,6 +7464,8 @@
     function renderAll() {
       renderSessions();
       renderBudgets();
+      renderExpenses();
+      renderBudgetCompare();
       renderStats();
       renderCharts();
       renderFinanceWiki();
@@ -7132,13 +7493,11 @@
 
     document.getElementById('budgetForm').addEventListener('submit', e => {
       e.preventDefault();
-      const spentValue = document.getElementById('budgetSpent').value;
       const payload = {
         id: document.getElementById('budgetId').value || uid(),
         month: document.getElementById('budgetMonth').value,
         type: document.getElementById('budgetType').value,
         amount: Number(document.getElementById('budgetAmount').value),
-        spent: spentValue === '' ? 0 : Number(spentValue),
         note: document.getElementById('budgetNote').value
       };
       const existing = state.budgets.find(b => b.id === payload.id);
@@ -7146,6 +7505,31 @@
       else state.budgets.push(payload);
       resetBudgetForm(); renderAll();
       showToast('预算记录已保存', 'success');
+    });
+
+    // 开销表单提交
+    document.getElementById('expenseForm').addEventListener('submit', e => {
+      e.preventDefault();
+      const payload = {
+        id: document.getElementById('expenseId').value || uid(),
+        date: document.getElementById('expenseDate').value,
+        month: document.getElementById('expenseMonth').value,
+        type: document.getElementById('expenseType').value,
+        amount: Number(document.getElementById('expenseAmount').value),
+        desc: document.getElementById('expenseDesc').value
+      };
+      const existing = state.expenses.find(ex => ex.id === payload.id);
+      if (existing) Object.assign(existing, payload);
+      else state.expenses.push(payload);
+      resetExpenseForm(); renderAll();
+      showToast('开销记录已保存', 'success');
+    });
+
+    // 预算模块 Tab 切换事件
+    document.querySelectorAll('.budget-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        switchBudgetTab(tab.dataset.tab);
+      });
     });
 
     // 初始化
