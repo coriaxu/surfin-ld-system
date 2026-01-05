@@ -8858,6 +8858,7 @@
       if (!state.financeWiki) state.financeWiki = [];
       renderFinanceKanban();
       renderFinanceHeatmap(); // Also refresh the timeline
+      renderFinanceStatsTable(); // 修复：保存后刷新统计表格
     }
 
     // --- Drag & Drop Handlers ---
