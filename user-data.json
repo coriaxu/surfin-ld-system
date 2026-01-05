@@ -828,7 +828,7 @@
       "id": "fuzfjc2g",
       "episode": 9,
       "title": "稳定币超入门 第9期",
-      "date": "2025-12-26",
+      "date": "2026-01-06",
       "note": "",
       "views": 0,
       "total": 260,
@@ -841,7 +841,12 @@
         "publish": false,
         "data": false
       },
-      "project": "Stablecoin 101"
+      "project": "Stablecoin 101",
+      "unread": null,
+      "read": null,
+      "viewRate": null,
+      "downloads": null,
+      "downloadRate": null
     }
   ],
   "currentFinanceEpisode": "fuzfjc2g"
