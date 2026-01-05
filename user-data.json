@@ -836,12 +836,13 @@
         "draft": true,
         "topic": true,
         "ppt": true,
-        "video": false,
-        "copy": false,
+        "video": true,
+        "copy": true,
         "publish": false,
         "data": false
       },
       "project": "Stablecoin 101"
     }
-  ]
+  ],
+  "currentFinanceEpisode": "fuzfjc2g"
 }
