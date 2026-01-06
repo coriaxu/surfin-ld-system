@@ -791,7 +791,7 @@
       "episode": 7,
       "season": "stablecoin",
       "title": "全球合规共性：FATF旅行规则与风控基线",
-      "date": "2026-01-03",
+      "date": "2025-12-09",
       "unread": 28,
       "read": 318,
       "viewRate": 91.9,
@@ -859,5 +859,5 @@
       "downloadRate": null
     }
   ],
-  "currentFinanceEpisode": "fin08"
+  "currentFinanceEpisode": "fin06"
 }
