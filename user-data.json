@@ -688,7 +688,7 @@
         "video": true,
         "review": true,
         "publish": true,
-        "data": false,
+        "data": true,
         "copy": true
       },
       "total": 260,
@@ -863,5 +863,5 @@
       "downloadRate": null
     }
   ],
-  "currentFinanceEpisode": "fin03"
+  "currentFinanceEpisode": "fin02"
 }
