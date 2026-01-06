@@ -721,7 +721,7 @@
       "episode": 4,
       "season": "stablecoin",
       "title": "两场真实崩盘：为什么'稳定'币也会暴雷",
-      "date": "2025-11-15",
+      "date": "2025-10-28",
       "unread": 40,
       "read": 303,
       "viewRate": 88.3,
@@ -736,7 +736,9 @@
         "publish": true,
         "data": false,
         "copy": true
-      }
+      },
+      "total": 260,
+      "note": ""
     },
     {
       "id": "fin05",
@@ -859,5 +861,5 @@
       "downloadRate": null
     }
   ],
-  "currentFinanceEpisode": "fin04"
+  "currentFinanceEpisode": "fin03"
 }
