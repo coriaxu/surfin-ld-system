@@ -699,7 +699,7 @@
       "episode": 3,
       "season": "stablecoin",
       "title": "稳定币怎么'稳'：美元霸权的数字延伸",
-      "date": "2025-11-01",
+      "date": "2025-10-14",
       "unread": 33,
       "read": 310,
       "viewRate": 90.4,
@@ -714,7 +714,9 @@
         "publish": true,
         "data": false,
         "copy": true
-      }
+      },
+      "total": 260,
+      "note": ""
     },
     {
       "id": "fin04",
