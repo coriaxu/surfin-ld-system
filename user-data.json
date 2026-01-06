@@ -848,7 +848,7 @@
         "ppt": true,
         "video": true,
         "copy": true,
-        "publish": false,
+        "publish": true,
         "data": false
       },
       "project": "Stablecoin 101"
