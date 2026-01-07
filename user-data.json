@@ -9,6 +9,16 @@
       "people": 1,
       "duration": 2,
       "note": ""
+    },
+    {
+      "id": "jahuuo55",
+      "date": "2026-01-07",
+      "course": "1 对 1 辅导答疑",
+      "project": "AI 赋能训练营",
+      "lecturer": "\t徐浩",
+      "people": 1,
+      "duration": 2,
+      "note": "跟双双"
     }
   ],
   "budgets": [
