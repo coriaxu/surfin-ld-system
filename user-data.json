@@ -592,6 +592,116 @@
       "detail": "沉淀经验",
       "owner": "复盘",
       "done": true
+    },
+    {
+      "id": "g6w20dda",
+      "episode": 88,
+      "name": "确定本期主题",
+      "stage": "theme",
+      "tool": "主题对齐",
+      "output": "选题定位",
+      "detail": "明确看点与受众",
+      "owner": "策划",
+      "done": false
+    },
+    {
+      "id": "9kmvwfh3",
+      "episode": 88,
+      "name": "主文案撰写",
+      "stage": "writing",
+      "tool": "钉钉文档",
+      "output": "主稿",
+      "detail": "可直接发布",
+      "owner": "内容",
+      "done": false
+    },
+    {
+      "id": "5sz7hqs0",
+      "episode": 88,
+      "name": "飞书归档同步",
+      "stage": "sync",
+      "tool": "飞书文档",
+      "output": "归档记录",
+      "detail": "版本一致",
+      "owner": "归档",
+      "done": false
+    },
+    {
+      "id": "3nj5jzop",
+      "episode": 88,
+      "name": "视觉海报制作",
+      "stage": "produce",
+      "tool": "Gemini",
+      "output": "海报/封面",
+      "detail": "主视觉",
+      "owner": "设计",
+      "done": false
+    },
+    {
+      "id": "0opg5lsh",
+      "episode": 88,
+      "name": "AI 播客制作",
+      "stage": "produce",
+      "tool": "豆包",
+      "output": "播客",
+      "detail": "音频成品",
+      "owner": "剪辑",
+      "done": false
+    },
+    {
+      "id": "9izg0vmz",
+      "episode": 88,
+      "name": "全球 AI 新闻撰写",
+      "stage": "assemble",
+      "tool": "钉钉文档",
+      "output": "新闻区块",
+      "detail": "嵌入广播站",
+      "owner": "内容",
+      "done": false
+    },
+    {
+      "id": "9zw025th",
+      "episode": 88,
+      "name": "发刊词撰写",
+      "stage": "assemble",
+      "tool": "钉钉文档",
+      "output": "发刊词",
+      "detail": "开场引导",
+      "owner": "内容",
+      "done": false
+    },
+    {
+      "id": "8cgo8tqy",
+      "episode": 88,
+      "name": "钉钉群发布",
+      "stage": "publish",
+      "tool": "钉钉群",
+      "output": "触达发布",
+      "detail": "群内推送",
+      "owner": "运营",
+      "done": false
+    },
+    {
+      "id": "r4gk2ebt",
+      "episode": 88,
+      "name": "数据回收与查看率",
+      "stage": "data",
+      "tool": "数据回收",
+      "output": "查看率",
+      "detail": "发布后 2 天",
+      "owner": "分析",
+      "done": false
+    },
+    {
+      "id": "humwgow5",
+      "episode": 88,
+      "name": "复盘与改进",
+      "stage": "review",
+      "tool": "复盘模板",
+      "output": "优化清单",
+      "detail": "沉淀经验",
+      "owner": "复盘",
+      "done": false
     }
   ],
   "aiShareTasks": [
@@ -684,7 +794,7 @@
       "done": false
     }
   ],
-  "currentStationEpisode": 86,
+  "currentStationEpisode": 88,
   "currentShareEpisode": 13,
   "financeWiki": [
     {
