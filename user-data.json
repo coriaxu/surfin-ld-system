@@ -368,7 +368,9 @@
     "86": "Meta收购Manus背后，3个深刻洞察",
     "87": "不读代码，光看4万小时直播英伟达团队让AI自动学会千款游戏"
   },
-  "aiShareTitles": {},
+  "aiShareTitles": {
+    "1": "NotebookLM 实战应用 - 你的 AI 第二大脑"
+  },
   "aiStationTasks": [
     {
       "id": "vw89gvsa",
@@ -793,10 +795,98 @@
       "detail": "人数/资料",
       "owner": "",
       "done": false
+    },
+    {
+      "id": "1m771s8m",
+      "episode": 1,
+      "name": "主题确定",
+      "stage": "theme",
+      "tool": "需求对齐",
+      "output": "主题&目标",
+      "detail": "明确人群",
+      "owner": "",
+      "done": false
+    },
+    {
+      "id": "8hhwvlwo",
+      "episode": 1,
+      "name": "课程开发",
+      "stage": "dev",
+      "tool": "PPT/脚本",
+      "output": "课件",
+      "detail": "内容开发",
+      "owner": "",
+      "done": false
+    },
+    {
+      "id": "6kxhqxik",
+      "episode": 1,
+      "name": "宣发物料",
+      "stage": "material",
+      "tool": "设计/文案",
+      "output": "海报/二维码",
+      "detail": "物料准备",
+      "owner": "",
+      "done": false
+    },
+    {
+      "id": "l1n4df8d",
+      "episode": 1,
+      "name": "首轮通知",
+      "stage": "notify1",
+      "tool": "钉钉/飞书",
+      "output": "通知已发",
+      "detail": "周五预告",
+      "owner": "",
+      "done": false
+    },
+    {
+      "id": "qxrv5eic",
+      "episode": 1,
+      "name": "二轮通知",
+      "stage": "notify2",
+      "tool": "钉钉/飞书",
+      "output": "名单确认",
+      "detail": "周二/三确认",
+      "owner": "",
+      "done": false
+    },
+    {
+      "id": "qw6oqoge",
+      "episode": 1,
+      "name": "建群倒计时",
+      "stage": "group",
+      "tool": "社群运营",
+      "output": "群/倒计时",
+      "detail": "氛围营造",
+      "owner": "",
+      "done": false
+    },
+    {
+      "id": "0dvnw136",
+      "episode": 1,
+      "name": "培训执行",
+      "stage": "execute",
+      "tool": "线下/直播",
+      "output": "培训完成",
+      "detail": "控场/录制",
+      "owner": "",
+      "done": false
+    },
+    {
+      "id": "bqq0w42f",
+      "episode": 1,
+      "name": "数据归档",
+      "stage": "archive",
+      "tool": "档案库",
+      "output": "归档记录",
+      "detail": "人数/资料",
+      "owner": "",
+      "done": false
     }
   ],
   "currentStationEpisode": 87,
-  "currentShareEpisode": 13,
+  "currentShareEpisode": 1,
   "financeWiki": [
     {
       "id": "fin01",
