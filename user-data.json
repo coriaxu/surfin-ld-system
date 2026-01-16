@@ -1214,7 +1214,21 @@
       "viewRate": null,
       "downloads": 8,
       "downloadRate": null
+    },
+    {
+      "id": "n7zys5rp",
+      "workflow": {},
+      "episode": 10,
+      "title": "会计与税务入门：别把\"像现金\"当成真的现金",
+      "date": "2026-01-20",
+      "unread": null,
+      "read": null,
+      "viewRate": null,
+      "downloads": null,
+      "downloadRate": null,
+      "total": 260,
+      "note": ""
     }
   ],
-  "currentFinanceEpisode": "fuzfjc2g"
+  "currentFinanceEpisode": "n7zys5rp"
 }
