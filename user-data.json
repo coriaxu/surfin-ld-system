@@ -1217,7 +1217,15 @@
     },
     {
       "id": "n7zys5rp",
-      "workflow": {},
+      "workflow": {
+        "topic": true,
+        "draft": true,
+        "ppt": true,
+        "video": false,
+        "copy": false,
+        "publish": false,
+        "data": false
+      },
       "episode": 10,
       "title": "会计与税务入门：别把\"像现金\"当成真的现金",
       "date": "2026-01-20",
