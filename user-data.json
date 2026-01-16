@@ -1198,7 +1198,7 @@
       "date": "2026-01-06",
       "note": "",
       "views": 0,
-      "total": 260,
+      "total": 347,
       "workflow": {
         "draft": true,
         "topic": true,
@@ -1209,7 +1209,7 @@
         "data": true
       },
       "project": "Stablecoin 101",
-      "unread": null,
+      "unread": 37,
       "read": null,
       "viewRate": null,
       "downloads": null,
