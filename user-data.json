@@ -1206,7 +1206,7 @@
         "video": true,
         "copy": true,
         "publish": true,
-        "data": false
+        "data": true
       },
       "project": "Stablecoin 101",
       "unread": null,
@@ -1215,5 +1215,6 @@
       "downloads": null,
       "downloadRate": null
     }
-  ]
+  ],
+  "currentFinanceEpisode": "fuzfjc2g"
 }
