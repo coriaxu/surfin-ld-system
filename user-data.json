@@ -1211,9 +1211,9 @@
       "project": "Stablecoin 101",
       "unread": 37,
       "read": 300,
-      "viewRate": null,
+      "viewRate": 86.5,
       "downloads": 8,
-      "downloadRate": null
+      "downloadRate": 2.3
     },
     {
       "id": "n7zys5rp",
@@ -1237,5 +1237,6 @@
       "total": 260,
       "note": ""
     }
-  ]
+  ],
+  "currentFinanceEpisode": "fuzfjc2g"
 }
