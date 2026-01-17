@@ -5250,7 +5250,7 @@
                   </div>
                   <div class="form-group">
                     <label class="form-label">查看率 (%)</label>
-                    <input type="number" id="finViewRate" min="0" max="100" step="0.1" placeholder="自动计算" />
+                    <input type="number" id="finViewRate" min="0" max="100" step="0.1" placeholder="自动计算" readonly style="background-color: var(--bg-tertiary); cursor: not-allowed;" />
                   </div>
                   <div class="form-group">
                     <label class="form-label">下载人数</label>
@@ -5258,11 +5258,11 @@
                   </div>
                   <div class="form-group">
                     <label class="form-label">下载率 (%)</label>
-                    <input type="number" id="finDownloadRate" min="0" max="100" step="0.1" placeholder="自动计算" />
+                    <input type="number" id="finDownloadRate" min="0" max="100" step="0.1" placeholder="自动计算" readonly style="background-color: var(--bg-tertiary); cursor: not-allowed;" />
                   </div>
                   <div class="form-group">
                     <label class="form-label">公司总人数</label>
-                    <input type="number" id="finTotal" min="1" value="260" />
+                    <input type="number" id="finTotal" min="1" value="347" />
                   </div>
                   <div class="form-group span-2">
                     <label class="form-label">备注</label>
@@ -9340,28 +9340,34 @@
       showToast(isNew ? '新建成功' : '保存成功', 'success');
     });
 
-    // Auto-calculate rates
-    ['finUnread', 'finRead', 'finDownloads'].forEach(id => {
+    // Auto-calculate rates: 查看率 = 已读人数 / 公司总人数, 下载率 = 下载人数 / 公司总人数
+    function calculateFinanceRates() {
+      const readInput = document.getElementById('finRead').value;
+      const downloadsInput = document.getElementById('finDownloads').value;
+      const totalInput = document.getElementById('finTotal').value;
+
+      const read = readInput === '' ? 0 : Number(readInput);
+      const downloads = downloadsInput === '' ? 0 : Number(downloadsInput);
+      const total = totalInput === '' ? 0 : Number(totalInput);
+
+      // 查看率计算：已读人数 / 公司总人数 × 100%
+      if (total > 0 && read >= 0) {
+        const viewRate = (read / total * 100).toFixed(1);
+        document.getElementById('finViewRate').value = viewRate;
+      }
+
+      // 下载率计算：下载人数 / 公司总人数 × 100%
+      if (total > 0 && downloads >= 0) {
+        const downloadRate = (downloads / total * 100).toFixed(1);
+        document.getElementById('finDownloadRate').value = downloadRate;
+      }
+    }
+
+    // 监听已读人数、下载人数、公司总人数的变化
+    ['finRead', 'finDownloads', 'finTotal'].forEach(id => {
       const el = document.getElementById(id);
       if (el) {
-        el.addEventListener('input', () => {
-          const unreadInput = document.getElementById('finUnread').value;
-          const readInput = document.getElementById('finRead').value;
-          const downloadsInput = document.getElementById('finDownloads').value;
-
-          const unread = unreadInput === '' ? 0 : Number(unreadInput);
-          const read = readInput === '' ? 0 : Number(readInput);
-          const downloads = downloadsInput === '' ? 0 : Number(downloadsInput);
-
-          const total = unread + read;
-
-          if (total > 0) {
-            const vr = (read / total * 100).toFixed(1);
-            const dr = (downloads / total * 100).toFixed(1);
-            document.getElementById('finViewRate').placeholder = `建议: ${vr}`;
-            document.getElementById('finDownloadRate').placeholder = `建议: ${dr}`;
-          }
-        });
+        el.addEventListener('input', calculateFinanceRates);
       }
     });
 
