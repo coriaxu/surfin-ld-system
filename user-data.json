@@ -1221,7 +1221,7 @@
         "topic": true,
         "draft": true,
         "ppt": true,
-        "video": false,
+        "video": true,
         "copy": false,
         "publish": false,
         "data": false
