@@ -50,6 +50,14 @@
       "desc": "ChatGPT 的订阅费用"
     },
     {
+      "id": "v03uo6sm",
+      "date": "2026-01-19",
+      "month": "2026-01",
+      "type": "regular",
+      "amount": 173.8,
+      "desc": "Claude 的订阅费用"
+    },
+    {
       "id": "mr6lv19o",
       "date": "2026-01-05",
       "month": "2026-01",
