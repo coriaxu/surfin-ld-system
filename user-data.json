@@ -42,6 +42,14 @@
   ],
   "expenses": [
     {
+      "id": "3airzej8",
+      "date": "2026-01-20",
+      "month": "2026-01",
+      "type": "regular",
+      "amount": 150,
+      "desc": "ChatGPT 的订阅费用"
+    },
+    {
       "id": "mr6lv19o",
       "date": "2026-01-05",
       "month": "2026-01",
