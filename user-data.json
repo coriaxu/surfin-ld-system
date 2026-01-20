@@ -48,6 +48,14 @@
       "type": "regular",
       "amount": 154.5,
       "desc": "金融小百科-稳定币开销"
+    },
+    {
+      "id": "ci05p97w",
+      "date": "2026-01-03",
+      "month": "2026-01",
+      "type": "regular",
+      "amount": 150,
+      "desc": "Gemini 订阅费用"
     }
   ],
   "aiStations": [
