@@ -973,7 +973,7 @@
       "output": "通知已发",
       "detail": "周五预告",
       "owner": "",
-      "done": false
+      "done": true
     },
     {
       "id": "qxrv5eic",
@@ -984,7 +984,7 @@
       "output": "名单确认",
       "detail": "周二/三确认",
       "owner": "",
-      "done": false
+      "done": true
     },
     {
       "id": "qw6oqoge",
@@ -995,7 +995,7 @@
       "output": "群/倒计时",
       "detail": "氛围营造",
       "owner": "",
-      "done": false
+      "done": true
     },
     {
       "id": "0dvnw136",
