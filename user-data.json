@@ -29,6 +29,17 @@
       "people": 1,
       "duration": 2,
       "note": "跟双双"
+    },
+    {
+      "id": "s9tvuf16",
+      "date": "2026-01-22",
+      "course": "NotebookLM 实战应用 - 你的 AI 第二大脑",
+      "project": "AI分享月(第1期)",
+      "lecturer": "",
+      "people": 13,
+      "duration": "1.0",
+      "note": " [自动同步自AI分享月]",
+      "source": "ai_share"
     }
   ],
   "budgets": [
@@ -386,7 +397,19 @@
       "note": ""
     }
   ],
-  "aiShares": [],
+  "aiShares": [
+    {
+      "id": "pg9jz0rm",
+      "episode": 1,
+      "date": "2026-01-22",
+      "title": "NotebookLM 实战应用 - 你的 AI 第二大脑",
+      "attendees": 13,
+      "total": 345,
+      "duration": 60,
+      "note": "",
+      "linkedSessionId": "s9tvuf16"
+    }
+  ],
   "aiStationTitles": {
     "85": "港大'幽灵引用'论文撤稿、导师卸任：比AI幻觉更危险的是人类放弃自查",
     "86": "Meta收购Manus背后，3个深刻洞察",
