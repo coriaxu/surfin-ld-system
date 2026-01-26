@@ -1406,7 +1406,15 @@
     },
     {
       "id": "lmm4962u",
-      "workflow": {},
+      "workflow": {
+        "topic": true,
+        "draft": true,
+        "ppt": false,
+        "video": false,
+        "copy": false,
+        "publish": false,
+        "data": false
+      },
       "episode": 11,
       "title": "RWA：把现实资产票化的正确打开方式",
       "date": "2026-02-03",
