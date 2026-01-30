@@ -1540,8 +1540,8 @@
         "draft": true,
         "ppt": true,
         "video": true,
-        "copy": false,
-        "publish": false,
+        "copy": true,
+        "publish": true,
         "data": false
       },
       "episode": 10,
@@ -1560,7 +1560,7 @@
       "workflow": {
         "topic": true,
         "draft": true,
-        "ppt": false,
+        "ppt": true,
         "video": false,
         "copy": false,
         "publish": false,
