@@ -6293,8 +6293,10 @@
 
       // 预算数据
       const budgetData = state.budgets.filter(b => b.month === yearMonth);
-      const totalBudget = budgetData.reduce((sum, b) => sum + (Number(b.budget) || 0), 0);
-      const totalSpend = budgetData.reduce((sum, b) => sum + (Number(b.spend) || 0), 0);
+      const totalBudget = budgetData.reduce((sum, b) => sum + (Number(b.amount) || 0), 0);
+      // 开销从独立的 expenses 数组计算
+      const expenseData = (state.expenses || []).filter(e => e.month === yearMonth);
+      const totalSpend = expenseData.reduce((sum, e) => sum + (Number(e.amount) || 0), 0);
 
       // AI 知识库数据
       const aiStationCount = state.aiStations.filter(a => {
@@ -6460,21 +6462,21 @@
         ${opts.includeTraining && data.training.sessions.length > 0 ? `
         <div style="background: rgba(255,255,255,0.05); border-radius: 12px; padding: 20px; margin-bottom: 20px;">
           <div style="font-size: 14px; font-weight: 600; color: #0ea5e9; margin-bottom: 12px;">👩‍🏫 培训场次明细</div>
-          <table style="width: 100%; border-collapse: collapse; font-size: 11px;">
-            <tr style="background: rgba(14, 165, 233, 0.2);">
-              <th style="padding: 8px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.1);">日期</th>
-              <th style="padding: 8px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.1);">课程</th>
-              <th style="padding: 8px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.1);">讲师</th>
-              <th style="padding: 8px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1);">人数</th>
-              <th style="padding: 8px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1);">人时</th>
+          <table style="width: 100%; border-collapse: collapse; font-size: 11px; color: #ffffff;">
+            <tr style="background: rgba(14, 165, 233, 0.3);">
+              <th style="padding: 8px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.2); color: #ffffff; font-weight: 600;">日期</th>
+              <th style="padding: 8px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.2); color: #ffffff; font-weight: 600;">课程</th>
+              <th style="padding: 8px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.2); color: #ffffff; font-weight: 600;">讲师</th>
+              <th style="padding: 8px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.2); color: #ffffff; font-weight: 600;">人数</th>
+              <th style="padding: 8px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.2); color: #ffffff; font-weight: 600;">人时</th>
             </tr>
             ${data.training.sessions.slice(0, 8).map((s, i) => `
-            <tr style="background: ${i % 2 === 0 ? 'transparent' : 'rgba(255,255,255,0.02)'};">
-              <td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.05);">${s.date || '-'}</td>
-              <td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.05);">${s.course || '-'}</td>
-              <td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.05);">${s.trainer || '-'}</td>
-              <td style="padding: 8px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.05);">${s.people || 0}</td>
-              <td style="padding: 8px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.05);">${(Number(s.people) || 0) * (Number(s.duration) || 0)}</td>
+            <tr style="background: ${i % 2 === 0 ? 'transparent' : 'rgba(255,255,255,0.05)'};">
+              <td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.08); color: #ffffff;">${s.date || '-'}</td>
+              <td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.08); color: #ffffff;">${s.course || '-'}</td>
+              <td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.08); color: #ffffff;">${s.lecturer || '-'}</td>
+              <td style="padding: 8px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.08); color: #ffffff;">${s.people || 0}</td>
+              <td style="padding: 8px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.08); color: #ffffff;">${(Number(s.people) || 0) * (Number(s.duration) || 0)}</td>
             </tr>
             `).join('')}
           </table>
