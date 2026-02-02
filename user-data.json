@@ -1557,7 +1557,7 @@
       "episode": 10,
       "title": "会计与税务入门：别把\"像现金\"当成真的现金",
       "date": "2026-01-20",
-      "unread": null,
+      "unread": 22,
       "read": null,
       "viewRate": null,
       "downloads": null,
@@ -1587,5 +1587,6 @@
       "total": 260,
       "note": ""
     }
-  ]
+  ],
+  "currentFinanceEpisode": "n7zys5rp"
 }
