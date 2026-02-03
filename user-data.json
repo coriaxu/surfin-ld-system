@@ -1582,8 +1582,8 @@
         "draft": true,
         "ppt": true,
         "video": true,
-        "copy": false,
-        "publish": false,
+        "copy": true,
+        "publish": true,
         "data": false
       },
       "episode": 11,
