@@ -1098,7 +1098,7 @@
       "output": "播客",
       "detail": "音频成品",
       "owner": "剪辑",
-      "done": false
+      "done": true
     },
     {
       "id": "yo287zhk",
@@ -1109,7 +1109,7 @@
       "output": "新闻区块",
       "detail": "嵌入广播站",
       "owner": "内容",
-      "done": false
+      "done": true
     },
     {
       "id": "zuacp1bv",
