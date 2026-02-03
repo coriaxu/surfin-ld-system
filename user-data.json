@@ -1331,7 +1331,7 @@
       "output": "归档记录",
       "detail": "人数/资料",
       "owner": "",
-      "done": false
+      "done": true
     }
   ],
   "currentStationEpisode": 90,
