@@ -1175,7 +1175,7 @@
       "output": "选题定位",
       "detail": "明确看点与受众",
       "owner": "策划",
-      "done": false
+      "done": true
     },
     {
       "id": "c0x3as7m",
@@ -1186,7 +1186,7 @@
       "output": "主稿",
       "detail": "可直接发布",
       "owner": "内容",
-      "done": false
+      "done": true
     },
     {
       "id": "p41yedxg",
@@ -1197,7 +1197,7 @@
       "output": "归档记录",
       "detail": "版本一致",
       "owner": "归档",
-      "done": false
+      "done": true
     },
     {
       "id": "v5104zlt",
@@ -1208,7 +1208,7 @@
       "output": "海报/封面",
       "detail": "主视觉",
       "owner": "设计",
-      "done": false
+      "done": true
     },
     {
       "id": "8gphzlj0",
