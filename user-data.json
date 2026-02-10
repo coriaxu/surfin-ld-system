@@ -1720,7 +1720,15 @@
     },
     {
       "id": "pdy4zwx0",
-      "workflow": {},
+      "workflow": {
+        "topic": true,
+        "draft": true,
+        "ppt": false,
+        "video": false,
+        "copy": false,
+        "publish": false,
+        "data": false
+      },
       "episode": 12,
       "title": "稳定币的终局：一套新金融操作系统正在成型",
       "date": "2026-02-24",
