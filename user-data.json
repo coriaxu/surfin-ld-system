@@ -1717,6 +1717,21 @@
       "downloadRate": null,
       "total": 260,
       "note": ""
+    },
+    {
+      "id": "pdy4zwx0",
+      "workflow": {},
+      "episode": 12,
+      "title": "稳定币的终局：一套新金融操作系统正在成型",
+      "date": "2026-02-24",
+      "unread": null,
+      "read": null,
+      "viewRate": null,
+      "downloads": null,
+      "downloadRate": null,
+      "total": 260,
+      "note": ""
     }
-  ]
+  ],
+  "currentFinanceEpisode": "pdy4zwx0"
 }
