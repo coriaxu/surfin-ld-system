@@ -104,6 +104,14 @@
   "budgets": [],
   "expenses": [
     {
+      "id": "xlpedmgg",
+      "date": "2026-02-26",
+      "month": "2026-02",
+      "type": "regular",
+      "amount": 27.5,
+      "desc": "金融小百科-稳定币开销"
+    },
+    {
       "id": "3airzej8",
       "date": "2026-01-20",
       "month": "2026-01",
