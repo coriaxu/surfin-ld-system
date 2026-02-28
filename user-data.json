@@ -1438,7 +1438,7 @@
       "output": "主稿",
       "detail": "可直接发布",
       "owner": "内容",
-      "done": false
+      "done": true
     },
     {
       "id": "myjkyry6",
@@ -1449,7 +1449,7 @@
       "output": "归档记录",
       "detail": "版本一致",
       "owner": "归档",
-      "done": false
+      "done": true
     },
     {
       "id": "xx6556gz",
@@ -1460,7 +1460,7 @@
       "output": "海报/封面",
       "detail": "主视觉",
       "owner": "设计",
-      "done": false
+      "done": true
     },
     {
       "id": "z2mguy47",
