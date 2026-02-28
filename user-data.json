@@ -101,15 +101,7 @@
       "note": "跟双双"
     }
   ],
-  "budgets": [
-    {
-      "id": "whdoe7s4",
-      "month": "2026-01",
-      "type": "regular",
-      "amount": 299,
-      "note": "1月份 AI 费用，得到替票"
-    }
-  ],
+  "budgets": [],
   "expenses": [
     {
       "id": "3airzej8",
