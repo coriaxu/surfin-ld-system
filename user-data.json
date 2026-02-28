@@ -516,7 +516,8 @@
     "88": "AI时代的华山论剑四位AI技术掌门人眼中的2026",
     "89": "89期-DeepSeek团队6周连发三篇论文：被算力逼出来的“架构革命”",
     "90": "从爆火的Moltbot到AI店主实验，聊聊\"数字员工\"落地困境",
-    "91": "当AI半夜给你打电话：Clawdbot爆火事件完整复盘与背后洞察"
+    "91": "当AI半夜给你打电话：Clawdbot爆火事件完整复盘与背后洞察",
+    "92": "2026 年春节假期的 AI 圈依然很热闹"
   },
   "aiShareTitles": {
     "1": "NotebookLM 实战应用 - 你的 AI 第二大脑"
@@ -1305,7 +1306,7 @@
       "output": "选题定位",
       "detail": "明确看点与受众",
       "owner": "策划",
-      "done": false
+      "done": true
     },
     {
       "id": "shrvk19s",
@@ -1316,7 +1317,7 @@
       "output": "主稿",
       "detail": "可直接发布",
       "owner": "内容",
-      "done": false
+      "done": true
     },
     {
       "id": "56mc9q9d",
@@ -1327,7 +1328,7 @@
       "output": "归档记录",
       "detail": "版本一致",
       "owner": "归档",
-      "done": false
+      "done": true
     },
     {
       "id": "2r7g2hi2",
@@ -1338,7 +1339,7 @@
       "output": "海报/封面",
       "detail": "主视觉",
       "owner": "设计",
-      "done": false
+      "done": true
     },
     {
       "id": "igl8rkuv",
@@ -1349,7 +1350,7 @@
       "output": "播客",
       "detail": "音频成品",
       "owner": "剪辑",
-      "done": false
+      "done": true
     },
     {
       "id": "6pa9jk6l",
@@ -1360,7 +1361,7 @@
       "output": "新闻区块",
       "detail": "嵌入广播站",
       "owner": "内容",
-      "done": false
+      "done": true
     },
     {
       "id": "cm07z0wy",
@@ -1371,7 +1372,7 @@
       "output": "发刊词",
       "detail": "开场引导",
       "owner": "内容",
-      "done": false
+      "done": true
     },
     {
       "id": "2jj7s13q",
@@ -1382,7 +1383,7 @@
       "output": "触达发布",
       "detail": "群内推送",
       "owner": "运营",
-      "done": false
+      "done": true
     },
     {
       "id": "punokhvk",
@@ -1393,7 +1394,7 @@
       "output": "查看率",
       "detail": "发布后 2 天",
       "owner": "分析",
-      "done": false
+      "done": true
     },
     {
       "id": "jp78a29w",
