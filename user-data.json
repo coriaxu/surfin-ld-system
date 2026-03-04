@@ -2011,8 +2011,8 @@
       "workflow": {
         "topic": true,
         "draft": true,
-        "ppt": false,
-        "video": false,
+        "ppt": true,
+        "video": true,
         "copy": false,
         "publish": false,
         "data": false
