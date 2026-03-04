@@ -2013,7 +2013,7 @@
         "draft": true,
         "ppt": true,
         "video": true,
-        "copy": false,
+        "copy": true,
         "publish": false,
         "data": false
       },
