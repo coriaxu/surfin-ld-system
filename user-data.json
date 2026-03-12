@@ -2134,7 +2134,7 @@
         "video": true,
         "copy": true,
         "publish": true,
-        "data": false
+        "data": true
       },
       "episode": 11,
       "title": "RWA：把现实资产票化的正确打开方式",
@@ -2169,5 +2169,6 @@
       "total": 260,
       "note": ""
     }
-  ]
+  ],
+  "currentFinanceEpisode": "lmm4962u"
 }
