@@ -1,6 +1,16 @@
 {
   "sessions": [
     {
+      "id": "8nx0el4l",
+      "date": "2026-03-18",
+      "course": "文档及代码-分享培训",
+      "project": "AI 分享月",
+      "lecturer": "徐浩",
+      "people": 16,
+      "duration": 1,
+      "note": ""
+    },
+    {
       "id": "zuc4eqi9",
       "date": "2026-03-11",
       "course": "1 对 1 辅导答疑",
