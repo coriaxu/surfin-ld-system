@@ -144,6 +144,14 @@
   "budgets": [],
   "expenses": [
     {
+      "id": "5h89opax",
+      "date": "2026-03-18",
+      "month": "2026-03",
+      "type": "regular",
+      "amount": 189,
+      "desc": "万维钢老师课程报销，替票 AI"
+    },
+    {
       "id": "xlpedmgg",
       "date": "2026-02-26",
       "month": "2026-02",
