@@ -1929,7 +1929,7 @@
       "output": "新闻区块",
       "detail": "嵌入广播站",
       "owner": "内容",
-      "done": false
+      "done": true
     },
     {
       "id": "6s0uhowy",
@@ -1940,7 +1940,7 @@
       "output": "发刊词",
       "detail": "开场引导",
       "owner": "内容",
-      "done": false
+      "done": true
     },
     {
       "id": "68zf26tg",
