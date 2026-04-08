@@ -2782,6 +2782,26 @@
       /* 主文字 */
       --case-text-sub: #64748B;
       /* 次要文字 */
+
+      /* 管理者测评报告库 - 暖白智库主题（与独立站一致） */
+      --assess-bg: #faf9f7;
+      --assess-bg-warm: #f5f3ef;
+      --assess-surface: #ffffff;
+      --assess-primary: #1c2a3a;
+      --assess-accent: #b8964a;
+      --assess-accent-soft: rgba(184,150,74,.08);
+      --assess-accent-line: rgba(184,150,74,.25);
+      --assess-ink: #1a1d23;
+      --assess-ink-2: #3d4350;
+      --assess-muted: #8b93a3;
+      --assess-muted-light: #b0b6c3;
+      --assess-line: #eaebed;
+      --assess-ok: #2d8f6f;
+      --assess-ok-bg: #eaf6f1;
+      --assess-warn: #c48a1a;
+      --assess-warn-bg: #fdf5e6;
+      --assess-info-blue: #1558b0;
+      --assess-info-bg: #e8f0fe;
     }
 
     /* Finance page specific - override main padding for consistent margins */
@@ -3984,6 +4004,522 @@
     }
 
     /* =========================================
+       管理者测评报告库 - 暖白智库样式（与独立站一致）
+       ========================================= */
+    #page-assessment {
+      margin: -24px -32px -40px -32px;
+      padding: 0;
+    }
+
+    .assess-container {
+      background: var(--assess-bg);
+      min-height: 80vh;
+      padding-bottom: 60px;
+    }
+
+    /* Hero */
+    .assess-hero {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 56px 40px 20px;
+    }
+
+    .assess-hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 28px;
+    }
+
+    .assess-hero-eyebrow .live-dot {
+      width: 7px; height: 7px;
+      background: var(--assess-ok);
+      border-radius: 50%;
+    }
+
+    .assess-hero-eyebrow span {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--assess-ok);
+      font-family: "DM Sans","Noto Sans SC",sans-serif;
+    }
+
+    .assess-hero-title {
+      font-family: "Noto Serif SC",serif;
+      font-size: 46px;
+      font-weight: 900;
+      color: var(--assess-primary);
+      line-height: 1.2;
+      letter-spacing: -.02em;
+      margin-bottom: 36px;
+    }
+
+    .assess-hero-body {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 48px;
+      margin-bottom: 56px;
+    }
+
+    .assess-hero-desc {
+      font-size: 15px;
+      color: var(--assess-ink-2);
+      max-width: 480px;
+      line-height: 1.9;
+      flex-shrink: 0;
+    }
+
+    .assess-stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+
+    .assess-stat-block {
+      background: var(--assess-surface);
+      border: 1px solid var(--assess-line);
+      border-radius: 12px;
+      padding: 18px 24px;
+      min-width: 140px;
+      box-shadow: 0 1px 2px rgba(0,0,0,.03), 0 4px 12px rgba(0,0,0,.02);
+    }
+
+    .assess-stat-block .num {
+      font-family: "DM Sans",sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--assess-primary);
+      line-height: 1.1;
+      margin-bottom: 3px;
+    }
+
+    .assess-stat-block .label {
+      font-size: 11px;
+      color: var(--assess-muted);
+      font-family: "DM Sans","Noto Sans SC",sans-serif;
+    }
+
+    /* Content area */
+    .assess-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 40px;
+    }
+
+    /* Team banner */
+    .assess-team-banner {
+      margin-bottom: 12px;
+    }
+
+    .assess-team-banner-inner {
+      background: var(--assess-primary);
+      border-radius: 14px;
+      padding: 22px 26px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: all .28s cubic-bezier(.22,1,.36,1);
+    }
+
+    .assess-team-banner-inner:hover {
+      box-shadow: 0 8px 28px rgba(28,42,58,.18);
+      transform: translateY(-2px);
+    }
+
+    .assess-team-banner-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .assess-team-icon {
+      width: 42px; height: 42px;
+      background: rgba(255,255,255,.1);
+      border-radius: 11px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .assess-team-icon svg {
+      width: 20px; height: 20px;
+      color: rgba(255,255,255,.7);
+    }
+
+    .assess-team-text h3 {
+      font-size: 15px; font-weight: 700;
+      color: #fff;
+      margin-bottom: 1px;
+    }
+
+    .assess-team-text p {
+      font-size: 12px;
+      color: rgba(255,255,255,.5);
+      font-family: "DM Sans","Noto Sans SC",sans-serif;
+    }
+
+    .assess-team-arrow {
+      width: 32px; height: 32px;
+      background: rgba(255,255,255,.08);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: background .2s;
+    }
+
+    .assess-team-banner-inner:hover .assess-team-arrow {
+      background: rgba(255,255,255,.15);
+    }
+
+    .assess-team-arrow svg {
+      width: 16px; height: 16px;
+      color: rgba(255,255,255,.6);
+    }
+
+    /* Group headers */
+    .assess-group-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+      margin-top: 32px;
+    }
+
+    .assess-group-header:first-child { margin-top: 24px; }
+
+    .assess-group-badge {
+      font-family: "DM Sans","Noto Sans SC",sans-serif;
+      font-size: 12px; font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 7px;
+      white-space: nowrap;
+    }
+
+    .assess-group-badge.y3 { background: var(--assess-ok-bg); color: var(--assess-ok); }
+    .assess-group-badge.y2 { background: var(--assess-info-bg); color: var(--assess-info-blue); }
+    .assess-group-badge.y1 { background: var(--assess-warn-bg); color: var(--assess-warn); }
+
+    .assess-group-line {
+      flex: 1; height: 1px;
+      background: var(--assess-line);
+    }
+
+    .assess-group-count {
+      font-size: 12px;
+      color: var(--assess-muted);
+      font-family: "DM Sans",sans-serif;
+      font-weight: 500;
+    }
+
+    /* Manager grid */
+    .assess-manager-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+
+    .assess-manager-card {
+      background: var(--assess-surface);
+      border: 1px solid var(--assess-line);
+      border-radius: 12px;
+      padding: 18px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      transition: all .28s cubic-bezier(.22,1,.36,1);
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .assess-manager-card:hover {
+      box-shadow: 0 2px 8px rgba(0,0,0,.04), 0 8px 28px rgba(0,0,0,.04);
+      transform: translateY(-2px);
+      border-color: var(--assess-accent-line);
+    }
+
+    .assess-avatar {
+      width: 42px; height: 42px;
+      border-radius: 11px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: "Noto Serif SC",serif;
+      font-size: 17px; font-weight: 700;
+      flex-shrink: 0;
+      color: #fff;
+    }
+
+    .assess-avatar.y3 { background: linear-gradient(135deg, #2d8f6f, #3aab85); }
+    .assess-avatar.y2 { background: linear-gradient(135deg, #1558b0, #2d78d8); }
+    .assess-avatar.y1 { background: linear-gradient(135deg, #c48a1a, #daa035); }
+
+    .assess-card-info { flex: 1; min-width: 0; }
+
+    .assess-card-info .name {
+      font-size: 15px; font-weight: 700;
+      color: var(--assess-primary);
+      margin-bottom: 2px;
+      line-height: 1.3;
+    }
+
+    .assess-card-info .dept {
+      font-size: 12px;
+      color: var(--assess-muted);
+      font-family: "DM Sans","Noto Sans SC",sans-serif;
+      line-height: 1.4;
+    }
+
+    .assess-card-loc {
+      font-size: 11px;
+      color: var(--assess-muted-light);
+      font-family: "DM Sans",sans-serif;
+      font-weight: 500;
+      flex-shrink: 0;
+    }
+
+    /* Footer CTA */
+    .assess-footer {
+      max-width: 1200px;
+      margin: 56px auto 0;
+      padding: 0 40px;
+      text-align: center;
+    }
+
+    .assess-footer-text {
+      font-size: 13px;
+      color: var(--assess-muted);
+      margin-bottom: 20px;
+    }
+
+    .assess-footer-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 36px;
+      background: var(--assess-primary);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all .28s cubic-bezier(.22,1,.36,1);
+      font-family: "Noto Sans SC",sans-serif;
+      box-shadow: 0 4px 12px rgba(28,42,58,.15);
+    }
+
+    .assess-footer-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(28,42,58,.22);
+      background: #263b50;
+    }
+
+    .assess-footer-btn svg {
+      transition: transform .2s ease;
+    }
+
+    .assess-footer-btn:hover svg {
+      transform: translateX(4px);
+    }
+
+    /* Section head */
+    .assess-section-head {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .assess-section-head h3 {
+      font-size: 13px; font-weight: 700;
+      color: var(--assess-muted);
+      font-family: "DM Sans","Noto Sans SC",sans-serif;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .assess-divider {
+      flex: 1; height: 1px;
+      background: var(--assess-line);
+    }
+
+    /* Year cards grid */
+    .assess-year-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+    }
+
+    .assess-year-card {
+      background: var(--assess-surface);
+      border: 1px solid var(--assess-line);
+      border-radius: 14px;
+      padding: 26px 24px 22px;
+      cursor: pointer;
+      transition: all .28s cubic-bezier(.22,1,.36,1);
+      position: relative;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+
+    .assess-year-card:hover {
+      box-shadow: 0 4px 12px rgba(0,0,0,.05), 0 16px 48px rgba(0,0,0,.06);
+      transform: translateY(-3px);
+      border-color: var(--assess-accent-line);
+    }
+
+    .assess-year-card.current { border-color: var(--assess-accent-line); }
+
+    .assess-year-card.upcoming {
+      opacity: .4;
+      cursor: default;
+      border-style: dashed;
+    }
+
+    .assess-year-card.upcoming:hover {
+      box-shadow: none; transform: none; border-color: var(--assess-line);
+    }
+
+    .assess-year-num {
+      font-family: "DM Sans",sans-serif;
+      font-size: 40px; font-weight: 700;
+      color: var(--assess-primary);
+      line-height: 1;
+      margin-bottom: 6px;
+      letter-spacing: -.02em;
+    }
+
+    .assess-year-cycle {
+      font-size: 13px;
+      color: var(--assess-ink-2);
+      margin-bottom: 16px;
+      font-weight: 500;
+    }
+
+    .assess-year-info {
+      display: flex; flex-direction: column; gap: 5px;
+      font-size: 13px;
+    }
+
+    .assess-info-row {
+      display: flex; align-items: center; gap: 8px;
+      color: var(--assess-ink-2);
+    }
+
+    .assess-status-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .assess-status-dot.live { background: var(--assess-ok); }
+    .assess-status-dot.pending { background: var(--assess-warn); }
+    .assess-status-dot.off { background: #d0d3d9; }
+
+    .assess-tag-latest {
+      position: absolute;
+      top: 16px; right: 16px;
+      font-family: "DM Sans",sans-serif;
+      font-size: 10px; font-weight: 700;
+      color: var(--assess-accent);
+      background: var(--assess-accent-soft);
+      padding: 3px 10px;
+      border-radius: 6px;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+
+    /* Detail page toggle */
+    #assess-detail-2025,
+    #assess-detail-2024 { display: none; }
+    #assess-detail-2025.active,
+    #assess-detail-2024.active { display: block; animation: fadeIn .35s ease; }
+    #assess-home.hidden { display: none; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    /* Back button */
+    .assess-back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: var(--assess-muted);
+      cursor: pointer;
+      font-family: "DM Sans","Noto Sans SC",sans-serif;
+      font-weight: 500;
+      background: none;
+      border: none;
+      transition: color .2s;
+      margin-top: 20px;
+    }
+
+    .assess-back-btn:hover { color: var(--assess-primary); }
+
+    /* Detail hero */
+    .assess-detail-hero {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 32px 40px 44px;
+    }
+
+    .assess-detail-hero h2 {
+      font-family: "Noto Serif SC",serif;
+      font-size: 36px; font-weight: 900;
+      color: var(--assess-primary);
+      margin-bottom: 14px;
+      letter-spacing: -.01em;
+    }
+
+    .assess-meta-pills {
+      display: flex; flex-wrap: wrap; gap: 8px;
+    }
+
+    .assess-meta-pill {
+      background: var(--assess-bg-warm);
+      border: 1px solid var(--assess-line);
+      border-radius: 100px;
+      padding: 5px 14px;
+      font-size: 12px;
+      color: var(--assess-ink-2);
+      font-family: "DM Sans","Noto Sans SC",sans-serif;
+      font-weight: 500;
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .assess-hero-title { font-size: 36px; }
+      .assess-hero-body { flex-direction: column; gap: 28px; }
+      .assess-stats-grid { width: 100%; }
+      .assess-year-grid { grid-template-columns: repeat(2, 1fr); }
+      .assess-detail-hero h2 { font-size: 28px; }
+    }
+
+    @media (max-width: 640px) {
+      .assess-hero { padding: 40px 24px 16px; }
+      .assess-hero-title { font-size: 28px; }
+      .assess-stats-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+      .assess-stat-block { padding: 14px 16px; min-width: 0; }
+      .assess-content { padding: 0 20px; }
+      .assess-manager-grid { grid-template-columns: 1fr; }
+      .assess-year-grid { grid-template-columns: 1fr 1fr; }
+      .assess-detail-hero { padding: 28px 20px 36px; }
+    }
+
+    /* =========================================
        密码保护层样式
        ========================================= */
     .auth-overlay {
@@ -4318,6 +4854,15 @@
             <path d="M8 11h6" />
           </svg>
           <span>管理训练营优秀案例库</span>
+        </div>
+        <div class="nav-item" data-page="assessment">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
+            <rect x="8" y="2" width="8" height="4" rx="1" ry="1" />
+            <path d="M9 14l2 2 4-4" />
+          </svg>
+          <span>管理者测评报告库</span>
         </div>
       </div>
     </nav>
@@ -5532,6 +6077,232 @@
         </div>
       </div>
 
+      <!-- 管理者测评报告库 -->
+      <div class="page" id="page-assessment">
+        <div class="assess-container">
+
+          <!-- ===== 一级页面：年度总览 ===== -->
+          <div id="assess-home">
+            <div class="assess-hero">
+              <div class="assess-hero-eyebrow">
+                <span class="live-dot"></span>
+                <span>2025 年度报告已上线</span>
+              </div>
+              <h1 class="assess-hero-title">基层管理者测评反馈报告库</h1>
+              <div class="assess-hero-body">
+                <p class="assess-hero-desc">
+                  持续追踪基层管理梯队的成长轨迹。每年通过自评与下属评价，为每位管理者生成个人反馈报告，帮助管理者看见自己的管理画像，也为组织积累可追溯的人才发展数据。
+                </p>
+                <div class="assess-stats-grid">
+                  <div class="assess-stat-block"><div class="num">4</div><div class="label">测评年度</div></div>
+                  <div class="assess-stat-block"><div class="num">20</div><div class="label">2025 参评者</div></div>
+                  <div class="assess-stat-block"><div class="num">4</div><div class="label">覆盖部门</div></div>
+                  <div class="assess-stat-block"><div class="num">155</div><div class="label">评价人次</div></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="assess-content">
+              <div class="assess-section-head">
+                <h3>按年度浏览</h3>
+                <span class="assess-divider"></span>
+              </div>
+              <div class="assess-year-grid">
+                <a class="assess-year-card current" onclick="showAssessDetail('2025')">
+                  <span class="assess-tag-latest">Latest</span>
+                  <div class="assess-year-num">2025</div>
+                  <div class="assess-year-cycle">第三轮测评周期</div>
+                  <div class="assess-year-info">
+                    <div class="assess-info-row"><span class="assess-status-dot live"></span>20 位管理者</div>
+                    <div class="assess-info-row"><span class="assess-status-dot live"></span>报告已上线</div>
+                  </div>
+                </a>
+                <a class="assess-year-card" onclick="showAssessDetail('2024')">
+                  <div class="assess-year-num">2024</div>
+                  <div class="assess-year-cycle">第二轮测评周期</div>
+                  <div class="assess-year-info">
+                    <div class="assess-info-row"><span class="assess-status-dot live"></span>20 位管理者</div>
+                    <div class="assess-info-row"><span class="assess-status-dot live"></span>报告已上线</div>
+                  </div>
+                </a>
+                <a class="assess-year-card">
+                  <div class="assess-year-num">2023</div>
+                  <div class="assess-year-cycle">首轮测评周期</div>
+                  <div class="assess-year-info">
+                    <div class="assess-info-row"><span class="assess-status-dot pending"></span>7 位管理者</div>
+                    <div class="assess-info-row"><span class="assess-status-dot pending"></span>报告待补录</div>
+                  </div>
+                </a>
+                <div class="assess-year-card upcoming">
+                  <div class="assess-year-num" style="color:#c8ccd4">2026</div>
+                  <div class="assess-year-cycle" style="color:#c0c4cc">下一轮测评</div>
+                  <div class="assess-year-info">
+                    <div class="assess-info-row" style="color:#c0c4cc"><span class="assess-status-dot off"></span>待启动</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ===== 二级页面：2025 详情 ===== -->
+          <div id="assess-detail-2025">
+            <div class="assess-content">
+              <button class="assess-back-btn" onclick="goAssessHome()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+                返回年度总览
+              </button>
+            </div>
+
+            <div class="assess-detail-hero">
+              <h2>2025 基层管理者测评</h2>
+              <div class="assess-meta-pills">
+                <span class="assess-meta-pill">第三轮测评周期</span>
+                <span class="assess-meta-pill">20 位管理者</span>
+                <span class="assess-meta-pill">155 位下属参评</span>
+                <span class="assess-meta-pill">4 个一级部门</span>
+              </div>
+            </div>
+
+            <div class="assess-content">
+              <div class="assess-team-banner">
+                <div class="assess-team-banner-inner" onclick="openAssessReport('团队反馈报告', 'pdf')">
+                  <div class="assess-team-banner-left">
+                    <div class="assess-team-icon">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                      </svg>
+                    </div>
+                    <div class="assess-team-text">
+                      <h3>2025 团队共性分析报告</h3>
+                      <p>基层管理梯队整体画像与趋势洞察</p>
+                    </div>
+                  </div>
+                  <div class="assess-team-arrow">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 第三年参评 -->
+              <div class="assess-group-header">
+                <span class="assess-group-badge y3">第三年参评</span>
+                <span class="assess-group-line"></span>
+                <span class="assess-group-count">7 人</span>
+              </div>
+              <div class="assess-manager-grid">
+                <div class="assess-manager-card" onclick="openAssessReport('赵汉洋')"><div class="assess-avatar y3">赵</div><div class="assess-card-info"><div class="name">赵汉洋</div><div class="dept">风险管理中心 / 大数据部</div></div><span class="assess-card-loc">北京</span></div>
+                <div class="assess-manager-card" onclick="openAssessReport('刘天益')"><div class="assess-avatar y3">刘</div><div class="assess-card-info"><div class="name">刘天益</div><div class="dept">风险管理中心 / 特征开发部</div></div><span class="assess-card-loc">北京</span></div>
+                <div class="assess-manager-card" onclick="openAssessReport('姚亚坤')"><div class="assess-avatar y3">姚</div><div class="assess-card-info"><div class="name">姚亚坤</div><div class="dept">技术中心 / 支付组</div></div><span class="assess-card-loc">北京</span></div>
+                <div class="assess-manager-card" onclick="openAssessReport('唐必洪')"><div class="assess-avatar y3">唐</div><div class="assess-card-info"><div class="name">唐必洪</div><div class="dept">技术中心 / 智慧财富支持部</div></div><span class="assess-card-loc">北京</span></div>
+                <div class="assess-manager-card" onclick="openAssessReport('李晓铮')"><div class="assess-avatar y3">李</div><div class="assess-card-info"><div class="name">李晓铮</div><div class="dept">技术中心 / 信用卡组</div></div><span class="assess-card-loc">北京</span></div>
+                <div class="assess-manager-card" onclick="openAssessReport('张自富')"><div class="assess-avatar y3">张</div><div class="assess-card-info"><div class="name">张自富</div><div class="dept">技术中心 / 基础架构部</div></div><span class="assess-card-loc">武汉</span></div>
+                <div class="assess-manager-card" onclick="openAssessReport('魏丽惠')"><div class="assess-avatar y3">魏</div><div class="assess-card-info"><div class="name">魏丽惠</div><div class="dept">技术中心 / 信贷支持部</div></div><span class="assess-card-loc">武汉</span></div>
+              </div>
+
+              <!-- 第二年参评 -->
+              <div class="assess-group-header">
+                <span class="assess-group-badge y2">第二年参评</span>
+                <span class="assess-group-line"></span>
+                <span class="assess-group-count">7 人</span>
+              </div>
+              <div class="assess-manager-grid">
+                <div class="assess-manager-card" onclick="openAssessReport('杨蕊')"><div class="assess-avatar y2">杨</div><div class="assess-card-info"><div class="name">杨蕊</div><div class="dept">财务部 / 核算组</div></div><span class="assess-card-loc">北京</span></div>
+                <div class="assess-manager-card" onclick="openAssessReport('王尚程')"><div class="assess-avatar y2">王</div><div class="assess-card-info"><div class="name">王尚程</div><div class="dept">风险管理中心 / 上海分部</div></div><span class="assess-card-loc">上海</span></div>
+                <div class="assess-manager-card" onclick="openAssessReport('孙丰')"><div class="assess-avatar y2">孙</div><div class="assess-card-info"><div class="name">孙丰</div><div class="dept">产品运营部 / 武汉产品组</div></div><span class="assess-card-loc">武汉</span></div>
+                <div class="assess-manager-card" onclick="openAssessReport('李帅')"><div class="assess-avatar y2">李</div><div class="assess-card-info"><div class="name">李帅</div><div class="dept">技术中心 / 信贷支持部</div></div><span class="assess-card-loc">武汉</span></div>
+                <div class="assess-manager-card" onclick="openAssessReport('饶鹏达')"><div class="assess-avatar y2">饶</div><div class="assess-card-info"><div class="name">饶鹏达</div><div class="dept">技术中心 / 信贷支持部</div></div><span class="assess-card-loc">武汉</span></div>
+                <div class="assess-manager-card" onclick="openAssessReport('聂舜')"><div class="assess-avatar y2">聂</div><div class="assess-card-info"><div class="name">聂舜</div><div class="dept">技术中心 / 信贷支持部</div></div><span class="assess-card-loc">武汉</span></div>
+                <div class="assess-manager-card" onclick="openAssessReport('安俊')"><div class="assess-avatar y2">安</div><div class="assess-card-info"><div class="name">安俊</div><div class="dept">技术中心 / 信贷支持部</div></div><span class="assess-card-loc">武汉</span></div>
+              </div>
+
+              <!-- 首次参评 -->
+              <div class="assess-group-header">
+                <span class="assess-group-badge y1">首次参评</span>
+                <span class="assess-group-line"></span>
+                <span class="assess-group-count">6 人</span>
+              </div>
+              <div class="assess-manager-grid">
+                <div class="assess-manager-card" onclick="openAssessReport('刘晨晨')"><div class="assess-avatar y1">刘</div><div class="assess-card-info"><div class="name">刘晨晨</div><div class="dept">风险管理中心 / 风险策略部-B</div></div><span class="assess-card-loc">北京</span></div>
+                <div class="assess-manager-card" onclick="openAssessReport('何霄鹏')"><div class="assess-avatar y1">何</div><div class="assess-card-info"><div class="name">何霄鹏</div><div class="dept">技术中心 / to B</div></div><span class="assess-card-loc">北京</span></div>
+                <div class="assess-manager-card" onclick="openAssessReport('程双双')"><div class="assess-avatar y1">程</div><div class="assess-card-info"><div class="name">程双双</div><div class="dept">技术中心 / 信贷支持部</div></div><span class="assess-card-loc">武汉</span></div>
+                <div class="assess-manager-card" onclick="openAssessReport('韩军昌')"><div class="assess-avatar y1">韩</div><div class="assess-card-info"><div class="name">韩军昌</div><div class="dept">技术中心 / 信贷支持部</div></div><span class="assess-card-loc">武汉</span></div>
+                <div class="assess-manager-card" onclick="openAssessReport('徐选伟')"><div class="assess-avatar y1">徐</div><div class="assess-card-info"><div class="name">徐选伟</div><div class="dept">技术中心 / 信贷支持部</div></div><span class="assess-card-loc">武汉</span></div>
+                <div class="assess-manager-card" onclick="openAssessReport('曾德传')"><div class="assess-avatar y1">曾</div><div class="assess-card-info"><div class="name">曾德传</div><div class="dept">技术中心 / 信贷支持部</div></div><span class="assess-card-loc">海口</span></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ===== 二级页面：2024 详情 ===== -->
+          <div id="assess-detail-2024">
+            <div class="assess-content">
+              <button class="assess-back-btn" onclick="goAssessHome()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+                返回年度总览
+              </button>
+            </div>
+
+            <div class="assess-detail-hero">
+              <h2>2024 基层管理者测评</h2>
+              <div class="assess-meta-pills">
+                <span class="assess-meta-pill">第二轮测评周期</span>
+                <span class="assess-meta-pill">20 位管理者</span>
+                <span class="assess-meta-pill">4 个一级部门</span>
+                <span class="assess-meta-pill">PDF 报告</span>
+              </div>
+            </div>
+
+            <div class="assess-content">
+              <!-- 第三年参评 -->
+              <div class="assess-group-header">
+                <span class="assess-group-badge y3">第三年参评</span>
+                <span class="assess-group-line"></span>
+                <span class="assess-group-count">7 人</span>
+              </div>
+              <div class="assess-manager-grid">
+                <div class="assess-manager-card" onclick="openAssessReport2024('刘天益')"><div class="assess-avatar y3">刘</div><div class="assess-card-info"><div class="name">刘天益</div><div class="dept">风险管理中心 / 特征开发部</div></div><span class="assess-card-loc">北京</span></div>
+                <div class="assess-manager-card" onclick="openAssessReport2024('李晓铮')"><div class="assess-avatar y3">李</div><div class="assess-card-info"><div class="name">李晓铮</div><div class="dept">技术中心 / 信用卡部</div></div><span class="assess-card-loc">北京</span></div>
+                <div class="assess-manager-card" onclick="openAssessReport2024('唐必洪')"><div class="assess-avatar y3">唐</div><div class="assess-card-info"><div class="name">唐必洪</div><div class="dept">技术中心 / 智慧财富部</div></div><span class="assess-card-loc">北京</span></div>
+                <div class="assess-manager-card" onclick="openAssessReport2024('姚亚坤')"><div class="assess-avatar y3">姚</div><div class="assess-card-info"><div class="name">姚亚坤</div><div class="dept">技术中心 / 支付部</div></div><span class="assess-card-loc">北京</span></div>
+                <div class="assess-manager-card" onclick="openAssessReport2024('李瑞强')"><div class="assess-avatar y3">李</div><div class="assess-card-info"><div class="name">李瑞强</div><div class="dept">技术中心 / 智慧信贷部</div></div><span class="assess-card-loc">武汉</span></div>
+                <div class="assess-manager-card" onclick="openAssessReport2024('张自富')"><div class="assess-avatar y3">张</div><div class="assess-card-info"><div class="name">张自富</div><div class="dept">技术中心 / 基础架构部</div></div><span class="assess-card-loc">武汉</span></div>
+                <div class="assess-manager-card" onclick="openAssessReport2024('魏丽惠')"><div class="assess-avatar y3">魏</div><div class="assess-card-info"><div class="name">魏丽惠</div><div class="dept">技术中心 / 智慧信贷部-QA</div></div><span class="assess-card-loc">武汉</span></div>
+              </div>
+
+              <!-- 第二年参评 -->
+              <div class="assess-group-header">
+                <span class="assess-group-badge y2">第二年参评</span>
+                <span class="assess-group-line"></span>
+                <span class="assess-group-count">3 人</span>
+              </div>
+              <div class="assess-manager-grid">
+                <div class="assess-manager-card" onclick="openAssessReport2024('赵汉洋')"><div class="assess-avatar y2">赵</div><div class="assess-card-info"><div class="name">赵汉洋</div><div class="dept">风险管理中心 / 大数据部</div></div><span class="assess-card-loc">北京</span></div>
+                <div class="assess-manager-card" onclick="openAssessReport2024('董怡雪')"><div class="assess-avatar y2">董</div><div class="assess-card-info"><div class="name">董怡雪</div><div class="dept">技术中心 / QA</div></div><span class="assess-card-loc">北京</span></div>
+                <div class="assess-manager-card" onclick="openAssessReport2024('高忠强')"><div class="assess-avatar y2">高</div><div class="assess-card-info"><div class="name">高忠强</div><div class="dept">技术中心 / 智慧信贷部</div></div><span class="assess-card-loc">海口</span></div>
+              </div>
+
+              <!-- 首次参评 -->
+              <div class="assess-group-header">
+                <span class="assess-group-badge y1">首次参评</span>
+                <span class="assess-group-line"></span>
+                <span class="assess-group-count">10 人</span>
+              </div>
+              <div class="assess-manager-grid">
+                <div class="assess-manager-card" onclick="openAssessReport2024('杨蕊')"><div class="assess-avatar y1">杨</div><div class="assess-card-info"><div class="name">杨蕊</div><div class="dept">财务部</div></div><span class="assess-card-loc">北京</span></div>
+                <div class="assess-manager-card" onclick="openAssessReport2024('王尚程')"><div class="assess-avatar y1">王</div><div class="assess-card-info"><div class="name">王尚程</div><div class="dept">风险管理中心</div></div><span class="assess-card-loc">上海</span></div>
+                <div class="assess-manager-card" onclick="openAssessReport2024('刘宇鹏')"><div class="assess-avatar y1">刘</div><div class="assess-card-info"><div class="name">刘宇鹏</div><div class="dept">风险管理中心 / 风险策略部</div></div><span class="assess-card-loc">北京</span></div>
+                <div class="assess-manager-card" onclick="openAssessReport2024('孙丰')"><div class="assess-avatar y1">孙</div><div class="assess-card-info"><div class="name">孙丰</div><div class="dept">产品运营部</div></div><span class="assess-card-loc">武汉</span></div>
+                <div class="assess-manager-card" onclick="openAssessReport2024('吕亚楠')"><div class="assess-avatar y1">吕</div><div class="assess-card-info"><div class="name">吕亚楠</div><div class="dept">产品运营部</div></div><span class="assess-card-loc">北京</span></div>
+                <div class="assess-manager-card" onclick="openAssessReport2024('王雅平')"><div class="assess-avatar y1">王</div><div class="assess-card-info"><div class="name">王雅平</div><div class="dept">产品运营部</div></div><span class="assess-card-loc">北京</span></div>
+                <div class="assess-manager-card" onclick="openAssessReport2024('李帅')"><div class="assess-avatar y1">李</div><div class="assess-card-info"><div class="name">李帅</div><div class="dept">技术中心 / 信贷支持部</div></div><span class="assess-card-loc">武汉</span></div>
+                <div class="assess-manager-card" onclick="openAssessReport2024('饶鹏达')"><div class="assess-avatar y1">饶</div><div class="assess-card-info"><div class="name">饶鹏达</div><div class="dept">技术中心 / 信贷支持部</div></div><span class="assess-card-loc">武汉</span></div>
+                <div class="assess-manager-card" onclick="openAssessReport2024('聂舜')"><div class="assess-avatar y1">聂</div><div class="assess-card-info"><div class="name">聂舜</div><div class="dept">技术中心 / 信贷支持部</div></div><span class="assess-card-loc">武汉</span></div>
+                <div class="assess-manager-card" onclick="openAssessReport2024('安俊')"><div class="assess-avatar y1">安</div><div class="assess-card-info"><div class="name">安俊</div><div class="dept">技术中心 / 信贷支持部</div></div><span class="assess-card-loc">武汉</span></div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
 
       <!-- 预算与开销 -->
       <div class="page" id="page-budget">
@@ -5842,7 +6613,8 @@
       aiknowledge: 'AI 知识库',
       budget: '预算与开销',
       finance: '金融小百科',
-      caselib: '管理训练营优秀案例库'
+      caselib: '管理训练营优秀案例库',
+      assessment: '管理者测评报告库'
     };
 
     /* =========================================
@@ -8831,6 +9603,43 @@
     // 打开案例库外链
     function openCaseLibrary() {
       window.open(CASE_LIBRARY_URL, '_blank');
+    }
+
+    // 测评报告库外链地址
+    const ASSESSMENT_HUB_URL = 'https://coriaxu.github.io/surfin-assessment-hub/';
+
+    // 打开测评报告库首页
+    function openAssessmentHub() {
+      window.open(ASSESSMENT_HUB_URL, '_blank');
+    }
+
+    // 打开个人测评报告（直接跳转到报告页面）
+    function openAssessReport(name, ext) {
+      const suffix = ext || 'html';
+      window.open(ASSESSMENT_HUB_URL + 'reports/2025/' + encodeURIComponent(name) + '.' + suffix, '_blank');
+    }
+
+    // 打开 2024 年 PDF 报告
+    function openAssessReport2024(name) {
+      window.open(ASSESSMENT_HUB_URL + 'reports/2024/' + encodeURIComponent(name) + '.pdf', '_blank');
+    }
+
+    // 年度总览 → 年份详情
+    function showAssessDetail(year) {
+      const detail = document.getElementById('assess-detail-' + year);
+      if (detail) {
+        document.getElementById('assess-home').classList.add('hidden');
+        detail.classList.add('active');
+        window.scrollTo(0, 0);
+      }
+    }
+
+    // 年份详情 → 返回年度总览
+    function goAssessHome() {
+      document.getElementById('assess-home').classList.remove('hidden');
+      document.getElementById('assess-detail-2025').classList.remove('active');
+      document.getElementById('assess-detail-2024').classList.remove('active');
+      window.scrollTo(0, 0);
     }
 
     /* =========================================
