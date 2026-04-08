@@ -4353,9 +4353,14 @@
     }
 
     /* Year cards grid */
+    .assess-year-layout {
+      display: grid;
+      gap: 14px;
+    }
+
     .assess-year-grid {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(3, 1fr);
       gap: 14px;
     }
 
@@ -4380,14 +4385,46 @@
 
     .assess-year-card.current { border-color: var(--assess-accent-line); }
 
-    .assess-year-card.upcoming {
-      opacity: .4;
+    .assess-year-card.pending {
       cursor: default;
       border-style: dashed;
     }
 
+    .assess-year-card.pending:hover {
+      box-shadow: none;
+      transform: none;
+      border-color: var(--assess-line);
+    }
+
+    .assess-year-card.upcoming {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 18px 22px;
+      cursor: default;
+      border-style: dashed;
+      background: var(--assess-bg-warm);
+    }
+
     .assess-year-card.upcoming:hover {
       box-shadow: none; transform: none; border-color: var(--assess-line);
+    }
+
+    .assess-year-card.upcoming .assess-year-num {
+      color: #9da3ad;
+      font-size: 30px;
+      margin-bottom: 0;
+    }
+
+    .assess-year-card.upcoming .assess-year-cycle {
+      color: var(--assess-muted);
+      margin-bottom: 0;
+    }
+
+    .assess-year-card.upcoming .assess-year-info {
+      align-items: flex-end;
+      color: var(--assess-muted);
     }
 
     .assess-year-num {
@@ -4504,7 +4541,7 @@
       .assess-hero-title { font-size: 36px; }
       .assess-hero-body { flex-direction: column; gap: 28px; }
       .assess-stats-grid { width: 100%; }
-      .assess-year-grid { grid-template-columns: repeat(2, 1fr); }
+      .assess-year-grid { grid-template-columns: repeat(3, 1fr); }
       .assess-detail-hero h2 { font-size: 28px; }
     }
 
@@ -4515,7 +4552,9 @@
       .assess-stat-block { padding: 14px 16px; min-width: 0; }
       .assess-content { padding: 0 20px; }
       .assess-manager-grid { grid-template-columns: 1fr; }
-      .assess-year-grid { grid-template-columns: 1fr 1fr; }
+      .assess-year-grid { grid-template-columns: 1fr; }
+      .assess-year-card.upcoming { align-items: flex-start; flex-direction: column; }
+      .assess-year-card.upcoming .assess-year-info { align-items: flex-start; }
       .assess-detail-hero { padding: 28px 20px 36px; }
     }
 
@@ -6094,7 +6133,7 @@
                   持续追踪基层管理梯队的成长轨迹。每年通过自评与下属评价，为每位管理者生成个人反馈报告，帮助管理者看见自己的管理画像，也为组织积累可追溯的人才发展数据。
                 </p>
                 <div class="assess-stats-grid">
-                  <div class="assess-stat-block"><div class="num">4</div><div class="label">测评年度</div></div>
+                  <div class="assess-stat-block"><div class="num">3</div><div class="label">已发生测评年度</div></div>
                   <div class="assess-stat-block"><div class="num">20</div><div class="label">2025 参评者</div></div>
                   <div class="assess-stat-block"><div class="num">4</div><div class="label">覆盖部门</div></div>
                   <div class="assess-stat-block"><div class="num">155</div><div class="label">评价人次</div></div>
@@ -6107,37 +6146,41 @@
                 <h3>按年度浏览</h3>
                 <span class="assess-divider"></span>
               </div>
-              <div class="assess-year-grid">
-                <a class="assess-year-card current" onclick="showAssessDetail('2025')">
-                  <span class="assess-tag-latest">Latest</span>
-                  <div class="assess-year-num">2025</div>
-                  <div class="assess-year-cycle">第三轮测评周期</div>
-                  <div class="assess-year-info">
-                    <div class="assess-info-row"><span class="assess-status-dot live"></span>20 位管理者</div>
-                    <div class="assess-info-row"><span class="assess-status-dot live"></span>报告已上线</div>
+              <div class="assess-year-layout">
+                <div class="assess-year-grid">
+                  <a class="assess-year-card current" onclick="showAssessDetail('2025')">
+                    <span class="assess-tag-latest">Latest</span>
+                    <div class="assess-year-num">2025</div>
+                    <div class="assess-year-cycle">第三轮测评周期</div>
+                    <div class="assess-year-info">
+                      <div class="assess-info-row"><span class="assess-status-dot live"></span>20 位管理者</div>
+                      <div class="assess-info-row"><span class="assess-status-dot live"></span>报告已上线</div>
+                    </div>
+                  </a>
+                  <a class="assess-year-card" onclick="showAssessDetail('2024')">
+                    <div class="assess-year-num">2024</div>
+                    <div class="assess-year-cycle">第二轮测评周期</div>
+                    <div class="assess-year-info">
+                      <div class="assess-info-row"><span class="assess-status-dot live"></span>20 位管理者</div>
+                      <div class="assess-info-row"><span class="assess-status-dot live"></span>报告已上线</div>
+                    </div>
+                  </a>
+                  <div class="assess-year-card pending">
+                    <div class="assess-year-num">2023</div>
+                    <div class="assess-year-cycle">首轮测评周期</div>
+                    <div class="assess-year-info">
+                      <div class="assess-info-row"><span class="assess-status-dot pending"></span>7 位管理者</div>
+                      <div class="assess-info-row"><span class="assess-status-dot pending"></span>报告待补录</div>
+                    </div>
                   </div>
-                </a>
-                <a class="assess-year-card" onclick="showAssessDetail('2024')">
-                  <div class="assess-year-num">2024</div>
-                  <div class="assess-year-cycle">第二轮测评周期</div>
-                  <div class="assess-year-info">
-                    <div class="assess-info-row"><span class="assess-status-dot live"></span>20 位管理者</div>
-                    <div class="assess-info-row"><span class="assess-status-dot live"></span>报告已上线</div>
-                  </div>
-                </a>
-                <a class="assess-year-card">
-                  <div class="assess-year-num">2023</div>
-                  <div class="assess-year-cycle">首轮测评周期</div>
-                  <div class="assess-year-info">
-                    <div class="assess-info-row"><span class="assess-status-dot pending"></span>7 位管理者</div>
-                    <div class="assess-info-row"><span class="assess-status-dot pending"></span>报告待补录</div>
-                  </div>
-                </a>
+                </div>
                 <div class="assess-year-card upcoming">
-                  <div class="assess-year-num" style="color:#c8ccd4">2026</div>
-                  <div class="assess-year-cycle" style="color:#c0c4cc">下一轮测评</div>
+                  <div>
+                    <div class="assess-year-num">2026</div>
+                    <div class="assess-year-cycle">下一轮测评</div>
+                  </div>
                   <div class="assess-year-info">
-                    <div class="assess-info-row" style="color:#c0c4cc"><span class="assess-status-dot off"></span>待启动</div>
+                    <div class="assess-info-row"><span class="assess-status-dot off"></span>未启动，不计入当前统计</div>
                   </div>
                 </div>
               </div>
