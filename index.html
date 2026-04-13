@@ -6127,10 +6127,10 @@
                 <span class="live-dot"></span>
                 <span>2025 年度报告已上线</span>
               </div>
-              <h1 class="assess-hero-title">基层管理者测评反馈报告库</h1>
+              <h1 class="assess-hero-title">管理者测评反馈报告库</h1>
               <div class="assess-hero-body">
                 <p class="assess-hero-desc">
-                  持续追踪基层管理梯队的成长轨迹。每年通过自评与下属评价，为每位管理者生成个人反馈报告，帮助管理者看见自己的管理画像，也为组织积累可追溯的人才发展数据。
+                  持续追踪管理梯队的成长轨迹。每年通过自评与下属评价，为每位管理者生成个人反馈报告，帮助管理者看见自己的管理画像，也为组织积累可追溯的人才发展数据。
                 </p>
                 <div class="assess-stats-grid">
                   <div class="assess-stat-block"><div class="num">3</div><div class="label">已发生测评年度</div></div>
@@ -6165,14 +6165,14 @@
                       <div class="assess-info-row"><span class="assess-status-dot live"></span>报告已上线</div>
                     </div>
                   </a>
-                  <div class="assess-year-card pending">
+                  <a class="assess-year-card" onclick="openAssessmentHub('2023')">
                     <div class="assess-year-num">2023</div>
                     <div class="assess-year-cycle">首轮测评周期</div>
                     <div class="assess-year-info">
-                      <div class="assess-info-row"><span class="assess-status-dot pending"></span>7 位管理者</div>
-                      <div class="assess-info-row"><span class="assess-status-dot pending"></span>报告待补录</div>
+                      <div class="assess-info-row"><span class="assess-status-dot live"></span>26 位管理者</div>
+                      <div class="assess-info-row"><span class="assess-status-dot live"></span>报告已上线</div>
                     </div>
-                  </div>
+                  </a>
                 </div>
                 <div class="assess-year-card upcoming">
                   <div>
@@ -9652,8 +9652,9 @@
     const ASSESSMENT_HUB_URL = 'https://coriaxu.github.io/surfin-assessment-hub/';
 
     // 打开测评报告库首页
-    function openAssessmentHub() {
-      window.open(ASSESSMENT_HUB_URL, '_blank');
+    function openAssessmentHub(year) {
+      const target = year ? ASSESSMENT_HUB_URL + '#' + encodeURIComponent(year) : ASSESSMENT_HUB_URL;
+      window.open(target, '_blank');
     }
 
     // 打开个人测评报告（直接跳转到报告页面）
