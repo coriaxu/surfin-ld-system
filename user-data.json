@@ -2078,7 +2078,7 @@
       "output": "海报/封面",
       "detail": "主视觉",
       "owner": "设计",
-      "done": false
+      "done": true
     },
     {
       "id": "v1zao6ka",
@@ -2089,7 +2089,7 @@
       "output": "播客",
       "detail": "音频成品",
       "owner": "剪辑",
-      "done": false
+      "done": true
     },
     {
       "id": "ns20jm7b",
@@ -2100,7 +2100,7 @@
       "output": "新闻区块",
       "detail": "嵌入广播站",
       "owner": "内容",
-      "done": false
+      "done": true
     },
     {
       "id": "ak85w0f6",
@@ -2111,7 +2111,7 @@
       "output": "发刊词",
       "detail": "开场引导",
       "owner": "内容",
-      "done": false
+      "done": true
     },
     {
       "id": "l1ci9x9w",
@@ -2122,7 +2122,7 @@
       "output": "触达发布",
       "detail": "群内推送",
       "owner": "运营",
-      "done": false
+      "done": true
     },
     {
       "id": "36b8conh",
@@ -2133,7 +2133,7 @@
       "output": "查看率",
       "detail": "发布后 2 天",
       "owner": "分析",
-      "done": false
+      "done": true
     },
     {
       "id": "bm4unt95",
@@ -2144,7 +2144,7 @@
       "output": "优化清单",
       "detail": "沉淀经验",
       "owner": "复盘",
-      "done": false
+      "done": true
     }
   ],
   "aiShareTasks": [
