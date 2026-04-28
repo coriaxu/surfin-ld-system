@@ -1,6 +1,16 @@
 {
   "sessions": [
     {
+      "id": "uvs68vtb",
+      "date": "2026-04-28",
+      "course": "钉钉 AI 表格分享",
+      "project": "AI 分享月",
+      "lecturer": "雷庆",
+      "people": 16,
+      "duration": 1,
+      "note": ""
+    },
+    {
       "id": "xij2aun2",
       "date": "2026-04-15",
       "course": "AI辅导答疑",
