@@ -2555,7 +2555,7 @@
       "output": "触达发布",
       "detail": "群内推送",
       "owner": "运营",
-      "done": false
+      "done": true
     },
     {
       "id": "08fpabdt",
@@ -2566,7 +2566,7 @@
       "output": "查看率",
       "detail": "发布后 2 天",
       "owner": "分析",
-      "done": false
+      "done": true
     },
     {
       "id": "hrda7tk3",
@@ -2577,7 +2577,7 @@
       "output": "优化清单",
       "detail": "沉淀经验",
       "owner": "复盘",
-      "done": false
+      "done": true
     }
   ],
   "aiShareTasks": [
