@@ -808,7 +808,8 @@
     "96": "央视315曝光GEO：你以为的AI客观答案，其实有人提前投了“毒”",
     "99": "一项新测试让四大顶级AI全军覆没，模型成绩为何不如普通人？",
     "100": "AI Agent破解甲骨文，四步走工作流的灵感来自两千年前",
-    "101": "一家运动鞋公司改名变AI公司，逆天改命股价翻了6倍"
+    "101": "一家运动鞋公司改名变AI公司，逆天改命股价翻了6倍",
+    "102": "《麻省理工科技评论》发布十大AI关键趋势：AI诈骗已经防不胜防"
   },
   "aiShareTitles": {
     "1": "NotebookLM 实战应用 - 你的 AI 第二大脑"
@@ -2477,7 +2478,7 @@
       "output": "选题定位",
       "detail": "明确看点与受众",
       "owner": "策划",
-      "done": false
+      "done": true
     },
     {
       "id": "3bdn5486",
@@ -2488,7 +2489,7 @@
       "output": "主稿",
       "detail": "可直接发布",
       "owner": "内容",
-      "done": false
+      "done": true
     },
     {
       "id": "oow5ymqo",
@@ -2499,7 +2500,7 @@
       "output": "归档记录",
       "detail": "版本一致",
       "owner": "归档",
-      "done": false
+      "done": true
     },
     {
       "id": "7xj9qzfn",
@@ -2510,7 +2511,7 @@
       "output": "海报/封面",
       "detail": "主视觉",
       "owner": "设计",
-      "done": false
+      "done": true
     },
     {
       "id": "b3e0en72",
@@ -2521,7 +2522,7 @@
       "output": "播客",
       "detail": "音频成品",
       "owner": "剪辑",
-      "done": false
+      "done": true
     },
     {
       "id": "tdcusweu",
@@ -2532,7 +2533,7 @@
       "output": "新闻区块",
       "detail": "嵌入广播站",
       "owner": "内容",
-      "done": false
+      "done": true
     },
     {
       "id": "wev2wrti",
@@ -2543,7 +2544,7 @@
       "output": "发刊词",
       "detail": "开场引导",
       "owner": "内容",
-      "done": false
+      "done": true
     },
     {
       "id": "b7bvwk8t",
