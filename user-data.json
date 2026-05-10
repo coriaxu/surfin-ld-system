@@ -1,6 +1,16 @@
 {
   "sessions": [
     {
+      "id": "9jtps53x",
+      "date": "2026-05-09",
+      "course": "把 AI 装进你的电脑",
+      "project": "AI 赋能训练营",
+      "lecturer": "徐浩",
+      "people": 12,
+      "duration": 2.5,
+      "note": ""
+    },
+    {
       "id": "uvs68vtb",
       "date": "2026-04-28",
       "course": "钉钉 AI 表格分享",
