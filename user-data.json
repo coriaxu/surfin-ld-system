@@ -2674,7 +2674,7 @@
       "output": "新闻区块",
       "detail": "嵌入广播站",
       "owner": "内容",
-      "done": false
+      "done": true
     },
     {
       "id": "8hioof18",
@@ -2685,7 +2685,7 @@
       "output": "发刊词",
       "detail": "开场引导",
       "owner": "内容",
-      "done": false
+      "done": true
     },
     {
       "id": "la0s7p9l",
