@@ -2737,7 +2737,7 @@
       "output": "查看率",
       "detail": "发布后 2 天",
       "owner": "分析",
-      "done": false
+      "done": true
     },
     {
       "id": "rwb7hta6",
@@ -2748,7 +2748,7 @@
       "output": "优化清单",
       "detail": "沉淀经验",
       "owner": "复盘",
-      "done": false
+      "done": true
     }
   ],
   "aiShareTasks": [
