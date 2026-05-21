@@ -5385,8 +5385,9 @@
                     <input type="text" id="stationTitle" placeholder="标题或关键词" required />
                   </div>
                   <div class="form-group">
-                    <label class="form-label">查看人数</label>
-                    <input type="number" id="stationViews" min="0" placeholder="选填" />
+                    <label class="form-label">未查看人数</label>
+                    <input type="number" id="stationUnviewed" min="0" placeholder="如：13" />
+                    <div id="stationViewsHint" style="font-size:11px;color:var(--text-muted);margin-top:4px;min-height:14px;line-height:1.4;"></div>
                   </div>
                   <div class="form-group">
                     <label class="form-label">公司总人数</label>
@@ -9462,10 +9463,49 @@
       }
     };
 
+    // 实时反算「查看人数」提示
+    function updateStationViewsHint() {
+      const hint = document.getElementById('stationViewsHint');
+      if (!hint) return;
+      const totalRaw = document.getElementById('stationTotal').value.trim();
+      const unviewedRaw = document.getElementById('stationUnviewed').value.trim();
+      if (unviewedRaw === '' && totalRaw === '') {
+        hint.textContent = '';
+        return;
+      }
+      if (unviewedRaw === '') {
+        hint.textContent = '';
+        return;
+      }
+      const total = Number(totalRaw);
+      const unviewed = Number(unviewedRaw);
+      if (totalRaw === '' || !Number.isFinite(total) || total <= 0) {
+        hint.textContent = '请先填写公司总人数';
+        hint.style.color = 'var(--accent-warning)';
+        return;
+      }
+      if (!Number.isFinite(unviewed) || unviewed < 0) {
+        hint.textContent = '未查看人数应 ≥ 0';
+        hint.style.color = 'var(--accent-danger)';
+        return;
+      }
+      if (unviewed > total) {
+        hint.textContent = `⚠ 未查看（${unviewed}）已超过总人数（${total}）`;
+        hint.style.color = 'var(--accent-danger)';
+        return;
+      }
+      const views = total - unviewed;
+      const rate = ((views / total) * 100).toFixed(1);
+      hint.textContent = `查看人数 = ${total} − ${unviewed} = ${views}（${rate}%）`;
+      hint.style.color = 'var(--accent-success)';
+    }
+
     // 表单操作
     function resetStationForm() {
       document.getElementById('stationForm').reset();
       document.getElementById('stationId').value = '';
+      const hint = document.getElementById('stationViewsHint');
+      if (hint) hint.textContent = '';
     }
 
     function resetShareForm() {
@@ -9483,10 +9523,15 @@
       document.getElementById('stationEpisode').value = item.episode;
       document.getElementById('stationDate').value = item.date;
       document.getElementById('stationTitle').value = item.title;
-      document.getElementById('stationViews').value = item.views;
+      // 反算未查看人数 = 公司总人数 − 已查看人数（兜底负数 / 缺字段情况）
+      const hasViewData = typeof item.total === 'number' && typeof item.views === 'number';
+      const unviewedVal = hasViewData ? Math.max(0, item.total - item.views) : '';
+      document.getElementById('stationUnviewed').value = unviewedVal;
       document.getElementById('stationTotal').value = item.total;
       document.getElementById('stationCategory').value = item.category;
       document.getElementById('stationNote').value = item.note || '';
+      // 触发 hint 反算预览
+      updateStationViewsHint();
       // 自动滚动到表单位置
       document.getElementById('stationForm').scrollIntoView({ behavior: 'smooth', block: 'start' });
       // 显示取消编辑按钮
@@ -9547,13 +9592,37 @@
     // 表单提交
     document.getElementById('stationForm').addEventListener('submit', e => {
       e.preventDefault();
+      const unviewedRaw = document.getElementById('stationUnviewed').value.trim();
+      const totalRaw = document.getElementById('stationTotal').value.trim();
+      const total = Number(totalRaw);
+
+      // 校验：填了未查看人数就必须有合法的公司总人数
+      if (unviewedRaw !== '') {
+        if (totalRaw === '' || !Number.isFinite(total) || total <= 0) {
+          showToast('请先填写有效的公司总人数', 'error');
+          return;
+        }
+        const unviewedNum = Number(unviewedRaw);
+        if (!Number.isFinite(unviewedNum) || unviewedNum < 0) {
+          showToast('未查看人数必须 ≥ 0', 'error');
+          return;
+        }
+        if (unviewedNum > total) {
+          showToast(`未查看人数（${unviewedNum}）不能大于公司总人数（${total}）`, 'error');
+          return;
+        }
+      }
+
+      // 减法：留空 → views = 0（暂无回收数据）；填了 → views = total − 未查看
+      const views = unviewedRaw === '' ? 0 : total - Number(unviewedRaw);
+
       const payload = {
         id: document.getElementById('stationId').value || uid(),
         episode: Number(document.getElementById('stationEpisode').value),
         date: document.getElementById('stationDate').value,
         title: document.getElementById('stationTitle').value,
-        views: Number(document.getElementById('stationViews').value),
-        total: Number(document.getElementById('stationTotal').value),
+        views,
+        total: Number.isFinite(total) ? total : 0,
         category: document.getElementById('stationCategory').value,
         note: document.getElementById('stationNote').value
       };
@@ -9564,6 +9633,12 @@
       persist();
       renderAIKnowledge();
       showToast('广播站记录已保存', 'success');
+    });
+
+    // 未查看人数 / 公司总人数 实时反算「查看人数」hint
+    ['stationUnviewed', 'stationTotal'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.addEventListener('input', updateStationViewsHint);
     });
 
     document.getElementById('shareForm').addEventListener('submit', e => {
