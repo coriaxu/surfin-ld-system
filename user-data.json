@@ -1,16 +1,6 @@
 {
   "sessions": [
     {
-      "id": "acg8ihae",
-      "date": "2026-05-20",
-      "course": "小组辅导答疑",
-      "project": "AI 赋能训练营",
-      "lecturer": "徐浩",
-      "people": 4,
-      "duration": 1,
-      "note": ""
-    },
-    {
       "id": "5s9vx94g",
       "date": "2026-05-20",
       "course": "写出你第一个 skill",
@@ -18,6 +8,16 @@
       "lecturer": "徐浩",
       "people": 11,
       "duration": 1.5,
+      "note": ""
+    },
+    {
+      "id": "acg8ihae",
+      "date": "2026-05-18",
+      "course": "小组辅导答疑",
+      "project": "AI 赋能训练营",
+      "lecturer": "徐浩",
+      "people": 4,
+      "duration": 1,
       "note": ""
     },
     {
