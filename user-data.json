@@ -1,6 +1,136 @@
 {
   "sessions": [
     {
+      "id": "6r4i1stf",
+      "date": "2026-05-22",
+      "course": "1 对 1 辅导答疑",
+      "project": "AI 赋能训练营",
+      "lecturer": "徐浩",
+      "people": 1,
+      "duration": 2,
+      "note": "荣萌"
+    },
+    {
+      "id": "5s9vx94g",
+      "date": "2026-05-20",
+      "course": "写出你第一个 skill",
+      "project": "AI 赋能训练营",
+      "lecturer": "徐浩",
+      "people": 11,
+      "duration": 1.5,
+      "note": ""
+    },
+    {
+      "id": "acg8ihae",
+      "date": "2026-05-18",
+      "course": "小组辅导答疑",
+      "project": "AI 赋能训练营",
+      "lecturer": "徐浩",
+      "people": 4,
+      "duration": 1,
+      "note": ""
+    },
+    {
+      "id": "vh83mqc3",
+      "date": "2026-05-14",
+      "course": "小组辅导答疑",
+      "project": "AI 赋能训练营",
+      "lecturer": "徐浩",
+      "people": 4,
+      "duration": 1,
+      "note": ""
+    },
+    {
+      "id": "jsckipfe",
+      "date": "2026-05-13",
+      "course": "小组辅导答疑",
+      "project": "AI 赋能训练营",
+      "lecturer": "徐浩",
+      "people": 3,
+      "duration": 1,
+      "note": ""
+    },
+    {
+      "id": "9jtps53x",
+      "date": "2026-05-09",
+      "course": "把 AI 装进你的电脑",
+      "project": "AI 赋能训练营",
+      "lecturer": "徐浩",
+      "people": 12,
+      "duration": 2.5,
+      "note": ""
+    },
+    {
+      "id": "uvs68vtb",
+      "date": "2026-04-28",
+      "course": "钉钉 AI 表格分享",
+      "project": "AI 分享月",
+      "lecturer": "雷庆",
+      "people": 16,
+      "duration": 1,
+      "note": ""
+    },
+    {
+      "id": "ou78w9yu",
+      "date": "2026-04-28",
+      "course": "AI 赋能宣讲会",
+      "project": "AI 赋能训练营",
+      "lecturer": "徐浩",
+      "people": 11,
+      "duration": 1,
+      "note": ""
+    },
+    {
+      "id": "6m8495fn",
+      "date": "2026-04-21",
+      "course": "1 对 1 辅导答疑",
+      "project": "AI 赋能训练营",
+      "lecturer": "徐浩",
+      "people": 1,
+      "duration": 1,
+      "note": "戴鸿超"
+    },
+    {
+      "id": "dqi4dkht",
+      "date": "2026-04-17",
+      "course": "1 对 1 辅导答疑",
+      "project": "AI 赋能训练营",
+      "lecturer": "徐浩",
+      "people": 1,
+      "duration": 1.5,
+      "note": "可心"
+    },
+    {
+      "id": "xij2aun2",
+      "date": "2026-04-15",
+      "course": "AI辅导答疑",
+      "project": "AI 赋能训练营",
+      "lecturer": "徐浩",
+      "people": 4,
+      "duration": 2,
+      "note": "王雅平产品团队"
+    },
+    {
+      "id": "9k4ex2yb",
+      "date": "2026-04-14",
+      "course": "1 对 1 辅导答疑",
+      "project": "AI 赋能训练营",
+      "lecturer": "徐浩",
+      "people": 1,
+      "duration": 2,
+      "note": "财务部 nathan\n"
+    },
+    {
+      "id": "m5rujcsk",
+      "date": "2026-04-13",
+      "course": "1 对 1 辅导答疑",
+      "project": "AI 赋能训练营",
+      "lecturer": "徐浩",
+      "people": 1,
+      "duration": 1,
+      "note": "设计部李蓓"
+    },
+    {
       "id": "3k48jnto",
       "date": "2026-04-07",
       "course": "1 对 1 辅导答疑",
@@ -260,12 +390,52 @@
   ],
   "aiStations": [
     {
+      "id": "wle2b113",
+      "episode": 104,
+      "date": "2026-05-20",
+      "title": "如何每天用AI“提效”，又不把我们的脑子用废？分享四条建议",
+      "views": 0,
+      "total": 380,
+      "category": "thought",
+      "note": ""
+    },
+    {
+      "id": "i7tatwld",
+      "episode": 103,
+      "date": "2026-05-13",
+      "title": "关于黄仁勋访谈的八条笔记，全球最大的AI瓶颈是水管工",
+      "views": 355,
+      "total": 380,
+      "category": "thought",
+      "note": ""
+    },
+    {
+      "id": "earaultj",
+      "episode": 102,
+      "date": "2026-05-06",
+      "title": "《麻省理工科技评论》发布十大AI关键趋势：AI诈骗已经防不胜防",
+      "views": 340,
+      "total": 380,
+      "category": "news",
+      "note": ""
+    },
+    {
+      "id": "9529b5kb",
+      "episode": 101,
+      "date": "2026-04-29",
+      "title": "一家运动鞋公司改名变AI公司，逆天改命股价翻了6倍",
+      "views": 331,
+      "total": 375,
+      "category": "news",
+      "note": ""
+    },
+    {
       "id": "jueys37r",
       "episode": 100,
       "date": "2026-04-22",
       "title": "AI Agent破解甲骨文，四步走工作流的灵感来自两千年前",
-      "views": 0,
-      "total": 0,
+      "views": 322,
+      "total": 367,
       "category": "news",
       "note": ""
     },
@@ -727,7 +897,11 @@
     "95": "当AI能重写一切，从代码到内容创作，我们如何应对\"忒修斯之船\"？",
     "96": "央视315曝光GEO：你以为的AI客观答案，其实有人提前投了“毒”",
     "99": "一项新测试让四大顶级AI全军覆没，模型成绩为何不如普通人？",
-    "100": "AI Agent破解甲骨文，四步走工作流的灵感来自两千年前"
+    "100": "AI Agent破解甲骨文，四步走工作流的灵感来自两千年前",
+    "101": "一家运动鞋公司改名变AI公司，逆天改命股价翻了6倍",
+    "102": "《麻省理工科技评论》发布十大AI关键趋势：AI诈骗已经防不胜防",
+    "103": "关于黄仁勋访谈的八条笔记，全球最大的AI瓶颈是水管工",
+    "105": "如何每天用AI“提效”，又不把我们的脑子用废？分享四条建议"
   },
   "aiShareTitles": {
     "1": "NotebookLM 实战应用 - 你的 AI 第二大脑"
@@ -2220,7 +2394,7 @@
       "output": "播客",
       "detail": "音频成品",
       "owner": "剪辑",
-      "done": false
+      "done": true
     },
     {
       "id": "ul6qxf5r",
@@ -2231,7 +2405,7 @@
       "output": "新闻区块",
       "detail": "嵌入广播站",
       "owner": "内容",
-      "done": false
+      "done": true
     },
     {
       "id": "dtlh2vaz",
@@ -2242,7 +2416,7 @@
       "output": "发刊词",
       "detail": "开场引导",
       "owner": "内容",
-      "done": false
+      "done": true
     },
     {
       "id": "v3cwc5z5",
@@ -2253,7 +2427,7 @@
       "output": "触达发布",
       "detail": "群内推送",
       "owner": "运营",
-      "done": false
+      "done": true
     },
     {
       "id": "deo9pyl3",
@@ -2264,7 +2438,7 @@
       "output": "查看率",
       "detail": "发布后 2 天",
       "owner": "分析",
-      "done": false
+      "done": true
     },
     {
       "id": "eytitsms",
@@ -2275,7 +2449,447 @@
       "output": "优化清单",
       "detail": "沉淀经验",
       "owner": "复盘",
+      "done": true
+    },
+    {
+      "id": "zfp3jfg0",
+      "episode": 101,
+      "name": "确定本期主题",
+      "stage": "theme",
+      "tool": "主题对齐",
+      "output": "选题定位",
+      "detail": "明确看点与受众",
+      "owner": "策划",
+      "done": true
+    },
+    {
+      "id": "8y30tbtt",
+      "episode": 101,
+      "name": "主文案撰写",
+      "stage": "writing",
+      "tool": "钉钉文档",
+      "output": "主稿",
+      "detail": "可直接发布",
+      "owner": "内容",
+      "done": true
+    },
+    {
+      "id": "hhyrozux",
+      "episode": 101,
+      "name": "飞书归档同步",
+      "stage": "sync",
+      "tool": "飞书文档",
+      "output": "归档记录",
+      "detail": "版本一致",
+      "owner": "归档",
+      "done": true
+    },
+    {
+      "id": "e126n47v",
+      "episode": 101,
+      "name": "视觉海报制作",
+      "stage": "produce",
+      "tool": "Gemini",
+      "output": "海报/封面",
+      "detail": "主视觉",
+      "owner": "设计",
+      "done": true
+    },
+    {
+      "id": "fpwuwjr5",
+      "episode": 101,
+      "name": "AI 播客制作",
+      "stage": "produce",
+      "tool": "豆包",
+      "output": "播客",
+      "detail": "音频成品",
+      "owner": "剪辑",
+      "done": true
+    },
+    {
+      "id": "51rnegde",
+      "episode": 101,
+      "name": "全球 AI 新闻撰写",
+      "stage": "assemble",
+      "tool": "钉钉文档",
+      "output": "新闻区块",
+      "detail": "嵌入广播站",
+      "owner": "内容",
+      "done": true
+    },
+    {
+      "id": "2m5nav0b",
+      "episode": 101,
+      "name": "发刊词撰写",
+      "stage": "assemble",
+      "tool": "钉钉文档",
+      "output": "发刊词",
+      "detail": "开场引导",
+      "owner": "内容",
+      "done": true
+    },
+    {
+      "id": "mdrmy724",
+      "episode": 101,
+      "name": "钉钉群发布",
+      "stage": "publish",
+      "tool": "钉钉群",
+      "output": "触达发布",
+      "detail": "群内推送",
+      "owner": "运营",
+      "done": true
+    },
+    {
+      "id": "4cheh321",
+      "episode": 101,
+      "name": "数据回收与查看率",
+      "stage": "data",
+      "tool": "数据回收",
+      "output": "查看率",
+      "detail": "发布后 2 天",
+      "owner": "分析",
+      "done": true
+    },
+    {
+      "id": "w10oh81w",
+      "episode": 101,
+      "name": "复盘与改进",
+      "stage": "review",
+      "tool": "复盘模板",
+      "output": "优化清单",
+      "detail": "沉淀经验",
+      "owner": "复盘",
+      "done": true
+    },
+    {
+      "id": "id4bften",
+      "episode": 102,
+      "name": "确定本期主题",
+      "stage": "theme",
+      "tool": "主题对齐",
+      "output": "选题定位",
+      "detail": "明确看点与受众",
+      "owner": "策划",
+      "done": true
+    },
+    {
+      "id": "3bdn5486",
+      "episode": 102,
+      "name": "主文案撰写",
+      "stage": "writing",
+      "tool": "钉钉文档",
+      "output": "主稿",
+      "detail": "可直接发布",
+      "owner": "内容",
+      "done": true
+    },
+    {
+      "id": "oow5ymqo",
+      "episode": 102,
+      "name": "飞书归档同步",
+      "stage": "sync",
+      "tool": "飞书文档",
+      "output": "归档记录",
+      "detail": "版本一致",
+      "owner": "归档",
+      "done": true
+    },
+    {
+      "id": "7xj9qzfn",
+      "episode": 102,
+      "name": "视觉海报制作",
+      "stage": "produce",
+      "tool": "Gemini",
+      "output": "海报/封面",
+      "detail": "主视觉",
+      "owner": "设计",
+      "done": true
+    },
+    {
+      "id": "b3e0en72",
+      "episode": 102,
+      "name": "AI 播客制作",
+      "stage": "produce",
+      "tool": "豆包",
+      "output": "播客",
+      "detail": "音频成品",
+      "owner": "剪辑",
+      "done": true
+    },
+    {
+      "id": "tdcusweu",
+      "episode": 102,
+      "name": "全球 AI 新闻撰写",
+      "stage": "assemble",
+      "tool": "钉钉文档",
+      "output": "新闻区块",
+      "detail": "嵌入广播站",
+      "owner": "内容",
+      "done": true
+    },
+    {
+      "id": "wev2wrti",
+      "episode": 102,
+      "name": "发刊词撰写",
+      "stage": "assemble",
+      "tool": "钉钉文档",
+      "output": "发刊词",
+      "detail": "开场引导",
+      "owner": "内容",
+      "done": true
+    },
+    {
+      "id": "b7bvwk8t",
+      "episode": 102,
+      "name": "钉钉群发布",
+      "stage": "publish",
+      "tool": "钉钉群",
+      "output": "触达发布",
+      "detail": "群内推送",
+      "owner": "运营",
+      "done": true
+    },
+    {
+      "id": "08fpabdt",
+      "episode": 102,
+      "name": "数据回收与查看率",
+      "stage": "data",
+      "tool": "数据回收",
+      "output": "查看率",
+      "detail": "发布后 2 天",
+      "owner": "分析",
+      "done": true
+    },
+    {
+      "id": "hrda7tk3",
+      "episode": 102,
+      "name": "复盘与改进",
+      "stage": "review",
+      "tool": "复盘模板",
+      "output": "优化清单",
+      "detail": "沉淀经验",
+      "owner": "复盘",
+      "done": true
+    },
+    {
+      "id": "6268k1gr",
+      "episode": 103,
+      "name": "确定本期主题",
+      "stage": "theme",
+      "tool": "主题对齐",
+      "output": "选题定位",
+      "detail": "明确看点与受众",
+      "owner": "策划",
+      "done": true
+    },
+    {
+      "id": "vv09u7y6",
+      "episode": 103,
+      "name": "主文案撰写",
+      "stage": "writing",
+      "tool": "钉钉文档",
+      "output": "主稿",
+      "detail": "可直接发布",
+      "owner": "内容",
+      "done": true
+    },
+    {
+      "id": "whfgedo4",
+      "episode": 103,
+      "name": "飞书归档同步",
+      "stage": "sync",
+      "tool": "飞书文档",
+      "output": "归档记录",
+      "detail": "版本一致",
+      "owner": "归档",
+      "done": true
+    },
+    {
+      "id": "q97wd0p6",
+      "episode": 103,
+      "name": "视觉海报制作",
+      "stage": "produce",
+      "tool": "Gemini",
+      "output": "海报/封面",
+      "detail": "主视觉",
+      "owner": "设计",
+      "done": true
+    },
+    {
+      "id": "fyvwunil",
+      "episode": 103,
+      "name": "AI 播客制作",
+      "stage": "produce",
+      "tool": "豆包",
+      "output": "播客",
+      "detail": "音频成品",
+      "owner": "剪辑",
       "done": false
+    },
+    {
+      "id": "4gfq6n83",
+      "episode": 103,
+      "name": "全球 AI 新闻撰写",
+      "stage": "assemble",
+      "tool": "钉钉文档",
+      "output": "新闻区块",
+      "detail": "嵌入广播站",
+      "owner": "内容",
+      "done": true
+    },
+    {
+      "id": "8hioof18",
+      "episode": 103,
+      "name": "发刊词撰写",
+      "stage": "assemble",
+      "tool": "钉钉文档",
+      "output": "发刊词",
+      "detail": "开场引导",
+      "owner": "内容",
+      "done": true
+    },
+    {
+      "id": "la0s7p9l",
+      "episode": 103,
+      "name": "钉钉群发布",
+      "stage": "publish",
+      "tool": "钉钉群",
+      "output": "触达发布",
+      "detail": "群内推送",
+      "owner": "运营",
+      "done": true
+    },
+    {
+      "id": "6s2sj9yw",
+      "episode": 103,
+      "name": "数据回收与查看率",
+      "stage": "data",
+      "tool": "数据回收",
+      "output": "查看率",
+      "detail": "发布后 2 天",
+      "owner": "分析",
+      "done": true
+    },
+    {
+      "id": "rwb7hta6",
+      "episode": 103,
+      "name": "复盘与改进",
+      "stage": "review",
+      "tool": "复盘模板",
+      "output": "优化清单",
+      "detail": "沉淀经验",
+      "owner": "复盘",
+      "done": true
+    },
+    {
+      "id": "0438nt93",
+      "episode": 105,
+      "name": "确定本期主题",
+      "stage": "theme",
+      "tool": "主题对齐",
+      "output": "选题定位",
+      "detail": "明确看点与受众",
+      "owner": "策划",
+      "done": true
+    },
+    {
+      "id": "xcde1t3o",
+      "episode": 105,
+      "name": "主文案撰写",
+      "stage": "writing",
+      "tool": "钉钉文档",
+      "output": "主稿",
+      "detail": "可直接发布",
+      "owner": "内容",
+      "done": true
+    },
+    {
+      "id": "s8b0nc0g",
+      "episode": 105,
+      "name": "飞书归档同步",
+      "stage": "sync",
+      "tool": "飞书文档",
+      "output": "归档记录",
+      "detail": "版本一致",
+      "owner": "归档",
+      "done": true
+    },
+    {
+      "id": "6kb22xvt",
+      "episode": 105,
+      "name": "视觉海报制作",
+      "stage": "produce",
+      "tool": "Gemini",
+      "output": "海报/封面",
+      "detail": "主视觉",
+      "owner": "设计",
+      "done": true
+    },
+    {
+      "id": "whdi7kae",
+      "episode": 105,
+      "name": "AI 播客制作",
+      "stage": "produce",
+      "tool": "豆包",
+      "output": "播客",
+      "detail": "音频成品",
+      "owner": "剪辑",
+      "done": true
+    },
+    {
+      "id": "dqxo6hjd",
+      "episode": 105,
+      "name": "全球 AI 新闻撰写",
+      "stage": "assemble",
+      "tool": "钉钉文档",
+      "output": "新闻区块",
+      "detail": "嵌入广播站",
+      "owner": "内容",
+      "done": true
+    },
+    {
+      "id": "yo04cjio",
+      "episode": 105,
+      "name": "发刊词撰写",
+      "stage": "assemble",
+      "tool": "钉钉文档",
+      "output": "发刊词",
+      "detail": "开场引导",
+      "owner": "内容",
+      "done": true
+    },
+    {
+      "id": "igp3n3kq",
+      "episode": 105,
+      "name": "钉钉群发布",
+      "stage": "publish",
+      "tool": "钉钉群",
+      "output": "触达发布",
+      "detail": "群内推送",
+      "owner": "运营",
+      "done": true
+    },
+    {
+      "id": "we3y9n4j",
+      "episode": 105,
+      "name": "数据回收与查看率",
+      "stage": "data",
+      "tool": "数据回收",
+      "output": "查看率",
+      "detail": "发布后 2 天",
+      "owner": "分析",
+      "done": true
+    },
+    {
+      "id": "h9q5fcej",
+      "episode": 105,
+      "name": "复盘与改进",
+      "stage": "review",
+      "tool": "复盘模板",
+      "output": "优化清单",
+      "detail": "沉淀经验",
+      "owner": "复盘",
+      "done": true
     }
   ],
   "aiShareTasks": [
@@ -2456,7 +3070,7 @@
       "done": true
     }
   ],
-  "currentStationEpisode": 100,
+  "currentStationEpisode": 105,
   "currentShareEpisode": 1,
   "financeWiki": [
     {
