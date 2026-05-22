@@ -6905,28 +6905,9 @@ tr:hover td.empty-cell {
         <h1 class="page-title" id="pageTitle">培训大屏</h1>
       </div>
       <div class="topbar-actions" id="topbarActions">
-        <div class="theme-switcher">
-          <button class="btn btn-secondary btn-sm" id="themeBtn" onclick="toggleThemeDropdown(event)">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="5" />
-              <path
-                d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
-            </svg>
-            主题方案
-          </button>
-          <div class="theme-dropdown" id="themeDropdown">
-            <div class="theme-option" onclick="setTheme('default')"><span class="theme-dot"
-                style="background:#1E455F"></span>经典原力</div>
-            <div class="theme-option" onclick="setTheme('dark')"><span class="theme-dot"
-                style="background:#0A1B2A"></span>暗夜星辰</div>
-            <div class="theme-option" onclick="setTheme('wine')"><span class="theme-dot"
-                style="background:#6A3F3E"></span>流金岁月</div>
-            <div class="theme-option" onclick="setTheme('mint')"><span class="theme-dot"
-                style="background:#3C6E5E"></span>生机薄荷</div>
-            <div class="theme-option" onclick="setTheme('craft')"><span class="theme-dot"
-                style="background:#4B5058"></span>匠心工匠</div>
-          </div>
-        </div>
+        <!-- 主题方案功能已删除（仅保留 OS 6.x 锤子蓝紫单一主题）。
+             如未来需要再加多主题，CSS 类（.theme-switcher / .theme-dropdown 等）和
+             JS 函数（toggleThemeDropdown / setTheme / getThemeName）仍保留备用。 -->
         <button class="btn btn-secondary btn-sm" onclick="exportExcel()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
@@ -8666,50 +8647,11 @@ tr:hover td.empty-cell {
       currentConfirmCallback = null;
     };
 
-    // 主题切换
-    function setTheme(theme) {
-      if (theme === 'default') {
-        document.body.removeAttribute('data-theme');
-      } else {
-        document.body.setAttribute('data-theme', theme);
-      }
-      localStorage.setItem('surfin_theme', theme);
-      document.getElementById('themeDropdown').classList.remove('active');
-      showToast(`已切换至「${getThemeName(theme)}」主题`, 'info');
-      // 触发图表刷新以适配背景
-      setTimeout(renderAll, 300);
-    }
-
-    function getThemeName(theme) {
-      const names = { default: '经典原力', dark: '暗夜星辰', wine: '流金岁月', mint: '生机薄荷', craft: '匠心工匠' };
-      return names[theme] || '未知';
-    }
-
-    function toggleThemeDropdown(e) {
-      e.stopPropagation();
-      const dd = document.getElementById('themeDropdown');
-      const btn = document.getElementById('themeBtn');
-      // dropdown 用 position: fixed 跳出 .topbar-actions 的 overflow 裁切，
-      // 显示时根据按钮位置动态计算坐标（右对齐）
-      if (dd.classList.toggle('active')) {
-        const rect = btn.getBoundingClientRect();
-        const ddWidth = dd.offsetWidth || 180;
-        dd.style.top = (rect.bottom + 8) + 'px';
-        dd.style.left = (rect.right - ddWidth) + 'px';
-      }
-    }
-
-    document.addEventListener('click', () => {
-      document.getElementById('themeDropdown').classList.remove('active');
-    });
-
-    // 窗口滚动/resize 时关闭下拉（避免位置错乱）
-    window.addEventListener('resize', () => {
-      document.getElementById('themeDropdown').classList.remove('active');
-    });
-    window.addEventListener('scroll', () => {
-      document.getElementById('themeDropdown').classList.remove('active');
-    }, true);
+    // 主题切换功能已删除，固定使用 OS 6.x 锤子蓝紫单一主题。
+    // 函数空实现保留以兜底防止其他地方误调用报错。
+    function setTheme() { /* no-op */ }
+    function getThemeName() { return 'OS 6.x'; }
+    function toggleThemeDropdown(e) { if (e && e.stopPropagation) e.stopPropagation(); }
 
     /* =========================================
        3. 数据初始化 & 逻辑
