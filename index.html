@@ -4226,6 +4226,39 @@ tr:hover td.empty-cell {
   color: var(--text-body);
 }
 
+
+/* ============================================================
+   20. 历史记录表格 · 关键列防换行
+   ------------------------------------------------------------
+   AI 广播站 / AI 分享月 的历史记录表格里，"期数"和"发布日期"
+   两列是固定短文本（"第 101 期" / "2026-04-29"），不应换行。
+   侧边栏拉窄主区域变小时这两列被压换行，强制 nowrap 修复。
+
+   备注 / 主题 列保持自动换行（长文本应该允许折行）。
+   ============================================================ */
+#stationTable td:nth-child(1),
+#stationTable td:nth-child(2),
+#shareTable td:nth-child(1),
+#shareTable td:nth-child(2) {
+  white-space: nowrap;
+}
+
+/* 期数列稍微强调（深色 + 数字 tabular-nums） */
+#stationTable td:nth-child(1),
+#shareTable td:nth-child(1) {
+  color: var(--text-strong);
+  font-variant-numeric: tabular-nums;
+}
+
+/* 发布日期列用 mono 数字风格更整齐 */
+#stationTable td:nth-child(2),
+#shareTable td:nth-child(2) {
+  font-family: var(--font-mono);
+  font-weight: var(--fw-light);
+  color: var(--text-body);
+  font-variant-numeric: tabular-nums;
+}
+
 /* ===== 06-finance.css ===== */
 /* ============================================================
  * 06-finance.css · 金融小百科 (panel-finance) 全部样式
