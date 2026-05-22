@@ -2844,7 +2844,7 @@
       "output": "播客",
       "detail": "音频成品",
       "owner": "剪辑",
-      "done": true
+      "done": false
     },
     {
       "id": "dqxo6hjd",
@@ -2855,7 +2855,7 @@
       "output": "新闻区块",
       "detail": "嵌入广播站",
       "owner": "内容",
-      "done": true
+      "done": false
     },
     {
       "id": "yo04cjio",
@@ -2866,7 +2866,7 @@
       "output": "发刊词",
       "detail": "开场引导",
       "owner": "内容",
-      "done": true
+      "done": false
     },
     {
       "id": "igp3n3kq",
@@ -2877,7 +2877,7 @@
       "output": "触达发布",
       "detail": "群内推送",
       "owner": "运营",
-      "done": true
+      "done": false
     },
     {
       "id": "we3y9n4j",
