@@ -2888,7 +2888,7 @@
       "output": "查看率",
       "detail": "发布后 2 天",
       "owner": "分析",
-      "done": true
+      "done": false
     },
     {
       "id": "h9q5fcej",
@@ -2899,7 +2899,7 @@
       "output": "优化清单",
       "detail": "沉淀经验",
       "owner": "复盘",
-      "done": true
+      "done": false
     }
   ],
   "aiShareTasks": [
