@@ -1,1 +1,4 @@
 .vscode/
+.gstack/
+.claude/
+.DS_Store
