@@ -179,6 +179,138 @@
   --t-smooth: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+
+/* ============================================================
+ * 多主题切换 · body[data-theme="xxx"] 覆盖核心变量
+ * ------------------------------------------------------------
+ * 设计原则：
+ *   - 切换主题只换基础色板（背景 / 文字 / 边框 / 品牌主色 / 图表色）
+ *   - 8 张 KPI 卡的类别色（blue/green/orange/...）保留不变，确保识别度
+ *   - 字体 / 间距 / 圆角 / 字号阶梯等 OS 6.x 系统变量全部保持
+ *   - 切换是无刷新的：JS 给 body 加/移除 data-theme attribute 即可
+ * ============================================================ */
+
+/* === Notion 暖米调（亲和工作台）=== */
+:root[data-theme="notion"] {
+  --bg-page: #FAFAF7;
+  --bg-card: #FFFFFF;
+  --bg-card-soft: #F7F6F3;
+  --bg-sidebar: #F5F3EE;
+  --bg-hover: rgba(55, 53, 47, 0.04);
+  --bg-active: rgba(55, 53, 47, 0.08);
+  --border-faint: #E9E5DC;
+  --border-light: #DCD8CB;
+  --border-mid: #C8C2B0;
+  --text-strong: #37352F;
+  --text-body: #555248;
+  --text-muted: #8C8979;
+  --text-faint: #B5B3A6;
+  --brand: #37352F;
+  --brand-light: #555248;
+  --brand-dark: #1F1E1A;
+  --brand-alpha-04: rgba(55, 53, 47, 0.04);
+  --brand-alpha-08: rgba(55, 53, 47, 0.08);
+  --brand-alpha-12: rgba(55, 53, 47, 0.12);
+  --brand-alpha-25: rgba(55, 53, 47, 0.25);
+  --dashboard-chart-primary: #37352F;
+  --dashboard-chart-primary-fill: rgba(55, 53, 47, 0.08);
+  --dashboard-chart-accent: #C24E2C;
+  --primary: #37352F;
+  --primary-glow: rgba(55, 53, 47, 0.18);
+  --shadow-brand: 0 4px 16px rgba(55, 53, 47, 0.12);
+}
+
+/* === 墨绿 + 焦糖（森林书卷）=== */
+:root[data-theme="forest"] {
+  --bg-page: #FBFAF6;
+  --bg-card: #FFFFFF;
+  --bg-card-soft: #F5F2EB;
+  --bg-sidebar: #F2EFE6;
+  --bg-hover: rgba(31, 58, 45, 0.04);
+  --bg-active: rgba(31, 58, 45, 0.08);
+  --border-faint: #E8E4D5;
+  --border-light: #D8D3C0;
+  --border-mid: #C0BAA5;
+  --text-strong: #1F3A2D;
+  --text-body: #4A5E4F;
+  --text-muted: #7A8A7E;
+  --text-faint: #B0B8AE;
+  --brand: #1F3A2D;
+  --brand-light: #2F5C44;
+  --brand-dark: #142A1F;
+  --brand-alpha-04: rgba(31, 58, 45, 0.04);
+  --brand-alpha-08: rgba(31, 58, 45, 0.08);
+  --brand-alpha-12: rgba(31, 58, 45, 0.12);
+  --brand-alpha-25: rgba(31, 58, 45, 0.25);
+  --dashboard-chart-primary: #1F3A2D;
+  --dashboard-chart-primary-fill: rgba(31, 58, 45, 0.10);
+  --dashboard-chart-accent: #C56F1E;
+  --primary: #1F3A2D;
+  --primary-glow: rgba(31, 58, 45, 0.18);
+  --shadow-brand: 0 4px 16px rgba(31, 58, 45, 0.18);
+}
+
+/* === 海军 + 古铜（经典企业）=== */
+:root[data-theme="navy"] {
+  --bg-page: #F5F1E8;
+  --bg-card: #FFFFFF;
+  --bg-card-soft: #EFEADD;
+  --bg-sidebar: #ECE6D5;
+  --bg-hover: rgba(26, 43, 60, 0.04);
+  --bg-active: rgba(26, 43, 60, 0.08);
+  --border-faint: #E2D7BD;
+  --border-light: #D0C5A8;
+  --border-mid: #B8AC8E;
+  --text-strong: #1A2B3C;
+  --text-body: #3A4A5C;
+  --text-muted: #6A7A8C;
+  --text-faint: #9AAABA;
+  --brand: #1A2B3C;
+  --brand-light: #2F4459;
+  --brand-dark: #0E1A26;
+  --brand-alpha-04: rgba(26, 43, 60, 0.04);
+  --brand-alpha-08: rgba(26, 43, 60, 0.08);
+  --brand-alpha-12: rgba(26, 43, 60, 0.12);
+  --brand-alpha-25: rgba(26, 43, 60, 0.25);
+  --dashboard-chart-primary: #1A2B3C;
+  --dashboard-chart-primary-fill: rgba(26, 43, 60, 0.10);
+  --dashboard-chart-accent: #B89968;
+  --primary: #1A2B3C;
+  --primary-glow: rgba(26, 43, 60, 0.18);
+  --shadow-brand: 0 4px 16px rgba(26, 43, 60, 0.18);
+}
+
+/* === 钢蓝 + 莹绿（现代科技）=== */
+:root[data-theme="linear"] {
+  --bg-page: #FCFCFC;
+  --bg-card: #FFFFFF;
+  --bg-card-soft: #F8F8F8;
+  --bg-sidebar: #F5F5F7;
+  --bg-hover: rgba(31, 41, 55, 0.04);
+  --bg-active: rgba(31, 41, 55, 0.08);
+  --border-faint: #E5E5EA;
+  --border-light: #D5D5DA;
+  --border-mid: #B5B5BA;
+  --text-strong: #1F2937;
+  --text-body: #4B5563;
+  --text-muted: #9CA3AF;
+  --text-faint: #D1D5DB;
+  --brand: #1F2937;
+  --brand-light: #374151;
+  --brand-dark: #111827;
+  --brand-alpha-04: rgba(31, 41, 55, 0.04);
+  --brand-alpha-08: rgba(31, 41, 55, 0.08);
+  --brand-alpha-12: rgba(31, 41, 55, 0.12);
+  --brand-alpha-25: rgba(31, 41, 55, 0.25);
+  --dashboard-chart-primary: #1F2937;
+  --dashboard-chart-primary-fill: rgba(31, 41, 55, 0.10);
+  --dashboard-chart-accent: #10B981;
+  --primary: #1F2937;
+  --primary-glow: rgba(31, 41, 55, 0.18);
+  --shadow-brand: 0 4px 16px rgba(31, 41, 55, 0.18);
+}
+
+
 /* === html/body 基础规则 === */
 html {
   font-size: 16px;
@@ -6905,9 +7037,22 @@ tr:hover td.empty-cell {
         <h1 class="page-title" id="pageTitle">培训大屏</h1>
       </div>
       <div class="topbar-actions" id="topbarActions">
-        <!-- 主题方案功能已删除（仅保留 OS 6.x 锤子蓝紫单一主题）。
-             如未来需要再加多主题，CSS 类（.theme-switcher / .theme-dropdown 等）和
-             JS 函数（toggleThemeDropdown / setTheme / getThemeName）仍保留备用。 -->
+        <div class="theme-switcher">
+          <button class="btn btn-secondary btn-sm" id="themeBtn" onclick="toggleThemeDropdown(event)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="5" />
+              <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
+            </svg>
+            主题方案
+          </button>
+          <div class="theme-dropdown" id="themeDropdown">
+            <div class="theme-option" onclick="setTheme('default')"><span class="theme-dot" style="background:#5C7CC8"></span>锤子蓝紫</div>
+            <div class="theme-option" onclick="setTheme('notion')"><span class="theme-dot" style="background:#37352F"></span>Notion 暖米</div>
+            <div class="theme-option" onclick="setTheme('forest')"><span class="theme-dot" style="background:#1F3A2D"></span>墨绿焦糖</div>
+            <div class="theme-option" onclick="setTheme('navy')"><span class="theme-dot" style="background:#1A2B3C"></span>海军古铜</div>
+            <div class="theme-option" onclick="setTheme('linear')"><span class="theme-dot" style="background:#1F2937"></span>钢蓝莹绿</div>
+          </div>
+        </div>
         <button class="btn btn-secondary btn-sm" onclick="exportExcel()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
@@ -8647,11 +8792,73 @@ tr:hover td.empty-cell {
       currentConfirmCallback = null;
     };
 
-    // 主题切换功能已删除，固定使用 OS 6.x 锤子蓝紫单一主题。
-    // 函数空实现保留以兜底防止其他地方误调用报错。
-    function setTheme() { /* no-op */ }
-    function getThemeName() { return 'OS 6.x'; }
-    function toggleThemeDropdown(e) { if (e && e.stopPropagation) e.stopPropagation(); }
+    // 主题切换：5 个主题（OS 6.x 锤子蓝紫 + Notion 暖米 + 墨绿焦糖 + 海军古铜 + 钢蓝莹绿）
+    // CSS 通过 body[data-theme="xxx"] 选择器覆盖核心色变量
+    function setTheme(theme) {
+      // 写到 document.documentElement（即 <html>）而不是 body，
+      // 这样 Chart.js 的 getComputedStyle(document.documentElement) 能读到 CSS 变量
+      if (theme === 'default') {
+        document.documentElement.removeAttribute('data-theme');
+      } else {
+        document.documentElement.setAttribute('data-theme', theme);
+      }
+      try { localStorage.setItem('surfin_theme', theme); } catch (_) {}
+      document.getElementById('themeDropdown').classList.remove('active');
+      if (typeof showToast === 'function') {
+        showToast(`已切换至「${getThemeName(theme)}」主题`, 'info');
+      }
+      // 触发图表重渲染以拾取新的 CSS 变量
+      if (typeof renderAll === 'function') setTimeout(renderAll, 300);
+    }
+
+    function getThemeName(theme) {
+      const names = {
+        default: '锤子蓝紫',
+        notion: 'Notion 暖米',
+        forest: '墨绿焦糖',
+        navy: '海军古铜',
+        linear: '钢蓝莹绿'
+      };
+      return names[theme] || '未知';
+    }
+
+    function toggleThemeDropdown(e) {
+      e.stopPropagation();
+      const dd = document.getElementById('themeDropdown');
+      const btn = document.getElementById('themeBtn');
+      // dropdown 用 position: fixed 跳出 .topbar-actions 的 overflow 裁切，
+      // 显示时根据按钮位置动态计算坐标（右对齐）
+      if (dd.classList.toggle('active')) {
+        const rect = btn.getBoundingClientRect();
+        const ddWidth = dd.offsetWidth || 180;
+        dd.style.top = (rect.bottom + 8) + 'px';
+        dd.style.left = (rect.right - ddWidth) + 'px';
+      }
+    }
+
+    document.addEventListener('click', () => {
+      const dd = document.getElementById('themeDropdown');
+      if (dd) dd.classList.remove('active');
+    });
+
+    window.addEventListener('resize', () => {
+      const dd = document.getElementById('themeDropdown');
+      if (dd) dd.classList.remove('active');
+    });
+    window.addEventListener('scroll', () => {
+      const dd = document.getElementById('themeDropdown');
+      if (dd) dd.classList.remove('active');
+    }, true);
+
+    // 启动时恢复上次保存的主题（attribute 设到 documentElement）
+    (function restoreTheme() {
+      try {
+        const saved = localStorage.getItem('surfin_theme');
+        if (saved && saved !== 'default') {
+          document.documentElement.setAttribute('data-theme', saved);
+        }
+      } catch (_) {}
+    })();
 
     /* =========================================
        3. 数据初始化 & 逻辑
