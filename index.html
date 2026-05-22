@@ -1661,10 +1661,11 @@ tr:hover td.empty-cell {
   /* 继承 .btn .btn-secondary 风格，这里只做位置微调 */
 }
 
+/* dropdown 用 fixed 跳出 .topbar-actions 的 overflow-y:hidden 裁切 */
 .theme-dropdown {
-  position: absolute;
-  top: calc(100% + 8px);
-  right: 0;
+  position: fixed;
+  top: 0;
+  left: 0;
   min-width: 180px;
   padding: 6px;
   background: var(--bg-card);
@@ -1674,7 +1675,8 @@ tr:hover td.empty-cell {
   display: none;
   flex-direction: column;
   gap: 2px;
-  z-index: 50;
+  z-index: 200;
+  /* 显示时由 JS 动态设置 top/left 跟随按钮（见下方 IIFE） */
 }
 
 .theme-dropdown.active,
@@ -8685,12 +8687,29 @@ tr:hover td.empty-cell {
 
     function toggleThemeDropdown(e) {
       e.stopPropagation();
-      document.getElementById('themeDropdown').classList.toggle('active');
+      const dd = document.getElementById('themeDropdown');
+      const btn = document.getElementById('themeBtn');
+      // dropdown 用 position: fixed 跳出 .topbar-actions 的 overflow 裁切，
+      // 显示时根据按钮位置动态计算坐标（右对齐）
+      if (dd.classList.toggle('active')) {
+        const rect = btn.getBoundingClientRect();
+        const ddWidth = dd.offsetWidth || 180;
+        dd.style.top = (rect.bottom + 8) + 'px';
+        dd.style.left = (rect.right - ddWidth) + 'px';
+      }
     }
 
     document.addEventListener('click', () => {
       document.getElementById('themeDropdown').classList.remove('active');
     });
+
+    // 窗口滚动/resize 时关闭下拉（避免位置错乱）
+    window.addEventListener('resize', () => {
+      document.getElementById('themeDropdown').classList.remove('active');
+    });
+    window.addEventListener('scroll', () => {
+      document.getElementById('themeDropdown').classList.remove('active');
+    }, true);
 
     /* =========================================
        3. 数据初始化 & 逻辑
