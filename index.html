@@ -10025,7 +10025,11 @@ tr:hover td.empty-cell {
         }
       });
 
-      const months = [...new Set(state.budgets.map(b => b.month))].sort();
+      // 修复：months 应该是预算月份 + 开销月份的并集
+      // 原版只从 state.budgets 抽月份，导致没有预算但有开销时图表完全空白
+      const budgetMonths = state.budgets.map(b => b.month);
+      const expenseMonths = (state.expenses || []).map(e => e.month).filter(m => m);
+      const months = [...new Set([...budgetMonths, ...expenseMonths])].sort();
       const budgetAmount = months.map(m => state.budgets.filter(b => b.month === m).reduce((s, b) => s + Number(b.amount), 0));
       // 从 expenses 计算每月实际支出
       const budgetSpent = months.map(m => getSpentByMonth(m));
