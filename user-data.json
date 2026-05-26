@@ -344,6 +344,14 @@
   "budgets": [],
   "expenses": [
     {
+      "id": "vp6yc1zr",
+      "date": "2026-05-26",
+      "month": "2026-05",
+      "type": "regular",
+      "amount": 1433.26,
+      "desc": "ChatGPT 100 刀会员 2 个月"
+    },
+    {
       "id": "5h89opax",
       "date": "2026-03-18",
       "month": "2026-03",
