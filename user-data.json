@@ -2913,7 +2913,7 @@
       "output": "新闻区块",
       "detail": "嵌入广播站",
       "owner": "内容",
-      "done": false
+      "done": true
     },
     {
       "id": "yo04cjio",
@@ -2924,7 +2924,7 @@
       "output": "发刊词",
       "detail": "开场引导",
       "owner": "内容",
-      "done": false
+      "done": true
     },
     {
       "id": "igp3n3kq",
@@ -2935,7 +2935,7 @@
       "output": "触达发布",
       "detail": "群内推送",
       "owner": "运营",
-      "done": false
+      "done": true
     },
     {
       "id": "we3y9n4j",
@@ -2946,7 +2946,7 @@
       "output": "查看率",
       "detail": "发布后 2 天",
       "owner": "分析",
-      "done": false
+      "done": true
     },
     {
       "id": "h9q5fcej",
@@ -2957,7 +2957,7 @@
       "output": "优化清单",
       "detail": "沉淀经验",
       "owner": "复盘",
-      "done": false
+      "done": true
     }
   ],
   "aiShareTasks": [
