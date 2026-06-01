@@ -1,6 +1,16 @@
 {
   "sessions": [
     {
+      "id": "pbrppi7y",
+      "date": "2026-06-01",
+      "course": "1 对 1 辅导答疑",
+      "project": "AI 赋能训练营",
+      "lecturer": "徐浩",
+      "people": 1,
+      "duration": 1,
+      "note": "宁奕然"
+    },
+    {
       "id": "uxsv94x1",
       "date": "2026-05-29",
       "course": "1 对 1 辅导答疑",
