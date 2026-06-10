@@ -444,6 +444,14 @@
   "budgets": [],
   "expenses": [
     {
+      "id": "01vkxukn",
+      "date": "2026-06-10",
+      "month": "2026-06",
+      "type": "regular",
+      "amount": 780,
+      "desc": "Claude 5x 100"
+    },
+    {
       "id": "vp6yc1zr",
       "date": "2026-05-26",
       "month": "2026-05",
