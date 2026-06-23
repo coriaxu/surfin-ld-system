@@ -1,6 +1,16 @@
 {
   "sessions": [
     {
+      "id": "v827adq5",
+      "date": "2026-06-18",
+      "course": "开小灶第一场",
+      "project": "AI 赋能训练营",
+      "lecturer": "徐浩",
+      "people": 2,
+      "duration": 2,
+      "note": "奕然、嘉宇"
+    },
+    {
       "id": "u0z5wlok",
       "date": "2026-06-04",
       "course": "1 对 1 辅导答疑",
