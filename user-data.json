@@ -1,6 +1,16 @@
 {
   "sessions": [
     {
+      "id": "j82ollrc",
+      "date": "2026-06-24",
+      "course": "L3 超级个体时代",
+      "project": "AI 赋能训练营",
+      "lecturer": "徐浩",
+      "people": 3,
+      "duration": 1.5,
+      "note": "戴鸿超组"
+    },
+    {
       "id": "we0em5nq",
       "date": "2026-06-23",
       "course": "1 对 1 辅导答疑",
