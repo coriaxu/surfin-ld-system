@@ -1129,7 +1129,8 @@
     "103": "关于黄仁勋访谈的八条笔记，全球最大的AI瓶颈是水管工",
     "105": "从被碾压到异军突起：Codex这两年都发生了什么？",
     "106": "10个AI在同一虚拟世界自由生长：15天社会学实验如《蝇王》重现",
-    "107": "从大脑研究看“顿悟时刻”：防止思考被AI外包的四个实操方法"
+    "107": "从大脑研究看“顿悟时刻”：防止思考被AI外包的四个实操方法",
+    "110": "用AI伪造医院诊断证明实施敲诈，却栽在了“太完美”上"
   },
   "aiShareTitles": {
     "1": "NotebookLM 实战应用 - 你的 AI 第二大脑"
@@ -3448,6 +3449,116 @@
       "detail": "沉淀经验",
       "owner": "复盘",
       "done": false
+    },
+    {
+      "id": "3uz0y1ou",
+      "episode": 110,
+      "name": "确定本期主题",
+      "stage": "theme",
+      "tool": "主题对齐",
+      "output": "选题定位",
+      "detail": "明确看点与受众",
+      "owner": "策划",
+      "done": false
+    },
+    {
+      "id": "cc4hrtqy",
+      "episode": 110,
+      "name": "主文案撰写",
+      "stage": "writing",
+      "tool": "钉钉文档",
+      "output": "主稿",
+      "detail": "可直接发布",
+      "owner": "内容",
+      "done": false
+    },
+    {
+      "id": "wb4947t1",
+      "episode": 110,
+      "name": "飞书归档同步",
+      "stage": "sync",
+      "tool": "飞书文档",
+      "output": "归档记录",
+      "detail": "版本一致",
+      "owner": "归档",
+      "done": false
+    },
+    {
+      "id": "3i6kjuz6",
+      "episode": 110,
+      "name": "视觉海报制作",
+      "stage": "produce",
+      "tool": "Gemini",
+      "output": "海报/封面",
+      "detail": "主视觉",
+      "owner": "设计",
+      "done": false
+    },
+    {
+      "id": "mgxwytib",
+      "episode": 110,
+      "name": "AI 播客制作",
+      "stage": "produce",
+      "tool": "豆包",
+      "output": "播客",
+      "detail": "音频成品",
+      "owner": "剪辑",
+      "done": false
+    },
+    {
+      "id": "j2dxpldd",
+      "episode": 110,
+      "name": "全球 AI 新闻撰写",
+      "stage": "assemble",
+      "tool": "钉钉文档",
+      "output": "新闻区块",
+      "detail": "嵌入广播站",
+      "owner": "内容",
+      "done": false
+    },
+    {
+      "id": "fqxzedvn",
+      "episode": 110,
+      "name": "发刊词撰写",
+      "stage": "assemble",
+      "tool": "钉钉文档",
+      "output": "发刊词",
+      "detail": "开场引导",
+      "owner": "内容",
+      "done": false
+    },
+    {
+      "id": "vx7s7ynj",
+      "episode": 110,
+      "name": "钉钉群发布",
+      "stage": "publish",
+      "tool": "钉钉群",
+      "output": "触达发布",
+      "detail": "群内推送",
+      "owner": "运营",
+      "done": false
+    },
+    {
+      "id": "pl94ve4n",
+      "episode": 110,
+      "name": "数据回收与查看率",
+      "stage": "data",
+      "tool": "数据回收",
+      "output": "查看率",
+      "detail": "发布后 2 天",
+      "owner": "分析",
+      "done": false
+    },
+    {
+      "id": "equqn6mo",
+      "episode": 110,
+      "name": "复盘与改进",
+      "stage": "review",
+      "tool": "复盘模板",
+      "output": "优化清单",
+      "detail": "沉淀经验",
+      "owner": "复盘",
+      "done": false
     }
   ],
   "aiShareTasks": [
@@ -3628,7 +3739,7 @@
       "done": true
     }
   ],
-  "currentStationEpisode": 111,
+  "currentStationEpisode": 110,
   "currentShareEpisode": 1,
   "financeWiki": [
     {
