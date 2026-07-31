@@ -1,6 +1,16 @@
 {
   "sessions": [
     {
+      "id": "kgpqywqf",
+      "date": "2026-07-31",
+      "course": "前期调研访谈",
+      "project": "2026管理者训练营 1.0",
+      "lecturer": "徐浩",
+      "people": 1,
+      "duration": 1,
+      "note": "安广海"
+    },
+    {
       "id": "o2ydvq4b",
       "date": "2026-07-28",
       "course": "1 对 1 辅导答疑",
