@@ -4400,7 +4400,7 @@
       "output": "选题定位",
       "detail": "明确看点与受众",
       "owner": "策划",
-      "done": false
+      "done": true
     },
     {
       "id": "4ecbkdy3",
@@ -4411,7 +4411,7 @@
       "output": "主稿",
       "detail": "可直接发布",
       "owner": "内容",
-      "done": false
+      "done": true
     },
     {
       "id": "e62thr9i",
@@ -4422,7 +4422,7 @@
       "output": "归档记录",
       "detail": "版本一致",
       "owner": "归档",
-      "done": false
+      "done": true
     },
     {
       "id": "bxwnb8df",
@@ -4433,7 +4433,7 @@
       "output": "海报/封面",
       "detail": "主视觉",
       "owner": "设计",
-      "done": false
+      "done": true
     },
     {
       "id": "f504h7v6",
@@ -4444,7 +4444,7 @@
       "output": "播客",
       "detail": "音频成品",
       "owner": "剪辑",
-      "done": false
+      "done": true
     },
     {
       "id": "ke9zsxbk",
