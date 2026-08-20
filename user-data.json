@@ -1410,7 +1410,8 @@
     "113": "OpenAI 48 小时做了六件大事",
     "114": "一封梭哈、一封摸高、一封踩刹车：三位AI掌门人为何同时写信",
     "115": "北京专门为智能体开发布会：十条政策追问“任务谁来交付”",
-    "116": "OpenAI神秘模型一口气解决10道数学难题？失真信息背后隐藏一个关键趋势"
+    "116": "OpenAI神秘模型一口气解决10道数学难题？失真信息背后隐藏一个关键趋势",
+    "118": "让AI先建议，让人保留否决权：Weee!如何把采购经验变成系统能力"
   },
   "aiShareTitles": {
     "1": "NotebookLM 实战应用 - 你的 AI 第二大脑"
@@ -4389,6 +4390,116 @@
       "detail": "沉淀经验",
       "owner": "复盘",
       "done": true
+    },
+    {
+      "id": "d3kgfdp3",
+      "episode": 118,
+      "name": "确定本期主题",
+      "stage": "theme",
+      "tool": "主题对齐",
+      "output": "选题定位",
+      "detail": "明确看点与受众",
+      "owner": "策划",
+      "done": false
+    },
+    {
+      "id": "4ecbkdy3",
+      "episode": 118,
+      "name": "主文案撰写",
+      "stage": "writing",
+      "tool": "钉钉文档",
+      "output": "主稿",
+      "detail": "可直接发布",
+      "owner": "内容",
+      "done": false
+    },
+    {
+      "id": "e62thr9i",
+      "episode": 118,
+      "name": "飞书归档同步",
+      "stage": "sync",
+      "tool": "飞书文档",
+      "output": "归档记录",
+      "detail": "版本一致",
+      "owner": "归档",
+      "done": false
+    },
+    {
+      "id": "bxwnb8df",
+      "episode": 118,
+      "name": "视觉海报制作",
+      "stage": "produce",
+      "tool": "Gemini",
+      "output": "海报/封面",
+      "detail": "主视觉",
+      "owner": "设计",
+      "done": false
+    },
+    {
+      "id": "f504h7v6",
+      "episode": 118,
+      "name": "AI 播客制作",
+      "stage": "produce",
+      "tool": "豆包",
+      "output": "播客",
+      "detail": "音频成品",
+      "owner": "剪辑",
+      "done": false
+    },
+    {
+      "id": "ke9zsxbk",
+      "episode": 118,
+      "name": "全球 AI 新闻撰写",
+      "stage": "assemble",
+      "tool": "钉钉文档",
+      "output": "新闻区块",
+      "detail": "嵌入广播站",
+      "owner": "内容",
+      "done": false
+    },
+    {
+      "id": "qmvlg28a",
+      "episode": 118,
+      "name": "发刊词撰写",
+      "stage": "assemble",
+      "tool": "钉钉文档",
+      "output": "发刊词",
+      "detail": "开场引导",
+      "owner": "内容",
+      "done": false
+    },
+    {
+      "id": "qrm1vnoq",
+      "episode": 118,
+      "name": "钉钉群发布",
+      "stage": "publish",
+      "tool": "钉钉群",
+      "output": "触达发布",
+      "detail": "群内推送",
+      "owner": "运营",
+      "done": false
+    },
+    {
+      "id": "dt7d37eg",
+      "episode": 118,
+      "name": "数据回收与查看率",
+      "stage": "data",
+      "tool": "数据回收",
+      "output": "查看率",
+      "detail": "发布后 2 天",
+      "owner": "分析",
+      "done": false
+    },
+    {
+      "id": "gf2n22ws",
+      "episode": 118,
+      "name": "复盘与改进",
+      "stage": "review",
+      "tool": "复盘模板",
+      "output": "优化清单",
+      "detail": "沉淀经验",
+      "owner": "复盘",
+      "done": false
     }
   ],
   "aiShareTasks": [
@@ -4569,7 +4680,7 @@
       "done": true
     }
   ],
-  "currentStationEpisode": 116,
+  "currentStationEpisode": 118,
   "currentShareEpisode": 1,
   "financeWiki": [
     {
