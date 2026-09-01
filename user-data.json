@@ -1,6 +1,16 @@
 {
   "sessions": [
     {
+      "id": "hciqiy7m",
+      "date": "2026-08-19",
+      "course": "skill 答疑访谈",
+      "project": "AI 赋能训练营",
+      "lecturer": "徐浩",
+      "people": 11,
+      "duration": 1,
+      "note": ""
+    },
+    {
       "id": "drxedggf",
       "date": "2026-08-14",
       "course": "L4 从想法到成品",
