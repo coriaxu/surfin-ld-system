@@ -1,6 +1,16 @@
 {
   "sessions": [
     {
+      "id": "drxedggf",
+      "date": "2026-08-14",
+      "course": "L4 从想法到成品",
+      "project": "AI 赋能训练营",
+      "lecturer": "徐浩",
+      "people": 3,
+      "duration": 1.5,
+      "note": ""
+    },
+    {
       "id": "2tvgh4vs",
       "date": "2026-08-12",
       "course": "L4 从想法到成品",
