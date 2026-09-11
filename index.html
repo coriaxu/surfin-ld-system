@@ -50,8 +50,8 @@
   /* === 文字灰阶（永远不用纯黑） === */
   --text-strong: #3A3A3A;
   --text-body: #666666;
-  --text-muted: #999999;
-  --text-faint: #BBBBBB;
+  --text-muted: #7A7A7A;
+  --text-faint: #A6A6A6;
 
   /* === Brand 蓝紫族（主 accent） === */
   --brand: #5C7CC8;
@@ -117,7 +117,7 @@
 
   /* === 字重（严格使用，禁止 ≥ 600） === */
   --fw-thin: 200;
-  --fw-light: 300;
+  --fw-light: 400;
   --fw-regular: 400;
   --fw-medium: 500;
 
@@ -365,6 +365,12 @@ table td {
 }
 .text-brand {
   color: var(--brand);
+}
+
+strong,
+b {
+  font-weight: var(--fw-medium);
+  color: inherit;
 }
 
 /* === 滚动条克制版（webkit 4px 灰） === */
@@ -6918,6 +6924,7 @@ tr:hover td.empty-cell {
 }
 
 </style>
+  <link rel="stylesheet" href="assets/workbench.css">
 </head>
 
 <body>
@@ -9650,6 +9657,10 @@ tr:hover td.empty-cell {
     }
 
     function toggleSidebar(collapse) {
+      if (window.matchMedia('(max-width:1024px)').matches) {
+        sidebar.classList.toggle('open', !collapse);
+        return;
+      }
       if (collapse) {
         sidebar.classList.add('collapsed');
         mainWrapper.classList.add('expanded');
@@ -12595,6 +12606,7 @@ tr:hover td.empty-cell {
     })();
 
   </script>
+  <script src="assets/workbench.js"></script>
 </body>
 
 </html>
