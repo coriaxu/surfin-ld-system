@@ -796,6 +796,14 @@
       "type": "regular",
       "amount": 150,
       "desc": "Gemini 订阅费用"
+    },
+    {
+      "id": "xiios3kp",
+      "date": "2026-09-12",
+      "month": "2026-09",
+      "type": "regular",
+      "amount": 880,
+      "desc": "Claude 5max"
     }
   ],
   "aiStations": [
