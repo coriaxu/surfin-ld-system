@@ -15,9 +15,10 @@
   function syncStatus(info) {
     const labels={'save-error':'本机保存失败',ready:'已载入',local:'本机已保存 · 待同步',syncing:'正在同步…',synced:'云端已同步',error:'同步失败 · 本机已保留'};
     syncBar.dataset.status=info.status;
-    syncBar.innerHTML=`<span>${labels[info.status] || '已载入'}</span>${info.lastCloud?`<time title="最近成功同步">${new Date(info.lastCloud).toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'})}</time>`:''}${info.status==='error'?btn('重试','retry-sync'):''}`;
+    syncBar.innerHTML=`<span>${labels[info.status] || '已载入'}</span>${info.lastCloud?`<time title="最近成功同步：${esc(new Date(info.lastCloud).toLocaleString('zh-CN'))}">${new Date(info.lastCloud).toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'})}</time>`:''}${info.status==='error'?btn('重试','retry-sync'):''}`;
     syncBar.title=info.error || (info.lastLocal?'本机保存：'+new Date(info.lastLocal).toLocaleString('zh-CN'):'');
     if($('syncBtnText'))$('syncBtnText').textContent='同步设置';
+    if($('syncLastTime'))$('syncLastTime').textContent=info.lastCloud?new Date(info.lastCloud).toLocaleString('zh-CN'):'尚未成功同步';
     const box=$('syncStatusBox');
     if(box){box.className='sync-status';box.textContent=labels[info.status]+(info.error?'：'+info.error:'');}
   }
