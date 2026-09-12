@@ -1,0 +1,8 @@
+{
+  "publicOrigin": "https://ld.example.com",
+  "host": "127.0.0.1",
+  "port": 8893,
+  "dataFile": "/srv/surfin-private/data.json",
+  "users": [],
+  "reports": []
+}

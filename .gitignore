@@ -2,3 +2,11 @@
 .gstack/
 .claude/
 .DS_Store
+
+# Private deployment files never belong in the public site.
+.env
+.env.*
+server/config.json
+server/*.local.json
+private/
+*.tmp

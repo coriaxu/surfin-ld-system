@@ -6925,6 +6925,9 @@ tr:hover td.empty-cell {
 
 </style>
   <link rel="stylesheet" href="assets/workbench.css">
+  <link rel="stylesheet" href="assets/workflow.css">
+  <script src="assets/ld-domain.js"></script>
+  <script src="assets/ld-sync.js"></script>
 </head>
 
 <body>
@@ -6961,7 +6964,7 @@ tr:hover td.empty-cell {
         </label>
         <button type="submit" class="auth-btn">进入系统</button>
       </form>
-      <p class="auth-footer">🔒 数据受密码保护，仅授权人员可访问</p>
+      <p class="auth-footer">共享访问口令；账号权限需使用私有服务版</p>
     </div>
   </div>
 
@@ -7185,7 +7188,7 @@ tr:hover td.empty-cell {
           </div>
           <div class="stat-card orange">
             <div class="stat-header">
-              <span class="stat-label">本月培训人数</span>
+              <span class="stat-label">本月参训人次</span>
               <div class="stat-icon">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
@@ -7194,7 +7197,7 @@ tr:hover td.empty-cell {
               </div>
             </div>
             <div class="stat-value" id="statMonthPeople">0</div>
-            <div class="stat-desc">参与人数合计</div>
+            <div class="stat-desc">参加人次合计</div>
           </div>
           <div class="stat-card red">
             <div class="stat-header">
@@ -7229,7 +7232,7 @@ tr:hover td.empty-cell {
           </div>
           <div class="stat-card teal">
             <div class="stat-header">
-              <span class="stat-label">2026 年培训人数</span>
+              <span class="stat-label">2026 年参训人次</span>
               <div class="stat-icon">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
@@ -7238,7 +7241,7 @@ tr:hover td.empty-cell {
               </div>
             </div>
             <div class="stat-value" id="statYearPeople">0</div>
-            <div class="stat-desc">参训人数累计</div>
+            <div class="stat-desc">参训人次累计</div>
           </div>
           <div class="stat-card gold">
             <div class="stat-header">
@@ -7295,7 +7298,7 @@ tr:hover td.empty-cell {
                     <line x1="18" y1="20" x2="18" y2="4" />
                     <line x1="6" y1="20" x2="6" y2="16" />
                   </svg></span>
-                预算 vs 开销
+                月度支出与预算
               </h2>
             </div>
             <div class="card-body">
@@ -8763,7 +8766,9 @@ tr:hover td.empty-cell {
 
   <script>
     const uid = () => Math.random().toString(36).slice(2, 10);
-    const STORAGE_KEY = 'surfin_ld_system_v2';
+    const PRIVATE_MODE=!!window.LD_SERVER;
+    const dataStorage=PRIVATE_MODE?sessionStorage:localStorage;
+    const STORAGE_KEY = 'surfin_ld_system_v2'+(PRIVATE_MODE?'_'+window.LD_SERVER.email:'');
 
     const state = {
       sessions: [],
@@ -8935,6 +8940,11 @@ tr:hover td.empty-cell {
     };
 
     async function loadRemoteData() {
+      if(PRIVATE_MODE){
+        try{const response=await fetch('/api/data',{cache:'no-store'});if(!response.ok)throw Error('读取失败，请重新登录后重试');syncController.acceptRemote(await response.json());dataStorage.setItem(STORAGE_KEY+'_version',String(DATA_VERSION));}
+        catch(error){showToast(error.message,'error');}
+        return true;
+      }
       // First, try to load from cloud (user-data.json via raw.githubusercontent.com)
       // This allows all visitors to see the latest synced data without needing a Token
       try {
@@ -8946,9 +8956,8 @@ tr:hover td.empty-cell {
             .some(key => Array.isArray(cloudData[key]));
           if (hasCloudPayload) {
             console.log('✅ 已从云端加载最新数据');
-            applyImportedState(cloudData);
-            persist();
-            localStorage.setItem(STORAGE_KEY + '_version', String(DATA_VERSION));
+            syncController.acceptRemote(cloudData);
+            dataStorage.setItem(STORAGE_KEY + '_version', String(DATA_VERSION));
             return true;
           }
         }
@@ -8965,9 +8974,8 @@ tr:hover td.empty-cell {
         const hasPayload = ['sessions', 'budgets', 'aiStations', 'aiShares', 'aiStationTasks', 'aiShareTasks']
           .some(key => Array.isArray(payload[key]));
         if (!hasPayload) return false;
-        applyImportedState(payload);
-        persist();
-        localStorage.setItem(STORAGE_KEY + '_version', String(DATA_VERSION));
+        syncController.acceptRemote(payload);
+        dataStorage.setItem(STORAGE_KEY + '_version', String(DATA_VERSION));
         return true;
       } catch (err) {
         return false;
@@ -8976,15 +8984,18 @@ tr:hover td.empty-cell {
 
     function seedDefaultData() {
       applyImportedState(DEFAULT_DATA);
-      persist();
-      localStorage.setItem(STORAGE_KEY + '_version', String(DATA_VERSION));
+      originalPersist();
+      dataStorage.setItem(STORAGE_KEY + '_version', String(DATA_VERSION));
     }
 
     async function initData() {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      const savedVersion = localStorage.getItem(STORAGE_KEY + '_version');
+      const raw = dataStorage.getItem(STORAGE_KEY);
+      const savedVersion = dataStorage.getItem(STORAGE_KEY + '_version');
 
-      // Always try to load from cloud first (both admin & visitor)
+      if (syncController.hasPending() && raw) {
+        try { applyImportedState(JSON.parse(raw)); syncController.emit(); syncController.schedule(); return; } catch (_) {}
+      }
+      // Load cloud unless this browser has unsynced edits.
       // This ensures every browser sees the latest synced data by default.
       const loaded = await loadRemoteData();
       if (!loaded) {
@@ -9005,104 +9016,25 @@ tr:hover td.empty-cell {
     }
 
 
-    function persist() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
-
-    // ========== Cloud Sync (GitHub API) ==========
     const SYNC_SETTINGS_KEY = 'surfin_sync_settings';
-    let syncSettings = JSON.parse(localStorage.getItem(SYNC_SETTINGS_KEY) || 'null') || {
-      token: '',
-      repo: 'coriaxu/surfin-ld-system',
-      path: 'user-data.json',
-      lastSync: null,
-      enabled: false
-    };
-
-    // Debounce sync to avoid too many API calls
-    let syncTimeout = null;
-    function debouncedCloudSync() {
-      if (!syncSettings.enabled || !syncSettings.token) return;
-      if (syncTimeout) clearTimeout(syncTimeout);
-      syncTimeout = setTimeout(() => {
-        pushToCloud().catch(err => console.warn('Auto sync failed:', err));
-      }, 3000); // Wait 3 seconds after last change before syncing
-    }
-
-    // Enhanced persist function that triggers cloud sync
-    const originalPersist = persist;
-    window.persistWithSync = function () {
-      originalPersist();
-      debouncedCloudSync();
-    };
-
-    // Override persist to include sync
-    function persist() {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-      debouncedCloudSync();
-    }
-
-    // Push data to GitHub
-    async function pushToCloud() {
-      if (!syncSettings.token || !syncSettings.repo || !syncSettings.path) {
-        throw new Error('云同步未配置');
-      }
-
-      const content = JSON.stringify(state, null, 2);
-      const base64Content = btoa(unescape(encodeURIComponent(content)));
-
-      // First, try to get the current file SHA (needed for updates)
-      let sha = null;
-      try {
-        const getResponse = await fetch(
-          `https://api.github.com/repos/${syncSettings.repo}/contents/${syncSettings.path}`,
-          {
-            headers: {
-              'Authorization': `token ${syncSettings.token}`,
-              'Accept': 'application/vnd.github.v3+json'
-            }
-          }
-        );
-        if (getResponse.ok) {
-          const fileData = await getResponse.json();
-          sha = fileData.sha;
-        }
-      } catch (e) {
-        // File doesn't exist yet, that's ok
-      }
-
-      // Create or update the file
-      const body = {
-        message: `Sync data - ${new Date().toLocaleString('zh-CN')}`,
-        content: base64Content,
-        branch: 'main'
-      };
-      if (sha) body.sha = sha;
-
-      const response = await fetch(
-        `https://api.github.com/repos/${syncSettings.repo}/contents/${syncSettings.path}`,
-        {
-          method: 'PUT',
-          headers: {
-            'Authorization': `token ${syncSettings.token}`,
-            'Accept': 'application/vnd.github.v3+json',
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(body)
-        }
-      );
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || '同步失败');
-      }
-
-      syncSettings.lastSync = new Date().toISOString();
-      localStorage.setItem(SYNC_SETTINGS_KEY, JSON.stringify(syncSettings));
-      updateSyncUI();
-      return true;
-    }
+    let syncSettings;
+    try { syncSettings = JSON.parse(localStorage.getItem(SYNC_SETTINGS_KEY) || 'null'); } catch (_) {}
+    syncSettings ||= {token:'',repo:'coriaxu/surfin-ld-system',path:'user-data.json',enabled:false,lastSync:null};
+    const syncController = createLDSync({
+      storage:dataStorage,key:STORAGE_KEY,getState:()=>state,
+      applyState:payload=>{applyImportedState(payload);document.dispatchEvent(new Event('ld-data-updated'));},
+      getSettings:()=>PRIVATE_MODE?{server:true,enabled:window.LD_SERVER.role==='editor'}:syncSettings,
+      onChange:detail=>document.dispatchEvent(new CustomEvent('ld-sync-state',{detail}))
+    });
+    function persist() { if(PRIVATE_MODE&&window.LD_SERVER.role!=='editor')throw Error('当前账号为只读权限');try{syncController.save();}catch(error){showToast(error.message,'error');throw error;} document.dispatchEvent(new Event('ld-data-updated')); }
+    function originalPersist() { dataStorage.setItem(STORAGE_KEY,JSON.stringify(state)); }
+    function debouncedCloudSync() { syncController.schedule(); }
+    async function pushToCloud() { return syncController.push(); }
+    window.persistWithSync = persist;
 
     // Pull data from GitHub
     async function pullFromCloudAPI() {
+      if(PRIVATE_MODE){const response=await fetch('/api/data',{cache:'no-store'});if(!response.ok)throw Error('请重新登录');return response.json();}
       if (!syncSettings.token || !syncSettings.repo || !syncSettings.path) {
         throw new Error('云同步未配置');
       }
@@ -9356,10 +9288,10 @@ tr:hover td.empty-cell {
         ['核心指标', '数值'],
         ['培训场次', data.training.totalSessions],
         ['总人时', data.training.totalHours],
-        ['参与人数', data.training.totalPeople],
-        ['月度预算', `¥${data.budget.totalBudget.toLocaleString()}`],
+        ['参训人次', data.training.totalPeople],
+        ['月度预算', data.budget.data.length ? `¥${data.budget.totalBudget.toLocaleString()}` : '尚未设置预算'],
         ['实际支出', `¥${data.budget.totalSpend.toLocaleString()}`],
-        ['预算剩余', `¥${data.budget.remaining.toLocaleString()}`],
+        ['预算剩余', data.budget.data.length ? `¥${data.budget.remaining.toLocaleString()}` : '—'],
         ['AI广播站发布', `${data.ai.stationCount}期`],
         ['金融小百科发布', `${data.finance.published}期`]
       ];
@@ -9379,13 +9311,15 @@ tr:hover td.empty-cell {
 
       // Sheet 3: 预算开销
       if (opts.includeBudget && data.budget.data.length > 0) {
-        const budgetHeader = ['月份', '类型', '预算', '支出', '剩余'];
+        const budgetHeader = ['月份', '类型', '预算'];
         const budgetRows = data.budget.data.map(b => [
-          b.month, b.type, b.budget, b.spend, (Number(b.budget) || 0) - (Number(b.spend) || 0)
+          b.month, b.type, b.amount
         ]);
         const wsBudget = XLSX.utils.aoa_to_sheet([budgetHeader, ...budgetRows]);
         XLSX.utils.book_append_sheet(wb, wsBudget, '预算开销');
       }
+
+      if(opts.includeBudget){const expenses=(state.expenses||[]).filter(e=>e.month===data.yearMonth);XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([['日期','归属月份','类型','金额','用途'],...expenses.map(e=>[e.date,e.month,e.type,e.amount,e.desc])]),'实际开销');}
 
       // Sheet 4: 金融小百科
       if (opts.includeFinance && data.finance.items.length > 0) {
@@ -9393,8 +9327,8 @@ tr:hover td.empty-cell {
         const financeRows = data.finance.items.map(f => [
           f.episode || '-',
           f.title || '-',
-          f.status === 'done' ? '已发布' : (f.status === 'pending' ? '待发布' : f.status || '-'),
-          f.viewRate !== null ? `${f.viewRate}%` : '-',
+          LDDomain.financeStatus(f).label,
+          LDDomain.financeMetric(f,'read') === null ? '待回收' : `${LDDomain.financeMetric(f,'read')}%`,
           f.date || '-'
         ]);
         const wsFinance = XLSX.utils.aoa_to_sheet([financeHeader, ...financeRows]);
@@ -9437,7 +9371,7 @@ tr:hover td.empty-cell {
           </div>
           <div style="background: rgba(251, 146, 60, 0.2); border: 1px solid rgba(251, 146, 60, 0.4); border-radius: 12px; padding: 20px; text-align: center;">
             <div style="font-size: 32px; font-weight: 700; color: #fb923c;">${data.training.totalPeople}</div>
-            <div style="font-size: 12px; color: rgba(255,255,255,0.7); margin-top: 4px;">参与人数</div>
+            <div style="font-size: 12px; color: rgba(255,255,255,0.7); margin-top: 4px;">参训人次</div>
           </div>
           <div style="background: rgba(239, 68, 68, 0.2); border: 1px solid rgba(239, 68, 68, 0.4); border-radius: 12px; padding: 20px; text-align: center;">
             <div style="font-size: 32px; font-weight: 700; color: #ef4444;">¥${(data.budget.totalSpend / 1000).toFixed(1)}K</div>
@@ -9475,7 +9409,7 @@ tr:hover td.empty-cell {
             <div style="font-size: 14px; font-weight: 600; color: #10b981; margin-bottom: 12px;">💰 预算执行</div>
             <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
               <span style="color: rgba(255,255,255,0.7);">月度预算</span>
-              <span style="font-weight: 600;">¥${data.budget.totalBudget.toLocaleString()}</span>
+              <span style="font-weight: 600;">${data.budget.data.length ? '¥'+data.budget.totalBudget.toLocaleString() : '尚未设置预算'}</span>
             </div>
             <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
               <span style="color: rgba(255,255,255,0.7);">实际支出</span>
@@ -9483,7 +9417,7 @@ tr:hover td.empty-cell {
             </div>
             <div style="display: flex; justify-content: space-between;">
               <span style="color: rgba(255,255,255,0.7);">剩余预算</span>
-              <span style="font-weight: 600; color: ${data.budget.remaining >= 0 ? '#10b981' : '#ef4444'};">¥${data.budget.remaining.toLocaleString()}</span>
+              <span style="font-weight: 600; color: ${data.budget.remaining >= 0 ? '#10b981' : '#ef4444'};">${data.budget.data.length ? '¥'+data.budget.remaining.toLocaleString() : '—'}</span>
             </div>
           </div>
           <div style="background: rgba(255,255,255,0.05); border-radius: 12px; padding: 20px;">
@@ -9573,6 +9507,7 @@ tr:hover td.empty-cell {
     };
 
     window.pullFromCloud = async function () {
+      if (syncController.hasPending() && !window.confirm("本机有尚未同步的修改。请先导出本机副本；继续拉取会替换本机内容，是否继续？")) return;
       // First try to get token from input field (for new browser setup)
       const inputToken = document.getElementById('githubTokenInput')?.value.trim();
       const inputRepo = document.getElementById('githubRepoInput')?.value.trim();
@@ -9616,9 +9551,8 @@ tr:hover td.empty-cell {
         const cloudData = JSON.parse(content);
 
         // Apply cloud data
-        applyImportedState(cloudData);
-        originalPersist(); // Use original to avoid triggering sync
-        localStorage.setItem(STORAGE_KEY + '_version', String(DATA_VERSION));
+        syncController.acceptRemote(cloudData);
+        dataStorage.setItem(STORAGE_KEY + '_version', String(DATA_VERSION));
 
         // Save the sync settings so future syncs work automatically
         syncSettings.token = token;
@@ -9961,7 +9895,7 @@ tr:hover td.empty-cell {
       document.getElementById('statMonthPeople').textContent = monthPeople.toLocaleString();
       document.getElementById('statMonthSpend').textContent = `¥${spentTotal.toLocaleString()}`;
 
-      const dashboardYear = 2026;
+      const dashboardYear = new Date().getFullYear();
       const yearPrefix = `${dashboardYear}-`;
       const yearSessions = state.sessions.filter(s => s.date.startsWith(yearPrefix));
       const yearBudgets = state.budgets.filter(b => b.month.startsWith(yearPrefix));
@@ -10041,7 +9975,7 @@ tr:hover td.empty-cell {
       const budgetMonths = state.budgets.map(b => b.month);
       const expenseMonths = (state.expenses || []).map(e => e.month).filter(m => m);
       const months = [...new Set([...budgetMonths, ...expenseMonths])].sort();
-      const budgetAmount = months.map(m => state.budgets.filter(b => b.month === m).reduce((s, b) => s + Number(b.amount), 0));
+      const budgetAmount = months.map(m => { const entries=state.budgets.filter(b=>b.month===m); return entries.length?entries.reduce((s,b)=>s+Number(b.amount),0):null; });
       // 从 expenses 计算每月实际支出
       const budgetSpent = months.map(m => getSpentByMonth(m));
 
@@ -10051,7 +9985,7 @@ tr:hover td.empty-cell {
         data: {
           labels: months,
           datasets: [
-            { label: '预算', data: budgetAmount, backgroundColor: colors.primary, borderRadius: 6, barThickness: 32, maxBarThickness: 40 },
+            ...(state.budgets.length ? [{ label: '预算', data: budgetAmount, backgroundColor: colors.primary, borderRadius: 6, barThickness: 32, maxBarThickness: 40 }] : []),
             { label: '实际', data: budgetSpent, backgroundColor: colors.accent, borderRadius: 6, barThickness: 32, maxBarThickness: 40 }
           ]
         },
@@ -10293,7 +10227,7 @@ tr:hover td.empty-cell {
           if (!hasPayload) throw new Error('缺少关键字段');
           applyImportedState(payload);
           normalizeImportedEpisodes();
-          localStorage.setItem(STORAGE_KEY + '_version', String(DATA_VERSION));
+          dataStorage.setItem(STORAGE_KEY + '_version', String(DATA_VERSION));
           renderAll();
           renderAIKnowledge();
           showToast('数据导入成功', 'success');
@@ -10373,7 +10307,7 @@ tr:hover td.empty-cell {
         if (!hasPayload) throw new Error('缺少关键字段');
         applyImportedState(payload);
         normalizeImportedEpisodes();
-        localStorage.setItem(STORAGE_KEY + '_version', String(DATA_VERSION));
+        dataStorage.setItem(STORAGE_KEY + '_version', String(DATA_VERSION));
         renderAll();
         renderAIKnowledge();
         updateBackupMeta('已导入');
@@ -10465,7 +10399,7 @@ tr:hover td.empty-cell {
       renderStats();
       renderCharts();
       renderFinanceWiki();
-      persist();
+      document.dispatchEvent(new Event('ld-data-updated'));
     }
 
     document.getElementById('sessionForm').addEventListener('submit', e => {
@@ -10483,7 +10417,7 @@ tr:hover td.empty-cell {
       const existing = state.sessions.find(s => s.id === payload.id);
       if (existing) Object.assign(existing, payload);
       else state.sessions.push(payload);
-      resetSessionForm(); renderAll();
+      persist(); resetSessionForm(); renderAll();
       showToast('培训记录已保存', 'success');
     });
 
@@ -10499,7 +10433,7 @@ tr:hover td.empty-cell {
       const existing = state.budgets.find(b => b.id === payload.id);
       if (existing) Object.assign(existing, payload);
       else state.budgets.push(payload);
-      resetBudgetForm(); renderAll();
+      persist(); resetBudgetForm(); renderAll();
       showToast('预算记录已保存', 'success');
     });
 
@@ -10517,7 +10451,7 @@ tr:hover td.empty-cell {
       const existing = state.expenses.find(ex => ex.id === payload.id);
       if (existing) Object.assign(existing, payload);
       else state.expenses.push(payload);
-      resetExpenseForm(); renderAll();
+      persist(); resetExpenseForm(); renderAll();
       showToast('开销记录已保存', 'success');
     });
 
@@ -10531,21 +10465,6 @@ tr:hover td.empty-cell {
     // 初始化
     (async () => {
       await initData();
-
-      // Auto-Heal: Patch missing data for Finance Wiki
-      // 确保至少有默认的8条数据，处理本地缓存数据丢失问题
-      if (!state.financeWiki || state.financeWiki.length < 8) {
-        console.warn('Auto-healing financeWiki data...');
-        if (!state.financeWiki) state.financeWiki = [];
-        const currentIds = new Set(state.financeWiki.map(i => i.id));
-        DEFAULT_DATA.financeWiki.forEach(d => {
-          if (!currentIds.has(d.id)) {
-            state.financeWiki.push(JSON.parse(JSON.stringify(d)));
-          }
-        });
-        state.financeWiki.sort((a, b) => a.episode - b.episode);
-        persist(); // Save repaired data
-      }
 
       // 加载主题
       const savedTheme = localStorage.getItem('surfin_theme');
@@ -10976,7 +10895,7 @@ tr:hover td.empty-cell {
       const data = sorted.slice(start, end);
 
       const labels = data.map(d => `第${d.episode}期`);
-      const rates = data.map(d => Number(((d.views / d.total) * 100).toFixed(1)));
+      const rates = data.map(d => LDDomain.stationMetric(d).value);
 
       if (stationChart) stationChart.destroy();
       stationChart = new Chart(ctx, {
@@ -11026,7 +10945,7 @@ tr:hover td.empty-cell {
       const sorted = [...state.aiShares].sort((a, b) => a.episode - b.episode);
       const labels = sorted.map(d => `第${d.episode}期`);
       const attendees = sorted.map(d => d.attendees);
-      const rates = sorted.map(d => Number(((d.attendees / d.total) * 100).toFixed(1)));
+      const rates = sorted.map(d => LDDomain.rate(d.attendees,d.total));
 
       if (shareChart) shareChart.destroy();
       shareChart = new Chart(ctx, {
@@ -11430,9 +11349,7 @@ tr:hover td.empty-cell {
         episodeEl.classList.add('active');
       }
 
-      const seeded = ensureEpisodeTasks(state.aiStationTasks, state.currentStationEpisode, stationTaskTemplate, stationTaskAliases);
-      if (seeded) persist();
-      const tasks = state.aiStationTasks.filter(task => task.episode === state.currentStationEpisode);
+      const tasks=LDDomain.taskPreview(state.aiStationTasks,state.currentStationEpisode,stationTaskTemplate,stationTaskAliases,'station');
       renderProjectBoard({
         boardEl,
         summaryEl,
@@ -11446,15 +11363,6 @@ tr:hover td.empty-cell {
     }
 
     function renderShareKanban() {
-      // 0. 自动清理旧的测试数据 (如果发现旧的 stage 定义残留)
-      if (state.aiShares.length > 0 && state.aiShareTasks.some(t => t.stage === 'prep' || t.stage === 'data')) {
-        console.log('Cleaning legacy share data...');
-        state.aiShares = [];
-        state.aiShareTasks = [];
-        state.currentShareEpisode = null;
-        persist();
-      }
-
       const episodeEl = document.getElementById('shareKanbanEpisode');
       const boardEl = document.getElementById('shareTimelineBoard'); // 注意 ID 变了
       const headerEl = document.getElementById('shareKanbanHeader');
@@ -11490,10 +11398,7 @@ tr:hover td.empty-cell {
         episodeEl.classList.add('active');
       }
 
-      const seeded = ensureEpisodeTasks(state.aiShareTasks, state.currentShareEpisode, shareTaskTemplate, shareTaskAliases);
-      if (seeded) persist();
-
-      const tasks = state.aiShareTasks.filter(task => task.episode === state.currentShareEpisode);
+      const tasks=LDDomain.taskPreview(state.aiShareTasks,state.currentShareEpisode,shareTaskTemplate,shareTaskAliases,'share');
 
       // 按照 stageDefs 顺序排序
       const sortedTasks = shareStageDefs.map(def => {
@@ -11594,7 +11499,9 @@ tr:hover td.empty-cell {
 
     // 切换任务状态
     window.toggleStationTask = function (id) {
-      const task = state.aiStationTasks.find(t => t.id === id);
+      if(PRIVATE_MODE&&window.LD_SERVER.role!=='editor')return;
+      let task = state.aiStationTasks.find(t => t.id === id);
+      if(!task){task=LDDomain.taskPreview(state.aiStationTasks,state.currentStationEpisode,stationTaskTemplate,stationTaskAliases,'station').find(t=>t.id===id);if(task)state.aiStationTasks.push(task);}
       if (task) {
         task.done = !task.done;
         persist();
@@ -11603,7 +11510,9 @@ tr:hover td.empty-cell {
     };
 
     window.toggleShareTask = function (id) {
-      const task = state.aiShareTasks.find(t => t.id === id);
+      if(PRIVATE_MODE&&window.LD_SERVER.role!=='editor')return;
+      let task = state.aiShareTasks.find(t => t.id === id);
+      if(!task){task=LDDomain.taskPreview(state.aiShareTasks,state.currentShareEpisode,shareTaskTemplate,shareTaskAliases,'share').find(t=>t.id===id);if(task)state.aiShareTasks.push(task);}
       if (task) {
         task.done = !task.done;
         persist();
@@ -11690,7 +11599,7 @@ tr:hover td.empty-cell {
       showConfirm('确认删除这条广播站记录吗？此操作不可恢复。', () => {
         state.aiStations = state.aiStations.filter(s => s.id !== id);
         persist();
-        renderAIKnowledge();
+        renderAIKnowledge(); renderAll();
         showToast('记录已删除', 'success');
       });
     };
@@ -11724,15 +11633,15 @@ tr:hover td.empty-cell {
           const targetProjectName = `AI分享月(第${item.episode}期)`;
           // 优先匹配 linkedSessionId，其次匹配特征
           if (item.linkedSessionId) {
-            state.sessions = state.sessions.filter(s => s.id !== item.linkedSessionId);
+            state.sessions = state.sessions.filter(s => s.id !== item.linkedSessionId && s.sourceId !== item.id);
           } else {
             // 兼容旧数据：尝试通过 项目名称+日期 匹配
-            state.sessions = state.sessions.filter(s => !(s.project === targetProjectName && s.date === item.date));
+            state.sessions = state.sessions.filter(s => !(s.source === 'ai_share' && s.project === targetProjectName && s.date === item.date));
           }
         }
 
         persist();
-        renderAIKnowledge();
+        renderAIKnowledge(); renderAll();
         showToast('记录已删除', 'success');
       });
     };
@@ -11740,47 +11649,13 @@ tr:hover td.empty-cell {
     // 表单提交
     document.getElementById('stationForm').addEventListener('submit', e => {
       e.preventDefault();
-      const unviewedRaw = document.getElementById('stationUnviewed').value.trim();
-      const totalRaw = document.getElementById('stationTotal').value.trim();
-      const total = Number(totalRaw);
-
-      // 校验：填了未查看人数就必须有合法的公司总人数
-      if (unviewedRaw !== '') {
-        if (totalRaw === '' || !Number.isFinite(total) || total <= 0) {
-          showToast('请先填写有效的公司总人数', 'error');
-          return;
-        }
-        const unviewedNum = Number(unviewedRaw);
-        if (!Number.isFinite(unviewedNum) || unviewedNum < 0) {
-          showToast('未查看人数必须 ≥ 0', 'error');
-          return;
-        }
-        if (unviewedNum > total) {
-          showToast(`未查看人数（${unviewedNum}）不能大于公司总人数（${total}）`, 'error');
-          return;
-        }
-      }
-
-      // 减法：留空 → views = 0（暂无回收数据）；填了 → views = total − 未查看
-      const views = unviewedRaw === '' ? 0 : total - Number(unviewedRaw);
-
-      const payload = {
-        id: document.getElementById('stationId').value || uid(),
-        episode: Number(document.getElementById('stationEpisode').value),
-        date: document.getElementById('stationDate').value,
-        title: document.getElementById('stationTitle').value,
-        views,
-        total: Number.isFinite(total) ? total : 0,
-        category: document.getElementById('stationCategory').value,
-        note: document.getElementById('stationNote').value
-      };
-      const existing = state.aiStations.find(s => s.id === payload.id);
-      if (existing) Object.assign(existing, payload);
-      else state.aiStations.push(payload);
-      resetStationForm();
-      persist();
-      renderAIKnowledge();
-      showToast('广播站记录已保存', 'success');
+      try {
+        const payload = LDDomain.stationPayload({episode:stationEpisode.value,date:stationDate.value,title:stationTitle.value,unviewed:stationUnviewed.value,total:stationTotal.value,category:stationCategory.value,note:stationNote.value},stationId.value || uid());
+        if (state.aiStations.some(item=>item.id!==payload.id && item.episode===payload.episode)) throw new Error('该期数已存在，请编辑已有记录');
+        const existing=state.aiStations.find(item=>item.id===payload.id);
+        if(existing)Object.assign(existing,payload);else state.aiStations.push(payload);
+        persist();resetStationForm();renderAIKnowledge();renderAll();showToast('广播站记录已保存','success');
+      }catch(error){showToast(error.message,'error');}
     });
 
     // 未查看人数 / 公司总人数 实时反算「查看人数」hint
@@ -11791,62 +11666,12 @@ tr:hover td.empty-cell {
 
     document.getElementById('shareForm').addEventListener('submit', e => {
       e.preventDefault();
-      const payload = {
-        id: document.getElementById('shareId').value || uid(),
-        episode: Number(document.getElementById('shareEpisode').value),
-        date: document.getElementById('shareDate').value,
-        title: document.getElementById('shareTitle').value,
-        attendees: Number(document.getElementById('shareAttendees').value),
-        total: Number(document.getElementById('shareTotal').value),
-        duration: Number(document.getElementById('shareDuration').value),
-        note: document.getElementById('shareNote').value
-      };
-
-      const existing = state.aiShares.find(s => s.id === payload.id);
-
-      // --- 数据联动 Logic Start ---
-      // 1. 查找是否已有关联的 Session
-      let relatedSession = null;
-      if (existing && existing.linkedSessionId) {
-        relatedSession = state.sessions.find(s => s.id === existing.linkedSessionId);
-      }
-      // 2. 如果没找到关联ID，尝试通过“项目名+日期”模糊匹配（防止旧数据重复创建）
-      const projectName = `AI分享月(第${payload.episode}期)`;
-      if (!relatedSession) {
-        relatedSession = state.sessions.find(s => s.project === projectName && s.date === payload.date);
-      }
-
-      // 3. 构造 Session 数据
-      const sessionPayload = {
-        id: relatedSession ? relatedSession.id : uid(),
-        date: payload.date,
-        course: payload.title, // 课程名 = 主题
-        project: projectName,  // 项目名 = AI分享月(第X期)
-        lecturer: '',          // 默认留空，或可设置为当前用户
-        people: payload.attendees,
-        duration: (payload.duration / 60).toFixed(1), // 分钟 -> 小时
-        note: (payload.note || '') + ' [自动同步自AI分享月]',
-        source: 'ai_share'
-      };
-
-      // 4. 更新/插入 Session
-      if (relatedSession) {
-        Object.assign(relatedSession, sessionPayload);
-      } else {
-        state.sessions.push(sessionPayload);
-      }
-
-      // 5. 将 Session ID 回写到 Share 记录中
-      payload.linkedSessionId = sessionPayload.id;
-      // --- 数据联动 Logic End ---
-
-      if (existing) Object.assign(existing, payload);
-      else state.aiShares.push(payload);
-
-      resetShareForm();
-      persist();
-      renderAIKnowledge();
-      showToast('分享月记录已保存 (并同步至培训管理)', 'success');
+      const payload={id:shareId.value || uid(),episode:Number(shareEpisode.value),date:shareDate.value,title:shareTitle.value.trim(),attendees:LDDomain.number(shareAttendees.value),total:LDDomain.number(shareTotal.value),duration:LDDomain.number(shareDuration.value),note:shareNote.value,materialUrl:document.getElementById('shareMaterialUrl')?.value.trim() || ''};
+      if(state.aiShares.some(item=>item.id!==payload.id && item.episode===payload.episode)){showToast('该期数已存在，请编辑已有记录','error');return;}
+      if(payload.attendees!==null && payload.total!==null && payload.attendees>payload.total){showToast('参加人数不能大于总人数','error');return;}
+      if(payload.materialUrl && !/^https?:\/\//i.test(payload.materialUrl)){showToast('资料地址请使用 http 或 https 链接','error');return;}
+      LDDomain.upsertShare(state,payload,uid);
+      persist();resetShareForm();renderAIKnowledge();renderAll();showToast('分享月已保存，关联培训记录已更新','success');
     });
 
     // 渲染所有AI知识库内容
@@ -12002,51 +11827,17 @@ tr:hover td.empty-cell {
 
       if (!col || !draggedFinanceItemId) return;
 
+      if(PRIVATE_MODE&&window.LD_SERVER.role!=='editor')return;
       const targetStage = col.dataset.stage;
       const item = state.financeWiki.find(i => i.id === draggedFinanceItemId);
       if (!item) return;
 
       if (!item.workflow) item.workflow = {};
 
-      // Update logic:
-      // If dropped in 'data' (Done), everything is true.
-      // If dropped in 'topic', everything is false.
-      // Else, everything BEFORE target is true, target and AFTER are false.
-      // Wait, if I drop in 'draft', 'topic' is done, 'draft' is Todo (false).
-
-      let pastTarget = false;
-
-      // Special check: If target is 'data', everything is true. 
-      // But 'data' stage in template is the last one.
-
-      financeTaskTemplate.forEach(t => {
-        if (t.stage === targetStage) pastTarget = true;
-
-        if (pastTarget) {
-          item.workflow[t.stage] = false;
-        } else {
-          item.workflow[t.stage] = true;
-        }
-      });
-
-      // Special case: If dropping into "data" column (Completed), maybe we want everything true?
-      // Logic above: If target is 'data', pastTarget becomes true immediately.
-      // So 'data' becomes false. Previous are true.
-      // Result: 'data' is the first FALSE stage. So getFinanceStage returns 'data'. Correct.
-      // But wait... getFinanceStage returns 'data' if ALL are true?
-      // "return 'data'; // All done" (Line 6104 in step 934)
-      // The template has 'data' as the last stage.
-      // If workflow['data'] is TRUE, do we move to a hidden 8th stage? No.
-      // If workflow['data'] is FALSE, getFinanceStage returns 'data'.
-      // So drag-to-data column sets workflow['data'] = false, implies it's "IN PROGRESS" at data stage.
-      // To mark as "COMPLETED" (done-done), workflow['data'] should be true?
-      // Visually 'data' column has class 'done'.
-      // If I want it to stay in 'data' column, getFinanceStage must return 'data'.
-      // getFinanceStage returns 'data' if 'publish' is true and 'data' is false.
-      // OR if 'data' is true, loop finishes, returns 'data'.
-      // So it doesn't matter if 'data' is true or false, it returns 'data'.
-      // So keeping it false is fine.
-
+      if(targetStage==='data'&&!item.date){showToast('请先编辑期次并填写发布日期','info');return;}
+      let pastTarget=false;
+      financeTaskTemplate.forEach(t=>{if(t.stage===targetStage)pastTarget=true;item.workflow[t.stage]=!pastTarget;});
+      item.published=targetStage==='data';item.workflow.publish=item.published;
       persist();
       renderFinanceKanban();
     };
@@ -12119,7 +11910,7 @@ tr:hover td.empty-cell {
       document.getElementById('finViewRate').value = item.viewRate !== null ? item.viewRate : '';
       document.getElementById('finDownloads').value = item.downloads !== null ? item.downloads : '';
       document.getElementById('finDownloadRate').value = item.downloadRate !== null ? item.downloadRate : '';
-      document.getElementById('finTotal').value = item.total || 260;
+      document.getElementById('finTotal').value = item.total ?? '';
       document.getElementById('finNote').value = item.note || '';
 
       // Render workflow chips
@@ -12253,10 +12044,10 @@ tr:hover td.empty-cell {
       if (!ctx) return;
       if (!state.financeWiki) state.financeWiki = [];
 
-      const data = [...state.financeWiki].filter(i => i.viewRate !== null).sort((a, b) => a.episode - b.episode);
+      const data = [...state.financeWiki].sort((a, b) => a.episode - b.episode);
       const labels = data.map(i => `第${i.episode}课`);
-      const rates = data.map(i => i.viewRate || 0);
-      const reads = data.map(i => i.read || 0);
+      const rates = data.map(i => LDDomain.financeMetric(i,'read'));
+      const reads = data.map(i => LDDomain.number(i.read));
 
       // Create Gradient
       const chartCtx = ctx.getContext('2d');
@@ -12435,7 +12226,10 @@ tr:hover td.empty-cell {
       fItem.downloads = downloads === '' ? null : Number(downloads);
       fItem.downloadRate = downloadRate === '' ? null : Number(downloadRate);
 
-      fItem.total = Number(document.getElementById('finTotal').value);
+      fItem.total = LDDomain.number(document.getElementById('finTotal').value);
+      fItem.published = document.getElementById('finPublished')?.checked ?? Boolean(fItem.workflow?.publish);
+      fItem.workflow ||= {}; fItem.workflow.publish = fItem.published;
+      if (!fItem.published) fItem.workflow.data = false;
       fItem.note = document.getElementById('finNote').value;
 
       persist();
@@ -12446,25 +12240,10 @@ tr:hover td.empty-cell {
 
     // Auto-calculate rates: 查看率 = 已读人数 / 公司总人数, 下载率 = 下载人数 / 公司总人数
     function calculateFinanceRates() {
-      const readInput = document.getElementById('finRead').value;
-      const downloadsInput = document.getElementById('finDownloads').value;
-      const totalInput = document.getElementById('finTotal').value;
-
-      const read = readInput === '' ? 0 : Number(readInput);
-      const downloads = downloadsInput === '' ? 0 : Number(downloadsInput);
-      const total = totalInput === '' ? 0 : Number(totalInput);
-
-      // 查看率计算：已读人数 / 公司总人数 × 100%
-      if (total > 0 && read >= 0) {
-        const viewRate = (read / total * 100).toFixed(1);
-        document.getElementById('finViewRate').value = viewRate;
-      }
-
-      // 下载率计算：下载人数 / 公司总人数 × 100%
-      if (total > 0 && downloads >= 0) {
-        const downloadRate = (downloads / total * 100).toFixed(1);
-        document.getElementById('finDownloadRate').value = downloadRate;
-      }
+      const historical=state.financeWiki?.find(s=>s.id===finId.value),total=LDDomain.number(finTotal.value);
+      const metric=(input,field)=>total!==null?LDDomain.rate(input.value,total):(historical && LDDomain.number(input.value)!==null && LDDomain.number(input.value)===LDDomain.number(historical[field])?LDDomain.financeMetric(historical,field):null);
+      const view=metric(finRead,'read'),download=metric(finDownloads,'downloads');
+      finViewRate.value=view===null?'':view;finDownloadRate.value=download===null?'':download;
     }
 
     // 监听已读人数、下载人数、公司总人数的变化
@@ -12482,6 +12261,7 @@ tr:hover td.empty-cell {
       // 使用 SHA-256 哈希保护密码（surfin 的哈希值）
       // 注意：这是前端验证，提供基础保护但非银行级安全
       const CORRECT_PASSWORD_HASH = 'a3c647c2c62a3b1dde5a5b1a7c6b2c8e9f0a1b2c3d4e5f6789012345678901ab';
+      if(window.LD_SERVER){document.getElementById('authOverlay').classList.add('hidden');return;}
       const AUTH_STORAGE_KEY = 'surfin_ld_auth_token';
       const AUTH_EXPIRY_KEY = 'surfin_ld_auth_expiry';
 
@@ -12607,6 +12387,7 @@ tr:hover td.empty-cell {
 
   </script>
   <script src="assets/workbench.js"></script>
+  <script src="assets/workflow.js"></script>
 </body>
 
 </html>
