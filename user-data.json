@@ -709,6 +709,16 @@
       "people": 31,
       "duration": 1,
       "note": ""
+    },
+    {
+      "id": "avpclds6",
+      "date": "2026-09-10",
+      "course": "管理者角色与时间账",
+      "project": "2026管理者训练营 1.0",
+      "lecturer": "徐浩",
+      "people": 6,
+      "duration": 2,
+      "note": ""
     }
   ],
   "budgets": [],
