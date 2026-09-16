@@ -689,6 +689,16 @@
       "people": 1,
       "duration": 2,
       "note": "跟双双"
+    },
+    {
+      "id": "zu1yxksl",
+      "date": "2026-09-16",
+      "course": "小组辅导",
+      "project": "AI 赋能训练营",
+      "lecturer": "徐浩",
+      "people": 4,
+      "duration": 1,
+      "note": ""
     }
   ],
   "budgets": [],
