@@ -804,6 +804,14 @@
       "type": "regular",
       "amount": 880,
       "desc": "Claude 5max"
+    },
+    {
+      "id": "hzjicbb3",
+      "date": "2026-09-16",
+      "month": "2026-09",
+      "type": "regular",
+      "amount": 1376.52,
+      "desc": "ChatGPT 5x2 个月"
     }
   ],
   "aiStations": [
