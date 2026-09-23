@@ -719,6 +719,16 @@
       "people": 6,
       "duration": 2,
       "note": ""
+    },
+    {
+      "id": "83xktdj2",
+      "date": "2026-09-14",
+      "course": "小组辅导",
+      "project": "AI 赋能训练营",
+      "lecturer": "徐浩",
+      "people": 3,
+      "duration": 1,
+      "note": ""
     }
   ],
   "budgets": [],
