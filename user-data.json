@@ -749,6 +749,16 @@
       "people": 20,
       "duration": 1,
       "note": ""
+    },
+    {
+      "id": "2faxhfg3",
+      "date": "2026-09-24",
+      "course": "任务授权与分配",
+      "project": "2026管理者训练营 1.0",
+      "lecturer": "徐浩",
+      "people": 5,
+      "duration": 1.5,
+      "note": ""
     }
   ],
   "budgets": [],
