@@ -39,3 +39,32 @@ test('viewing a workflow previews missing steps without creating or deleting rec
  const first=D.taskPreview(source,1,template,{},'share'),second=D.taskPreview(source,1,template,{},'share');
  assert.equal(JSON.stringify(source),before);assert.deepEqual(first,second);assert.equal(first[0].done,false);
 });
+test('AI 分享月 events combine share records with hand-entered training records once',()=>{
+ const state={aiShares:[{id:'sh1',episode:1,date:'2026-01-22',title:'NotebookLM 实战应用',attendees:13,total:345,duration:60,linkedSessionId:'gone'}],sessions:[
+  {id:'m1',date:'2026-01-22',course:'NotebookLM 实战应用',project:'AI 分享月',people:13,duration:1},
+  {id:'m2',date:'2026-09-23',course:'betterbuddy 使用分享第二期',project:'AI 分享月',people:20,duration:1},
+  {id:'m3',date:'2026-09-15',course:'betterbuddy 使用分享',project:'AI分享月',people:31,duration:1},
+  {id:'t1',date:'2026-09-24',course:'任务授权与分配',project:'2026管理者训练营 1.0',people:5,duration:1.5}]};
+ const events=D.shareEvents(state);
+ assert.deepEqual(events.map(e=>e.id),['m2','m3','sh1']);
+ assert.equal(events[0].date,'2026-09-23');assert.equal(events[0].minutes,60);assert.equal(events[2].total,345);
+ assert.ok(D.isShareProject('AI分享月(第3期)'));assert.ok(D.isShareProject(' AI 分享月'));assert.ok(!D.isShareProject('海外 AI 分享培训'));
+});
+test('saving a share links the hand-entered training record instead of duplicating it',()=>{
+ const state={aiShares:[],sessions:[{id:'m1',date:'2026-09-15',course:'betterbuddy 使用分享',project:'AI 分享月',lecturer:'冯世祺',people:31,duration:1,note:'全员'}]};
+ D.upsertShare(state,{id:'sh1',episode:2,date:'2026-09-15',title:'betterbuddy 使用分享',attendees:31,total:400,duration:60,note:''},()=>'new');
+ assert.equal(state.sessions.length,1);assert.equal(state.aiShares[0].linkedSessionId,'m1');
+ assert.equal(state.sessions[0].project,'AI 分享月');assert.equal(state.sessions[0].lecturer,'冯世祺');assert.equal(state.sessions[0].note,'全员');
+ assert.equal(D.shareEvents(state).length,1);
+});
+test('an incomplete share never overwrites a hand-entered training record',()=>{
+ const state={aiShares:[],sessions:[{id:'m1',date:'2026-09-15',course:'betterbuddy 使用分享',project:'AI 分享月',people:31,duration:1}]};
+ D.upsertShare(state,{id:'sh1',episode:2,date:'2026-09-15',title:'betterbuddy 使用分享',attendees:null,total:null,duration:null},()=>'new');
+ assert.equal(state.sessions[0].people,31);assert.equal(state.sessions[0].duration,1);assert.equal(state.sessions.length,1);
+ const [event]=D.shareEvents(state);assert.equal(event.people,31);assert.equal(event.minutes,60);
+});
+test('a finance count above its recorded total is flagged for review instead of collection',()=>{
+ const item={published:true,read:317,unread:26,downloads:12,total:260,viewRate:92.4};
+ assert.equal(D.financeStatus(item).key,'review');assert.equal(D.financeMetric(item,'read'),null);assert.ok(D.financeConflict(item));
+ assert.equal(D.financeStatus({...item,total:343}).key,'complete');assert.equal(D.financeMetric({...item,total:343},'read'),92.4);
+});

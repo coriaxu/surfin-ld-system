@@ -37,7 +37,7 @@
     }
   });
   document.getElementById('sidebarToggle').addEventListener('click', closeSidebar);
-  document.querySelectorAll('.nav-item').forEach((item, index) => {
+  document.querySelectorAll('.nav-item').forEach(item => {
     item.setAttribute('role', 'button'); item.tabIndex = 0;
     item.setAttribute('aria-current', item.classList.contains('active') ? 'page' : 'false');
     item.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); item.click(); } });
@@ -45,18 +45,23 @@
       document.querySelectorAll('.nav-item').forEach(n => n.setAttribute('aria-current', n === item ? 'page' : 'false'));
       closeSidebar(); window.scrollTo({top:0, behavior:'instant'});
     });
-    item.dataset.moduleIcon = index;
   });
   const actions = document.getElementById('topbarActions');
   const tools = document.createElement('details');
   tools.className = 'workbench-tools';
-  tools.innerHTML = '<summary class="btn btn-secondary btn-sm" aria-label="打开工具菜单">工具 <span aria-hidden="true">⌄</span></summary><div class="tools-panel"><div class="tools-panel-caption">数据与偏好</div></div>';
+  tools.innerHTML = '<summary class="btn btn-secondary btn-sm" aria-label="打开工具菜单"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg>工具</summary><div class="tools-panel"><div class="tools-panel-caption">数据与偏好</div></div>';
   const panel = tools.querySelector('.tools-panel');
+  const shortcuts = document.createDocumentFragment();
   [...actions.children].forEach(el => {
     const action = el.getAttribute('onclick') || '';
-    if (!action.includes('openMonthlyReportModal') && !action.includes('exportPdf')) panel.append(el);
-    if (action.includes('exportPdf')) { el.classList.remove('btn-primary'); el.classList.add('btn-secondary'); }
+    if (!action.includes('openMonthlyReportModal') && !action.includes('exportPdf')) { panel.append(el); return; }
+    // Page-level shortcuts stay in the topbar; narrow screens reach them through the menu.
+    el.classList.remove('btn-primary'); el.classList.add('btn-secondary'); el.removeAttribute('style');
+    const copy = el.cloneNode(true); copy.classList.add('mobile-only');
+    shortcuts.append(copy);
   });
+  shortcuts.append(Object.assign(document.createElement('div'), { className: 'tools-panel-divider mobile-only' }));
+  panel.prepend(shortcuts);
   actions.append(tools);
   const defaultTheme = document.querySelector('.theme-option');
   if (defaultTheme) {
@@ -130,10 +135,12 @@
   ];
   formDrawers.forEach(([id, label, editName, resetName]) => {
     const form = document.getElementById(id);
-    const toolbar = document.createElement('div'); toolbar.className = 'record-toolbar';
     const add = document.createElement('button'); add.className = 'btn btn-primary';
     add.type = 'button'; add.textContent = '＋ 新增' + label;
-    toolbar.append(add); form.before(toolbar);
+    // A card with its own header carries the add action there; shared panels keep a toolbar.
+    const header = form.closest('.budget-panel') ? null : form.closest('.card')?.querySelector(':scope > .card-header');
+    if (header) header.append(add);
+    else { const toolbar = document.createElement('div'); toolbar.className = 'record-toolbar'; toolbar.append(add); form.before(toolbar); }
     const drawer = document.createElement('dialog'); drawer.className = 'record-drawer';
     drawer.setAttribute('aria-labelledby', id + '-heading');
     drawer.innerHTML = `<div class="modal-header"><h2 id="${id}-heading">${label}</h2><button type="button" class="modal-close" aria-label="关闭编辑">×</button></div><div class="modal-body"></div>`;
@@ -156,17 +163,9 @@
     // Existing successful saves reset the form; failed validation leaves it open.
     form.addEventListener('reset', () => { if (drawer.open) queueMicrotask(() => drawer.close()); });
   });
-  const atlas = new Image();
-  atlas.onload = () => {
-    document.querySelectorAll('[data-module-icon]').forEach(item => {
-      const i = Number(item.dataset.moduleIcon), icon = document.createElement('span');
-      icon.className = 'module-icon'; icon.setAttribute('aria-hidden', 'true');
-      icon.style.backgroundPosition = `${-(5 + i % 4 * 310) * 38 / 320}px ${-(260 + Math.floor(i / 4) * 395) * 38 / 320}px`;
-      item.querySelector('svg')?.replaceWith(icon);
-    });
-    const brand = document.querySelector('.brand-mark');
-    brand.innerHTML = '<span class="module-icon" aria-hidden="true"></span>';
-    brand.firstChild.style.backgroundPosition = `${-935 * 38 / 320}px ${-655 * 38 / 320}px`;
-  };
-  atlas.src = new URL('./module-icons.png', document.currentScript.src).href;
+  // Brand: a wave mark for Surfin, with the product line beneath the name.
+  document.querySelector('.brand-mark').innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 10c2.9 0 2.9-3.2 5.7-3.2S12.1 10 15 10s2.8-3.2 5.5-3.2"/><path d="M3.5 16.4c2.9 0 2.9-3.2 5.7-3.2s2.9 3.2 5.8 3.2 2.8-3.2 5.5-3.2" opacity=".62"/></svg>';
+  const title = document.querySelector('.sidebar-title');
+  const brandText = document.createElement('span'); brandText.className = 'brand-text';
+  title.replaceWith(brandText); brandText.append(title, Object.assign(document.createElement('span'), { className: 'brand-sub', textContent: '学习发展工作台' }));
 })();

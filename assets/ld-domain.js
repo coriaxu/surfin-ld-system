@@ -28,11 +28,43 @@
     const historical = number(item[field === 'read' ? 'viewRate' : 'downloadRate']);
     return historical !== null && historical >= 0 && historical <= 100 ? historical : null;
   }
+  // A count above the episode's total means the recorded total needs checking, not collecting.
+  const financeConflict = item => {
+    const total = number(item.total);
+    return total !== null && total > 0 && ['read','downloads'].some(field => number(item[field]) !== null && number(item[field]) > total);
+  };
   function financeStatus(item) {
     const published = typeof item.published === 'boolean' ? item.published : Boolean(item.workflow?.publish || item.workflow?.data);
     if (!published) return {key:'draft',label:'制作中'};
+    if (financeConflict(item)) return {key:'review',label:'已发布 · 待核对'};
     if (financeMetric(item,'read') === null || financeMetric(item,'downloads') === null) return {key:'pending',label:'已发布 · 待回收'};
     return {key:'complete',label:'已发布 · 已回收'};
+  }
+  // Training records name the project "AI 分享月"; older linked records use "AI分享月(第N期)".
+  const SHARE_PROJECT = 'AI 分享月';
+  const isShareProject = name => /^AI\s*分享月/.test(String(name ?? '').trim());
+  const sameTitle = (a, b) => String(a ?? '').replace(/\s+/g, '').toLocaleLowerCase() === String(b ?? '').replace(/\s+/g, '').toLocaleLowerCase();
+  // The training record that already represents a share, if any.
+  function shareSession(sessions, share, date = share.date, title = share.title) {
+    const linked = sessions.find(s => s.id === share.linkedSessionId) || sessions.find(s => s.source === 'ai_share' && s.sourceId === share.id);
+    if (linked) return linked;
+    const sameDay = sessions.filter(s => date && s.date === date && isShareProject(s.project) && (!s.sourceId || s.sourceId === share.id));
+    return sameDay.find(s => sameTitle(s.course, title)) || (sameDay.length === 1 ? sameDay[0] : undefined);
+  }
+  // Every AI 分享月 event once: share records plus training records not already linked to one.
+  function shareEvents(state) {
+    const shares = state.aiShares || [], sessions = state.sessions || [], claimed = new Set();
+    const minutes = session => number(session?.duration) === null ? null : Math.round(number(session.duration) * 60);
+    const events = shares.map(share => {
+      const session = shareSession(sessions, share);
+      if (session) claimed.add(session.id);
+      return {kind:'share',id:share.id,episode:share.episode,date:share.date || '',title:share.title,people:number(share.attendees) ?? number(session?.people),total:number(share.total),minutes:number(share.duration) ?? minutes(session),note:share.note || '',materialUrl:share.materialUrl || ''};
+    });
+    for (const s of sessions) {
+      if (claimed.has(s.id) || !(isShareProject(s.project) || s.source === 'ai_share')) continue;
+      events.push({kind:'session',id:s.id,episode:null,date:s.date || '',title:s.course,people:number(s.people),total:null,minutes:minutes(s),note:s.note || '',materialUrl:''});
+    }
+    return events.sort((a,b) => b.date.localeCompare(a.date) || (b.episode ?? 0) - (a.episode ?? 0));
   }
   function upsertShare(state, payload, makeId) {
     const existing = state.aiShares.find(s => s.id === payload.id);
@@ -43,8 +75,12 @@
       else session = candidates.find(s => s.date === (existing?.date ?? payload.date));
     }
     const complete = number(payload.attendees) !== null && number(payload.duration) !== null && payload.duration > 0 && payload.date;
+    // A training record entered by hand for the same event is linked rather than duplicated;
+    // incomplete share figures never overwrite it.
+    const adopted = !session && complete ? shareSession(state.sessions, existing || payload, existing?.date ?? payload.date, existing?.title ?? payload.title) : undefined;
+    session ||= adopted;
     if (complete) {
-      const next = {id:session?.id || makeId(),date:payload.date,course:payload.title,project:`AI分享月(第${payload.episode}期)`,lecturer:session?.lecturer || '',people:payload.attendees,duration:payload.duration / 60,note:payload.note || '',source:'ai_share',sourceId:payload.id};
+      const next = {id:session?.id || makeId(),date:payload.date,course:payload.title,project:isShareProject(session?.project) ? session.project : SHARE_PROJECT,lecturer:session?.lecturer || '',people:payload.attendees,duration:payload.duration / 60,note:payload.note || (adopted ? adopted.note || '' : ''),source:'ai_share',sourceId:payload.id};
       if (session) Object.assign(session,next); else state.sessions.push(next);
       payload.linkedSessionId = next.id;
     } else if (session) {
@@ -94,5 +130,5 @@
     if (conflicts.length) { const error=new Error('云端与本机修改了同一记录，请先导出本机副本，再拉取云端核对。'); error.code='CONFLICT'; error.conflicts=conflicts; throw error; }
     return output;
   }
-  return {number,rate,stationMetric,stationPayload,financeMetric,financeStatus,upsertShare,taskPreview,monthly,search,mergeThreeWay};
+  return {number,rate,stationMetric,stationPayload,financeMetric,financeStatus,financeConflict,isShareProject,shareEvents,upsertShare,taskPreview,monthly,search,mergeThreeWay};
 });
