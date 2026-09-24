@@ -21,7 +21,7 @@
  * 规则：禁纯黑、禁 ≥ 600 字重、禁 serif/italic、禁 emoji
  * ============================================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@200;300;400;500&family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap');
+/* 字体改用系统字体栈（见 assets/workbench.css），不再阻塞加载 Google Fonts。 */
 
 /* === Global reset：box-sizing + 重置 margin/padding === */
 *,
@@ -7614,7 +7614,7 @@ tr:hover td.empty-cell {
                       stroke-width="2">
                       <path d="M18 20V10M12 20V4M6 20v-6" />
                     </svg></span>
-                  参与率趋势
+                  每场参与人数
                 </h3>
               </div>
               <div class="card-body">
@@ -7722,7 +7722,7 @@ tr:hover td.empty-cell {
           <div class="fin-header">
             <div>
               <div class="fin-title">金融小百科</div>
-              <div class="fin-subtitle">Financial Encryption Encyclopedia · 稳定币超入门</div>
+              <div class="fin-subtitle">第一季 · 稳定币超入门</div>
             </div>
             <div class="fin-controls">
               <button class="fin-btn active" id="finTab-stablecoin">稳定币 (Season 1)</button>
@@ -7752,7 +7752,7 @@ tr:hover td.empty-cell {
                 统计
               </button>
               <div style="flex:1;"></div>
-              <button class="btn btn-primary" onclick="newFinanceEpisode()">+ 新建期次</button>
+              <button class="btn btn-primary" onclick="newFinanceEpisode()">＋ 新建期次</button>
             </div>
 
             <!-- Kanban Board View -->
@@ -9328,7 +9328,7 @@ tr:hover td.empty-cell {
           f.episode || '-',
           f.title || '-',
           LDDomain.financeStatus(f).label,
-          LDDomain.financeMetric(f,'read') === null ? '待回收' : `${LDDomain.financeMetric(f,'read')}%`,
+          LDDomain.financeMetric(f,'read') === null ? (LDDomain.financeConflict(f) ? '待核对' : '待回收') : `${LDDomain.financeMetric(f,'read')}%`,
           f.date || '-'
         ]);
         const wsFinance = XLSX.utils.aoa_to_sheet([financeHeader, ...financeRows]);
@@ -9919,7 +9919,41 @@ tr:hover td.empty-cell {
 
     let hoursChart, budgetChart, costPie;
 
+    // Shared chart typography and tooltip styling, read from the active theme.
+    function applyChartDefaults() {
+      if (!window.Chart) return;
+      const styles = getComputedStyle(document.documentElement);
+      const read = (name, fallback) => styles.getPropertyValue(name).trim() || fallback;
+      // Styling only: an unexpected Chart.js release must never stop the charts from drawing.
+      try {
+        const d = Chart.defaults;
+        d.font.family = read('--font-sans', 'system-ui, sans-serif');
+        d.font.size = 12;
+        d.color = read('--text-muted', '#6F7672');
+        d.borderColor = read('--chart-grid', 'rgba(0, 0, 0, 0.06)');
+        Object.assign(d.plugins.legend.labels, { usePointStyle: true, pointStyle: 'circle', boxWidth: 7, boxHeight: 7, padding: 14 });
+        Object.assign(d.plugins.tooltip, { backgroundColor: read('--text-strong', '#1F2421'), padding: 10, cornerRadius: 8, boxPadding: 4, titleFont: { size: 12, weight: '600' }, bodyFont: { size: 12 } });
+        d.scale.ticks.maxRotation = 0;
+        d.scale.ticks.autoSkipPadding = 14;
+      } catch (_) {}
+    }
+
+    // Canvas needs a plain colour string, so tints are computed here rather than with CSS color-mix().
+    function chartTint(color, alpha) {
+      const hex = /^#([0-9a-f]{6})$/i.exec(String(color).trim());
+      if (!hex) return `rgba(120, 128, 124, ${alpha})`;
+      const n = parseInt(hex[1], 16);
+      return `rgba(${n >> 16}, ${(n >> 8) & 255}, ${n & 255}, ${alpha})`;
+    }
+
+    // "2026-09" → "9月" when every label shares a year, otherwise "25.12".
+    function monthTickLabels(months) {
+      const multiYear = new Set(months.map(m => m.slice(0, 4))).size > 1;
+      return months.map(m => multiYear ? `${m.slice(2, 4)}.${m.slice(5, 7)}` : `${Number(m.slice(5, 7))}月`);
+    }
+
     function renderCharts() {
+      applyChartDefaults();
       const styles = getComputedStyle(document.documentElement);
       const read = (name, fallback) => styles.getPropertyValue(name).trim() || fallback;
       const colors = {
@@ -9931,28 +9965,31 @@ tr:hover td.empty-cell {
         text: read('--text-muted', '#9AA6B2'),
         title: read('--text-title', '#1C2B3A')
       };
+      colors.muted = chartTint(colors.primary, 0.24);
 
       const byMonth = {};
       state.sessions.forEach(s => {
         const month = s.date.slice(0, 7);
         byMonth[month] = (byMonth[month] || 0) + calcManHours(s);
       });
-      const monthLabels = Object.keys(byMonth).sort();
-      const hoursData = monthLabels.map(m => byMonth[m]);
+      const monthKeys = Object.keys(byMonth).sort();
+      const hoursData = monthKeys.map(m => byMonth[m]);
 
       if (hoursChart) hoursChart.destroy();
       hoursChart = new Chart(document.getElementById('hoursChart'), {
         type: 'line',
         data: {
-          labels: monthLabels,
+          labels: monthTickLabels(monthKeys),
           datasets: [{
             label: '总人时',
             data: hoursData,
             borderColor: colors.primary,
             backgroundColor: colors.primaryAlpha,
-            tension: 0.4,
+            tension: 0.35,
+            cubicInterpolationMode: 'monotone',
             fill: true,
-            pointRadius: 4,
+            pointRadius: 3,
+            pointHoverRadius: 5,
             pointBackgroundColor: colors.primary,
             pointBorderColor: '#fff',
             pointBorderWidth: 2,
@@ -9962,10 +9999,11 @@ tr:hover td.empty-cell {
         options: {
           responsive: true,
           maintainAspectRatio: false,
-          plugins: { legend: { display: false } },
+          interaction: { mode: 'index', intersect: false },
+          plugins: { legend: { display: false }, tooltip: { callbacks: { title: items => monthKeys[items[0].dataIndex], label: item => ` ${item.formattedValue} 人时` } } },
           scales: {
-            x: { grid: { display: false }, ticks: { color: colors.text, font: { size: 11 } } },
-            y: { grid: { color: colors.grid }, ticks: { color: colors.text, font: { size: 11 } } }
+            x: { grid: { display: false }, border: { display: false }, ticks: { color: colors.text } },
+            y: { beginAtZero: true, grid: { color: colors.grid }, border: { display: false }, ticks: { color: colors.text, maxTicksLimit: 5 } }
           }
         }
       });
@@ -9983,19 +10021,23 @@ tr:hover td.empty-cell {
       budgetChart = new Chart(document.getElementById('budgetChart'), {
         type: 'bar',
         data: {
-          labels: months,
+          labels: monthTickLabels(months),
           datasets: [
-            ...(state.budgets.length ? [{ label: '预算', data: budgetAmount, backgroundColor: colors.primary, borderRadius: 6, barThickness: 32, maxBarThickness: 40 }] : []),
-            { label: '实际', data: budgetSpent, backgroundColor: colors.accent, borderRadius: 6, barThickness: 32, maxBarThickness: 40 }
+            ...(state.budgets.length ? [{ label: '预算', data: budgetAmount, backgroundColor: colors.muted, borderRadius: 5, maxBarThickness: 28 }] : []),
+            { label: '实际支出', data: budgetSpent, backgroundColor: colors.primary, borderRadius: 5, maxBarThickness: 28 }
           ]
         },
         options: {
           responsive: true,
           maintainAspectRatio: false,
-          plugins: { legend: { position: 'top', align: 'end', labels: { usePointStyle: true, pointStyle: 'rect', font: { size: 11 }, color: colors.text, padding: 12 } } },
+          interaction: { mode: 'index', intersect: false },
+          plugins: {
+            legend: { display: state.budgets.length > 0, position: 'top', align: 'end' },
+            tooltip: { callbacks: { title: items => months[items[0].dataIndex], label: item => ` ${item.dataset.label}：¥${Number(item.raw || 0).toLocaleString('zh-CN')}` } }
+          },
           scales: {
-            x: { grid: { display: false }, ticks: { color: colors.text, font: { size: 11 } } },
-            y: { grid: { color: colors.grid }, ticks: { color: colors.text, font: { size: 11 } } }
+            x: { grid: { display: false }, border: { display: false }, ticks: { color: colors.text } },
+            y: { beginAtZero: true, grid: { color: colors.grid }, border: { display: false }, ticks: { color: colors.text, maxTicksLimit: 5, callback: v => '¥' + Number(v).toLocaleString('zh-CN') } }
           }
         }
       });
@@ -10017,24 +10059,27 @@ tr:hover td.empty-cell {
           const centerX = (chartArea.left + chartArea.right) / 2;
           const centerY = (chartArea.top + chartArea.bottom) / 2;
 
-          ctx.restore();
+          ctx.save();
+          const family = Chart.defaults.font.family;
 
           // 总支出标签
-          ctx.font = '500 12px "Helvetica Neue", sans-serif';
+          ctx.font = `400 12px ${family}`;
           ctx.fillStyle = colors.text;
           ctx.textBaseline = 'middle';
           ctx.textAlign = 'center';
-          ctx.fillText('总支出', centerX, centerY - 10);
+          ctx.fillText('总支出', centerX, centerY - 11);
 
           // 金额
-          ctx.font = '700 20px "Helvetica Neue", sans-serif';
+          ctx.font = `600 19px ${family}`;
           ctx.fillStyle = colors.title;
-          ctx.fillText('¥' + totalSpent.toLocaleString(), centerX, centerY + 12);
+          ctx.fillText('¥' + totalSpent.toLocaleString('zh-CN'), centerX, centerY + 12);
 
-          ctx.save();
+          ctx.restore();
         }
       };
 
+      // A zero share would otherwise render as a stray gap in the ring.
+      const bothKinds = costRegular > 0 && costSpecial > 0;
       if (costPie) costPie.destroy();
       costPie = new Chart(document.getElementById('costPie'), {
         type: 'doughnut',
@@ -10045,15 +10090,18 @@ tr:hover td.empty-cell {
             backgroundColor: [colors.primary, colors.accent],
             borderWidth: 0,
             hoverOffset: 4,
-            borderRadius: 6,
-            spacing: 4
+            borderRadius: bothKinds ? 4 : 0,
+            spacing: bothKinds ? 3 : 0
           }]
         },
         options: {
           responsive: true,
           maintainAspectRatio: false,
-          cutout: '72%',
-          plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, pointStyle: 'rect', font: { size: 11 }, color: colors.text, padding: 16 } } }
+          cutout: '74%',
+          plugins: {
+            legend: { position: 'bottom', labels: { color: colors.text } },
+            tooltip: { callbacks: { label: item => ` ${item.label}：¥${Number(item.raw || 0).toLocaleString('zh-CN')}` } }
+          }
         },
         plugins: [centerTextPlugin]
       });
@@ -10772,14 +10820,13 @@ tr:hover td.empty-cell {
     function getChartPalette() {
       const styles = getComputedStyle(document.documentElement);
       const read = (name, fallback) => styles.getPropertyValue(name).trim() || fallback;
+      const primary = read('--dashboard-chart-primary', '#507568');
       return {
-        barBottom: read('--chart-blue-bottom', 'rgba(30, 78, 216, 0.9)'),
-        barMid: read('--chart-blue-mid', 'rgba(59, 130, 246, 0.85)'),
-        barTop: read('--chart-blue-top', 'rgba(147, 197, 253, 0.9)'),
-        barSolid: read('--chart-blue-solid', 'rgba(30, 78, 216, 0.8)'),
-        barEdge: read('--chart-blue-edge', 'rgba(30, 78, 216, 0.9)'),
-        line: read('--chart-green-line', '#1BB678'),
-        lineFill: read('--chart-green-fill', 'rgba(27, 182, 120, 0.14)'),
+        barSolid: primary,
+        line: primary,
+        lineFill: read('--dashboard-chart-primary-fill', 'rgba(80, 117, 104, 0.12)'),
+        accent: read('--dashboard-chart-accent', '#C08A5B'),
+        muted: chartTint(primary, 0.24),
         grid: read('--chart-grid', 'rgba(15, 66, 100, 0.08)')
       };
     }
@@ -10887,6 +10934,7 @@ tr:hover td.empty-cell {
       if (!ctx) return;
 
       normalizeStationChartRange();
+      applyChartDefaults();
       const palette = getChartPalette();
       const sorted = [...state.aiStations].sort((a, b) => a.episode - b.episode);
       const total = sorted.length;
@@ -10896,6 +10944,9 @@ tr:hover td.empty-cell {
 
       const labels = data.map(d => `第${d.episode}期`);
       const rates = data.map(d => LDDomain.stationMetric(d).value);
+      // Rates cluster near 90%; a floor ten points below the lowest value keeps changes visible.
+      const known = rates.filter(v => v !== null);
+      const floor = known.length ? Math.max(0, Math.floor((Math.min(...known) - 10) / 10) * 10) : 0;
 
       if (stationChart) stationChart.destroy();
       stationChart = new Chart(ctx, {
@@ -10908,14 +10959,16 @@ tr:hover td.empty-cell {
               data: rates,
               borderColor: palette.line,
               backgroundColor: palette.lineFill,
-              borderWidth: 2.5,
-              pointRadius: 3.5,
+              borderWidth: 2,
+              pointRadius: 3,
               pointHoverRadius: 5,
               pointBackgroundColor: palette.line,
               pointBorderColor: '#ffffff',
               pointBorderWidth: 2,
               tension: 0.35,
-              fill: true
+              cubicInterpolationMode: 'monotone',
+              fill: true,
+              spanGaps: true
             }
           ]
         },
@@ -10924,11 +10977,12 @@ tr:hover td.empty-cell {
           maintainAspectRatio: false,
           interaction: { mode: 'index', intersect: false },
           plugins: {
-            legend: { display: false }
+            legend: { display: false },
+            tooltip: { callbacks: { label: item => item.raw === null ? ' 待回收' : ` 查看率 ${item.raw}%` } }
           },
           scales: {
-            x: { grid: { display: false }, ticks: { maxRotation: 0, autoSkip: true, autoSkipPadding: 8 } },
-            y: { min: 0, max: 100, title: { display: true, text: '查看率 %' }, grid: { color: palette.grid }, ticks: { callback: v => v + '%' } }
+            x: { grid: { display: false }, border: { display: false }, ticks: { autoSkip: true } },
+            y: { min: floor, max: 100, grid: { color: palette.grid }, border: { display: false }, ticks: { maxTicksLimit: 5, callback: v => v + '%' } }
           }
         }
       });
@@ -10940,12 +10994,11 @@ tr:hover td.empty-cell {
       const ctx = document.getElementById('shareChart');
       if (!ctx) return;
 
+      applyChartDefaults();
       const palette = getChartPalette();
-      let barGradient = null;
-      const sorted = [...state.aiShares].sort((a, b) => a.episode - b.episode);
-      const labels = sorted.map(d => `第${d.episode}期`);
-      const attendees = sorted.map(d => d.attendees);
-      const rates = sorted.map(d => LDDomain.rate(d.attendees,d.total));
+      // Every session, including those entered in 培训记录, oldest first.
+      const events = LDDomain.shareEvents(state).reverse();
+      const labels = events.map(d => d.date ? `${Number(d.date.slice(5, 7))}/${Number(d.date.slice(8, 10))}` : '待定');
 
       if (shareChart) shareChart.destroy();
       shareChart = new Chart(ctx, {
@@ -10954,45 +11007,11 @@ tr:hover td.empty-cell {
           labels,
           datasets: [
             {
-              label: '参加人数',
-              data: attendees,
-              backgroundColor: (context) => {
-                const { chart } = context;
-                const { chartArea } = chart;
-                if (!chartArea) return palette.barSolid;
-                if (!barGradient) {
-                  const gradient = chart.ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
-                  gradient.addColorStop(0, palette.barBottom);
-                  gradient.addColorStop(0.6, palette.barMid);
-                  gradient.addColorStop(1, palette.barTop);
-                  barGradient = gradient;
-                }
-                return barGradient;
-              },
-              borderColor: palette.barEdge,
-              borderWidth: 1,
-              borderRadius: 6,
-              borderSkipped: false,
-              maxBarThickness: 30,
-              categoryPercentage: 0.72,
-              barPercentage: 0.72,
-              yAxisID: 'y'
-            },
-            {
-              label: '参与率',
-              data: rates,
-              type: 'line',
-              borderColor: '#F59E0B',
-              backgroundColor: 'rgba(245, 158, 11, 0.1)',
-              borderWidth: 2.5,
-              pointRadius: 3.5,
-              pointHoverRadius: 5,
-              pointBackgroundColor: '#F59E0B',
-              pointBorderColor: '#ffffff',
-              pointBorderWidth: 2,
-              tension: 0.35,
-              fill: true,
-              yAxisID: 'y1'
+              label: '参与人数',
+              data: events.map(d => d.people),
+              backgroundColor: palette.barSolid,
+              borderRadius: 5,
+              maxBarThickness: 28
             }
           ]
         },
@@ -11001,12 +11020,12 @@ tr:hover td.empty-cell {
           maintainAspectRatio: false,
           interaction: { mode: 'index', intersect: false },
           plugins: {
-            legend: { position: 'top', align: 'end', labels: { usePointStyle: true, font: { size: 11 } } }
+            legend: { display: false },
+            tooltip: { callbacks: { title: items => `${events[items[0].dataIndex].date} · ${events[items[0].dataIndex].title}`, label: item => ` 参与 ${item.formattedValue} 人` } }
           },
           scales: {
-            x: { grid: { display: false }, ticks: { maxRotation: 0, autoSkip: true, autoSkipPadding: 8 } },
-            y: { position: 'left', title: { display: true, text: '人数' }, grid: { color: palette.grid } },
-            y1: { position: 'right', title: { display: true, text: '参与率 %' }, min: 0, max: 50, grid: { display: false } }
+            x: { grid: { display: false }, border: { display: false } },
+            y: { beginAtZero: true, grid: { color: palette.grid }, border: { display: false }, ticks: { maxTicksLimit: 5, precision: 0 } }
           }
         }
       });
@@ -12044,16 +12063,12 @@ tr:hover td.empty-cell {
       if (!ctx) return;
       if (!state.financeWiki) state.financeWiki = [];
 
+      applyChartDefaults();
+      const palette = getChartPalette();
       const data = [...state.financeWiki].sort((a, b) => a.episode - b.episode);
-      const labels = data.map(i => `第${i.episode}课`);
+      const labels = data.map(i => `第${i.episode}期`);
       const rates = data.map(i => LDDomain.financeMetric(i,'read'));
       const reads = data.map(i => LDDomain.number(i.read));
-
-      // Create Gradient
-      const chartCtx = ctx.getContext('2d');
-      const gradient = chartCtx.createLinearGradient(0, 0, 0, 300);
-      gradient.addColorStop(0, 'rgba(75, 110, 134, 0.8)');
-      gradient.addColorStop(1, 'rgba(75, 110, 134, 0.1)');
 
       if (financeChart) financeChart.destroy();
       financeChart = new Chart(ctx, {
@@ -12064,20 +12079,23 @@ tr:hover td.empty-cell {
             {
               label: '已读人数',
               data: reads,
-              backgroundColor: gradient,
+              backgroundColor: palette.muted,
               borderRadius: 4,
+              maxBarThickness: 26,
               order: 2,
               yAxisID: 'y'
             },
             {
-              label: '查看率 %',
+              label: '查看率',
               data: rates,
               type: 'line',
-              borderColor: '#10B981',
-              borderWidth: 3,
+              borderColor: palette.line,
+              borderWidth: 2,
               pointBackgroundColor: '#fff',
-              pointBorderColor: '#10B981',
-              pointRadius: 4,
+              pointBorderColor: palette.line,
+              pointBorderWidth: 2,
+              pointRadius: 3,
+              spanGaps: true,
               order: 1,
               tension: 0.3,
               yAxisID: 'y1'
@@ -12087,20 +12105,15 @@ tr:hover td.empty-cell {
         options: {
           responsive: true,
           maintainAspectRatio: false,
+          interaction: { mode: 'index', intersect: false },
           plugins: {
-            legend: { position: 'top' },
-            tooltip: {
-              mode: 'index',
-              intersect: false,
-              backgroundColor: 'rgba(0,0,0,0.8)',
-              titleFont: { size: 13 },
-              bodyFont: { size: 13 }
-            }
+            legend: { position: 'top', align: 'end' },
+            tooltip: { callbacks: { label: item => item.raw === null ? ` ${item.dataset.label}：待回收` : ` ${item.dataset.label}：${item.formattedValue}${item.dataset.yAxisID === 'y1' ? '%' : ' 人'}` } }
           },
           scales: {
-            x: { grid: { display: false } },
-            y: { beginAtZero: true, position: 'left', grid: { color: 'rgba(0,0,0,0.05)' } },
-            y1: { beginAtZero: true, position: 'right', max: 100, grid: { display: false } }
+            x: { grid: { display: false }, border: { display: false }, ticks: { autoSkip: true } },
+            y: { beginAtZero: true, position: 'left', grid: { color: palette.grid }, border: { display: false }, ticks: { maxTicksLimit: 5 } },
+            y1: { beginAtZero: true, position: 'right', max: 100, grid: { display: false }, border: { display: false }, ticks: { maxTicksLimit: 5, callback: v => v + '%' } }
           }
         }
       });
