@@ -789,6 +789,16 @@
       "people": 1,
       "duration": 1,
       "note": "安广海"
+    },
+    {
+      "id": "djtbmtcp",
+      "date": "2026-10-10",
+      "course": "任务授权与分配",
+      "project": "2026管理者训练营 1.0",
+      "lecturer": "徐浩",
+      "people": 1,
+      "duration": 2,
+      "note": "安广海补课"
     }
   ],
   "budgets": [],
