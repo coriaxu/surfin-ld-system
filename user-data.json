@@ -769,6 +769,16 @@
       "people": 1,
       "duration": 1,
       "note": "戴鸿超"
+    },
+    {
+      "id": "b9vkkcds",
+      "date": "2026-10-12",
+      "course": "1 对 1 辅导答疑",
+      "project": "2026管理者训练营 1.0",
+      "lecturer": "徐浩",
+      "people": 1,
+      "duration": 1,
+      "note": "张立夏"
     }
   ],
   "budgets": [],
