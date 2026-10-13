@@ -226,7 +226,7 @@
     $('overviewRange').textContent=p.range+(p.ongoing?' · 本月进行中':'');$('overviewMonth').value=p.month;$('overviewMonth').max=R.today().slice(0,7);$('cutoffLabel').textContent=selection.mode==='ytd'?'截至月份':'选择月份';
     monthLabel.querySelectorAll('[data-period]').forEach(b=>{b.classList.toggle('active',b.dataset.period===selection.mode);b.setAttribute('aria-pressed',String(b.dataset.period===selection.mode));});
     annual.querySelector('summary').textContent=selection.mode==='ytd'?`查看 ${Number(p.month.slice(5))} 月数据`:`查看 ${p.year} 年度累计（截至 ${Number(p.month.slice(5))} 月）`;
-    const reportButton=document.querySelector('[onclick="openMonthlyReportModal()"]');if(reportButton){const textNode=[...reportButton.childNodes].find(n=>n.nodeType===3&&n.textContent.trim());if(textNode)textNode.textContent=selection.mode==='ytd'?'年度总结':'月度总结';}
+    document.querySelectorAll('[onclick="openMonthlyReportModal()"]').forEach(reportButton=>{const textNode=[...reportButton.childNodes].find(n=>n.nodeType===3&&n.textContent.trim());if(textNode)textNode.textContent=selection.mode==='ytd'?'年度总结':'月度总结';});
     if($('statFinanceTotal'))$('statFinanceTotal').textContent=(state.financeWiki||[]).length;
   };
   const byDateDesc=(a,b)=>String(b.date||'').localeCompare(String(a.date||''));
@@ -277,6 +277,11 @@
     const d=exportSnapshot||selected(),opts=Object.fromEntries(['includeTraining','includeBudget','includeAI','includeFinance'].map(k=>[k,$(k).checked]));const model=R.model(d,opts);
     exporting=true;closeMonthlyReportModal();showToast('正在生成报告…','info');
     try{if(pdf)await LDReportExport.pdf(model);if(xlsx)LDReportExport.excel(model);showToast('报告生成成功','success');}catch(err){console.error(err);showToast('报告生成失败：'+err.message,'error');}finally{exporting=false;}
+  };
+  const originalExcel=window.exportExcel;
+  window.exportExcel=()=>{
+    if(!['dashboard','monthly','annual'].includes(activePage))return originalExcel();
+    try{const d=activePage==='dashboard'?selected():reportSnapshot;LDReportExport.excel(R.model(d));showToast('Excel 已生成','success');}catch(err){console.error(err);showToast('Excel 生成失败：'+err.message,'error');}
   };
   const originalPdf=window.exportPdf;
   window.exportPdf=async()=>{
