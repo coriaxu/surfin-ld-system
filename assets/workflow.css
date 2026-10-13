@@ -162,3 +162,18 @@ a.record-note:hover { text-decoration:underline; }
   .section-heading { flex-wrap:wrap; gap:4px 8px; }
 }
 @media print { .primary-navigation,.module-tabs,.save-status,.record-filters,.table-pagination,.workflow-fold,.report-controls { display:none !important; } .annual-summary:not([open]) { display:none; } }
+.save-status[data-status="save-error"] { color:#9a463e; }
+
+/* Period controls fit the existing heading; dashboard cards and columns are unchanged. */
+.period-heading { flex-wrap:wrap; align-items:center; }
+.period-heading>h2 { margin-right:auto; }
+.period-controls,.period-controls label,.period-switch { display:flex; align-items:center; gap:8px; }
+.period-switch { gap:2px; padding:3px; background:#e3e4de; border:1px solid var(--border-light); border-radius:7px; }
+.period-switch button { border:1px solid transparent; border-radius:4px; padding:7px 12px; font:500 13px var(--font-sans); color:var(--text-body); background:transparent; cursor:pointer; white-space:nowrap; }
+.period-switch button.active { background:#fff; border-color:var(--border-mid); color:var(--brand-dark); }
+.period-controls input { padding:7px 9px; max-width:160px; min-width:0; }
+#overviewRange { flex-basis:100%; font-size:12px; }
+#annualSummary>h3:not(.report-month) { font-size:17px; font-weight:500; margin:26px 0 8px; }
+@media(max-width:640px) { .period-controls { flex-wrap:wrap; } .report-list li { flex-wrap:wrap; } }
+
+.period-controls label>span { white-space:nowrap; }

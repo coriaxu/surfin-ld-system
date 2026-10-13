@@ -6927,6 +6927,7 @@ tr:hover td.empty-cell {
   <link rel="stylesheet" href="assets/workbench.css">
   <link rel="stylesheet" href="assets/workflow.css">
   <script src="assets/ld-domain.js"></script>
+  <script src="assets/ld-report.js"></script>
   <script src="assets/ld-sync.js"></script>
 </head>
 
@@ -9195,274 +9196,10 @@ tr:hover td.empty-cell {
       }
     }
 
-    // 获取指定月份数据
-    function getMonthlyData(yearMonth) {
-      const [year, month] = yearMonth.split('-').map(Number);
-      const monthStr = String(month).padStart(2, '0');
-
-      // 培训数据
-      const trainingSessions = state.sessions.filter(s => {
-        if (!s.date) return false;
-        return s.date.startsWith(`${year}-${monthStr}`);
-      });
-      const totalSessions = trainingSessions.length;
-      const totalPeople = trainingSessions.reduce((sum, s) => sum + (Number(s.people) || 0), 0);
-      const totalHours = trainingSessions.reduce((sum, s) => sum + ((Number(s.people) || 0) * (Number(s.duration) || 0)), 0);
-
-      // 预算数据
-      const budgetData = state.budgets.filter(b => b.month === yearMonth);
-      const totalBudget = budgetData.reduce((sum, b) => sum + (Number(b.amount) || 0), 0);
-      // 开销从独立的 expenses 数组计算
-      const expenseData = (state.expenses || []).filter(e => e.month === yearMonth);
-      const totalSpend = expenseData.reduce((sum, e) => sum + (Number(e.amount) || 0), 0);
-
-      // AI 知识库数据
-      const aiStationCount = state.aiStations.filter(a => {
-        if (!a.date) return false;
-        return a.date.startsWith(`${year}-${monthStr}`);
-      }).length;
-
-      // 金融小百科数据
-      const financeItems = (state.financeWiki || []).filter(f => {
-        if (!f.date) return false;
-        return f.date.startsWith(`${year}-${monthStr}`);
-      });
-      const financeTotal = financeItems.length;
-      const financePublished = financeItems.filter(f => f.status === 'done' || f.viewRate !== null).length;
-
-      return {
-        yearMonth,
-        year,
-        month,
-        training: { sessions: trainingSessions, totalSessions, totalPeople, totalHours },
-        budget: { data: budgetData, totalBudget, totalSpend, remaining: totalBudget - totalSpend },
-        ai: { stationCount: aiStationCount },
-        finance: { items: financeItems, total: financeTotal, published: financePublished }
-      };
-    }
-
-    // 生成月度报告
-    window.generateMonthlyReport = async function () {
-      const yearMonth = document.getElementById('reportMonthSelect').value;
-      const exportPdf = document.getElementById('exportPdfCheck').checked;
-      const exportExcel = document.getElementById('exportExcelCheck').checked;
-      const includeTraining = document.getElementById('includeTraining').checked;
-      const includeBudget = document.getElementById('includeBudget').checked;
-      const includeAI = document.getElementById('includeAI').checked;
-      const includeFinance = document.getElementById('includeFinance').checked;
-
-      if (!exportPdf && !exportExcel) {
-        showToast('请至少选择一种导出格式', 'error');
-        return;
-      }
-
-      showToast('正在生成咨询级月度报告...', 'info');
-      closeMonthlyReportModal();
-
-      const data = getMonthlyData(yearMonth);
-
-      try {
-        if (exportExcel) {
-          await generateMonthlyExcel(data, { includeTraining, includeBudget, includeAI, includeFinance });
-        }
-        if (exportPdf) {
-          await generateMonthlyPdf(data, { includeTraining, includeBudget, includeAI, includeFinance });
-        }
-        showToast('月度报告生成成功！', 'success');
-      } catch (err) {
-        console.error(err);
-        showToast('报告生成失败: ' + err.message, 'error');
-      }
-    };
-
-    // 生成 Excel 报告
-    async function generateMonthlyExcel(data, opts) {
-      const wb = XLSX.utils.book_new();
-
-      // Sheet 1: 概览
-      const overviewData = [
-        ['Surfin L&D 学习发展系统 - 月度数据总结'],
-        [`报告月份: ${data.year}年${data.month}月`],
-        [`生成时间: ${new Date().toLocaleString('zh-CN')}`],
-        [],
-        ['核心指标', '数值'],
-        ['培训场次', data.training.totalSessions],
-        ['总人时', data.training.totalHours],
-        ['参训人次', data.training.totalPeople],
-        ['月度预算', data.budget.data.length ? `¥${data.budget.totalBudget.toLocaleString()}` : '尚未设置预算'],
-        ['实际支出', `¥${data.budget.totalSpend.toLocaleString()}`],
-        ['预算剩余', data.budget.data.length ? `¥${data.budget.remaining.toLocaleString()}` : '—'],
-        ['AI广播站发布', `${data.ai.stationCount}期`],
-        ['金融小百科发布', `${data.finance.published}期`]
-      ];
-      const wsOverview = XLSX.utils.aoa_to_sheet(overviewData);
-      XLSX.utils.book_append_sheet(wb, wsOverview, '概览');
-
-      // Sheet 2: 培训明细
-      if (opts.includeTraining && data.training.sessions.length > 0) {
-        const trainingHeader = ['日期', '课程名称', '项目', '讲师', '人数', '时长(h)', '人时'];
-        const trainingRows = data.training.sessions.map(s => [
-          s.date, s.course, s.project, s.trainer,
-          s.people, s.duration, (Number(s.people) || 0) * (Number(s.duration) || 0)
-        ]);
-        const wsTraining = XLSX.utils.aoa_to_sheet([trainingHeader, ...trainingRows]);
-        XLSX.utils.book_append_sheet(wb, wsTraining, '培训明细');
-      }
-
-      // Sheet 3: 预算开销
-      if (opts.includeBudget && data.budget.data.length > 0) {
-        const budgetHeader = ['月份', '类型', '预算'];
-        const budgetRows = data.budget.data.map(b => [
-          b.month, b.type, b.amount
-        ]);
-        const wsBudget = XLSX.utils.aoa_to_sheet([budgetHeader, ...budgetRows]);
-        XLSX.utils.book_append_sheet(wb, wsBudget, '预算开销');
-      }
-
-      if(opts.includeBudget){const expenses=(state.expenses||[]).filter(e=>e.month===data.yearMonth);XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([['日期','归属月份','类型','金额','用途'],...expenses.map(e=>[e.date,e.month,e.type,e.amount,e.desc])]),'实际开销');}
-
-      // Sheet 4: 金融小百科
-      if (opts.includeFinance && data.finance.items.length > 0) {
-        const financeHeader = ['期数', '标题', '状态', '查看率', '发布日期'];
-        const financeRows = data.finance.items.map(f => [
-          f.episode || '-',
-          f.title || '-',
-          LDDomain.financeStatus(f).label,
-          LDDomain.financeMetric(f,'read') === null ? (LDDomain.financeConflict(f) ? '待核对' : '待回收') : `${LDDomain.financeMetric(f,'read')}%`,
-          f.date || '-'
-        ]);
-        const wsFinance = XLSX.utils.aoa_to_sheet([financeHeader, ...financeRows]);
-        XLSX.utils.book_append_sheet(wb, wsFinance, '金融小百科');
-      }
-
-      const fileName = `Surfin_Monthly_Report_${data.yearMonth}.xlsx`;
-      XLSX.writeFile(wb, fileName);
-    }
-
-    // 生成 PDF 报告 (咨询公司风格)
-    async function generateMonthlyPdf(data, opts) {
-      // 创建隐藏的渲染容器
-      const container = document.createElement('div');
-      container.id = 'pdf-render-container';
-      container.style.cssText = `
-        position: fixed; left: -9999px; top: 0;
-        width: 794px; height: 1123px;
-        background: linear-gradient(180deg, #0f172a 0%, #1e3a5f 100%);
-        padding: 40px; box-sizing: border-box;
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        color: white;
-      `;
-
-      container.innerHTML = `
-        <div style="text-align: center; margin-bottom: 30px;">
-          <div style="font-size: 12px; letter-spacing: 4px; color: rgba(255,255,255,0.6); margin-bottom: 8px;">SURFIN L&D SYSTEM</div>
-          <div style="font-size: 28px; font-weight: 700; background: linear-gradient(90deg, #0ea5e9, #38bdf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">月度数据洞察报告</div>
-          <div style="font-size: 14px; color: rgba(255,255,255,0.7); margin-top: 8px;">${data.year}年${data.month}月 · Monthly Insight</div>
-        </div>
-
-        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 30px;">
-          <div style="background: rgba(14, 165, 233, 0.2); border: 1px solid rgba(14, 165, 233, 0.4); border-radius: 12px; padding: 20px; text-align: center;">
-            <div style="font-size: 32px; font-weight: 700; color: #0ea5e9;">${data.training.totalSessions}</div>
-            <div style="font-size: 12px; color: rgba(255,255,255,0.7); margin-top: 4px;">培训场次</div>
-          </div>
-          <div style="background: rgba(16, 185, 129, 0.2); border: 1px solid rgba(16, 185, 129, 0.4); border-radius: 12px; padding: 20px; text-align: center;">
-            <div style="font-size: 32px; font-weight: 700; color: #10b981;">${data.training.totalHours}</div>
-            <div style="font-size: 12px; color: rgba(255,255,255,0.7); margin-top: 4px;">总人时</div>
-          </div>
-          <div style="background: rgba(251, 146, 60, 0.2); border: 1px solid rgba(251, 146, 60, 0.4); border-radius: 12px; padding: 20px; text-align: center;">
-            <div style="font-size: 32px; font-weight: 700; color: #fb923c;">${data.training.totalPeople}</div>
-            <div style="font-size: 12px; color: rgba(255,255,255,0.7); margin-top: 4px;">参训人次</div>
-          </div>
-          <div style="background: rgba(239, 68, 68, 0.2); border: 1px solid rgba(239, 68, 68, 0.4); border-radius: 12px; padding: 20px; text-align: center;">
-            <div style="font-size: 32px; font-weight: 700; color: #ef4444;">¥${(data.budget.totalSpend / 1000).toFixed(1)}K</div>
-            <div style="font-size: 12px; color: rgba(255,255,255,0.7); margin-top: 4px;">本月支出</div>
-          </div>
-        </div>
-
-        ${opts.includeTraining && data.training.sessions.length > 0 ? `
-        <div style="background: rgba(255,255,255,0.05); border-radius: 12px; padding: 20px; margin-bottom: 20px;">
-          <div style="font-size: 14px; font-weight: 600; color: #0ea5e9; margin-bottom: 12px;">👩‍🏫 培训场次明细</div>
-          <table style="width: 100%; border-collapse: collapse; font-size: 11px; color: #ffffff;">
-            <tr style="background: rgba(14, 165, 233, 0.3);">
-              <th style="padding: 8px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.2); color: #ffffff; font-weight: 600;">日期</th>
-              <th style="padding: 8px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.2); color: #ffffff; font-weight: 600;">课程</th>
-              <th style="padding: 8px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.2); color: #ffffff; font-weight: 600;">讲师</th>
-              <th style="padding: 8px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.2); color: #ffffff; font-weight: 600;">人数</th>
-              <th style="padding: 8px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.2); color: #ffffff; font-weight: 600;">人时</th>
-            </tr>
-            ${data.training.sessions.slice(0, 8).map((s, i) => `
-            <tr style="background: ${i % 2 === 0 ? 'transparent' : 'rgba(255,255,255,0.05)'};">
-              <td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.08); color: #ffffff;">${s.date || '-'}</td>
-              <td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.08); color: #ffffff;">${s.course || '-'}</td>
-              <td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.08); color: #ffffff;">${s.lecturer || '-'}</td>
-              <td style="padding: 8px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.08); color: #ffffff;">${s.people || 0}</td>
-              <td style="padding: 8px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.08); color: #ffffff;">${(Number(s.people) || 0) * (Number(s.duration) || 0)}</td>
-            </tr>
-            `).join('')}
-          </table>
-        </div>
-        ` : ''}
-
-        ${opts.includeBudget ? `
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
-          <div style="background: rgba(255,255,255,0.05); border-radius: 12px; padding: 20px;">
-            <div style="font-size: 14px; font-weight: 600; color: #10b981; margin-bottom: 12px;">💰 预算执行</div>
-            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-              <span style="color: rgba(255,255,255,0.7);">月度预算</span>
-              <span style="font-weight: 600;">${data.budget.data.length ? '¥'+data.budget.totalBudget.toLocaleString() : '尚未设置预算'}</span>
-            </div>
-            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-              <span style="color: rgba(255,255,255,0.7);">实际支出</span>
-              <span style="font-weight: 600; color: #ef4444;">¥${data.budget.totalSpend.toLocaleString()}</span>
-            </div>
-            <div style="display: flex; justify-content: space-between;">
-              <span style="color: rgba(255,255,255,0.7);">剩余预算</span>
-              <span style="font-weight: 600; color: ${data.budget.remaining >= 0 ? '#10b981' : '#ef4444'};">${data.budget.data.length ? '¥'+data.budget.remaining.toLocaleString() : '—'}</span>
-            </div>
-          </div>
-          <div style="background: rgba(255,255,255,0.05); border-radius: 12px; padding: 20px;">
-            <div style="font-size: 14px; font-weight: 600; color: #8b5cf6; margin-bottom: 12px;">🤖 AI 知识库</div>
-            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-              <span style="color: rgba(255,255,255,0.7);">广播站发布</span>
-              <span style="font-weight: 600;">${data.ai.stationCount}期</span>
-            </div>
-          </div>
-        </div>
-        ` : ''}
-
-        ${opts.includeFinance ? `
-        <div style="background: rgba(255,255,255,0.05); border-radius: 12px; padding: 20px; margin-bottom: 20px;">
-          <div style="font-size: 14px; font-weight: 600; color: #059669; margin-bottom: 12px;">📚 金融小百科</div>
-          <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-            <span style="color: rgba(255,255,255,0.7);">本月发布期数</span>
-            <span style="font-weight: 600;">${data.finance.published}期</span>
-          </div>
-          <div style="display: flex; justify-content: space-between;">
-            <span style="color: rgba(255,255,255,0.7);">总规划期数</span>
-            <span style="font-weight: 600;">${data.finance.total}期</span>
-          </div>
-        </div>
-        ` : ''}
-
-        <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1);">
-          <div style="font-size: 10px; color: rgba(255,255,255,0.4);">Generated by Surfin L&D System · ${new Date().toLocaleDateString('zh-CN')}</div>
-        </div>
-      `;
-
-      document.body.appendChild(container);
-
-      // 使用 html2canvas 渲染
-      const canvas = await html2canvas(container, { scale: 2, useCORS: true, backgroundColor: null });
-      document.body.removeChild(container);
-
-      // 生成 PDF
-      const pdf = new jspdf.jsPDF('p', 'mm', 'a4');
-      const imgData = canvas.toDataURL('image/png');
-      const pdfWidth = 210;
-      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-      pdf.save(`Surfin_Monthly_Insight_${data.yearMonth}.pdf`);
-    }
+    // Compatibility adapters use the shared reporting model.
+    function getMonthlyData(month) { return LDReport.aggregate(state, LDReport.period('month', month)); }
+    async function generateMonthlyExcel(data, opts) { return LDReportExport.excel(LDReport.model(data, opts)); }
+    async function generateMonthlyPdf(data, opts) { return LDReportExport.pdf(LDReport.model(data, opts)); }
 
     window.testSyncConnection = async function () {
       try {
@@ -9876,46 +9613,8 @@ tr:hover td.empty-cell {
       }
     }
 
-    function renderStats() {
-      const now = new Date();
-      const monthStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
-      const monthSessions = state.sessions.filter(s => s.date.startsWith(monthStr));
-      const totalHours = monthSessions.reduce((sum, s) => sum + calcManHours(s), 0);
-      const monthPeople = monthSessions.reduce((sum, s) => sum + (Number(s.people) || 0), 0);
-      const latest = monthSessions.sort((a, b) => new Date(b.date) - new Date(a.date))[0];
-
-      document.getElementById('statSessions').textContent = monthSessions.length;
-      document.getElementById('statHours').textContent = totalHours.toLocaleString();
-      document.getElementById('statUpcoming').textContent = latest ? `最近：${latest.course}` : '最近培训：-';
-
-      const monthBudgets = state.budgets.filter(b => b.month === monthStr);
-      // 从 expenses 中计算本月实际支出
-      const spentTotal = getSpentByMonth(monthStr);
-
-      document.getElementById('statMonthPeople').textContent = monthPeople.toLocaleString();
-      document.getElementById('statMonthSpend').textContent = `¥${spentTotal.toLocaleString()}`;
-
-      const dashboardYear = new Date().getFullYear();
-      const yearPrefix = `${dashboardYear}-`;
-      const yearSessions = state.sessions.filter(s => s.date.startsWith(yearPrefix));
-      const yearBudgets = state.budgets.filter(b => b.month.startsWith(yearPrefix));
-      const yearPeople = yearSessions.reduce((sum, s) => sum + (Number(s.people) || 0), 0);
-      const yearHours = yearSessions.reduce((sum, s) => sum + calcManHours(s), 0);
-      // 从 expenses 中计算年度实际支出
-      const yearExpenses = state.expenses ? state.expenses.filter(e => e.month && e.month.startsWith(yearPrefix)) : [];
-      const yearSpend = yearExpenses.reduce((sum, e) => sum + (Number(e.amount) || 0), 0);
-
-      document.getElementById('statYearSessions').textContent = yearSessions.length;
-      document.getElementById('statYearPeople').textContent = yearPeople.toLocaleString();
-      document.getElementById('statYearHours').textContent = yearHours.toLocaleString();
-      document.getElementById('statYearSpend').textContent = `¥${yearSpend.toLocaleString()}`;
-
-      // Update Finance Wiki Stat
-      const finTotal = state.financeWiki ? state.financeWiki.length : 0;
-      const finEl = document.getElementById('statFinanceTotal');
-      if (finEl) finEl.textContent = finTotal;
-
-    }
+    // The workflow binds the shared period renderer before the interactive dashboard is ready.
+    function renderStats() {}
 
     let hoursChart, budgetChart, costPie;
 
@@ -9954,6 +9653,9 @@ tr:hover td.empty-cell {
 
     function renderCharts() {
       applyChartDefaults();
+      const report=window.getDashboardAggregate?.();
+      const chartState=report ? {sessions:report.sessions,budgets:report.budgets,expenses:report.expenses} : state;
+      const costState=window.getDashboardAggregate?.('selected') || chartState;
       const styles = getComputedStyle(document.documentElement);
       const read = (name, fallback) => styles.getPropertyValue(name).trim() || fallback;
       const colors = {
@@ -9968,12 +9670,12 @@ tr:hover td.empty-cell {
       colors.muted = chartTint(colors.primary, 0.24);
 
       const byMonth = {};
-      state.sessions.forEach(s => {
+      chartState.sessions.forEach(s => {
         const month = s.date.slice(0, 7);
-        byMonth[month] = (byMonth[month] || 0) + calcManHours(s);
+        byMonth[month] = (byMonth[month] || 0) + (LDReport.hours(s) || 0);
       });
-      const monthKeys = Object.keys(byMonth).sort();
-      const hoursData = monthKeys.map(m => byMonth[m]);
+      const monthKeys = report ? report.period.months : Object.keys(byMonth).sort();
+      const hoursData = monthKeys.map(m => { const rows=chartState.sessions.filter(s=>s.date.startsWith(m)); return rows.length && rows.every(s=>LDReport.hours(s)===null)?null:Math.round((byMonth[m]||0)*100)/100; });
 
       if (hoursChart) hoursChart.destroy();
       hoursChart = new Chart(document.getElementById('hoursChart'), {
@@ -10009,13 +9711,13 @@ tr:hover td.empty-cell {
       });
 
       // 修复：months 应该是预算月份 + 开销月份的并集
-      // 原版只从 state.budgets 抽月份，导致没有预算但有开销时图表完全空白
-      const budgetMonths = state.budgets.map(b => b.month);
-      const expenseMonths = (state.expenses || []).map(e => e.month).filter(m => m);
-      const months = [...new Set([...budgetMonths, ...expenseMonths])].sort();
-      const budgetAmount = months.map(m => { const entries=state.budgets.filter(b=>b.month===m); return entries.length?entries.reduce((s,b)=>s+Number(b.amount),0):null; });
+      // 原版只从 chartState.budgets 抽月份，导致没有预算但有开销时图表完全空白
+      const budgetMonths = chartState.budgets.map(b => b.month);
+      const expenseMonths = (chartState.expenses || []).map(e => e.month).filter(m => m);
+      const months = report ? report.period.months : [...new Set([...budgetMonths, ...expenseMonths])].sort();
+      const budgetAmount = months.map(m => { const entries=chartState.budgets.filter(b=>b.month===m); const known=entries.map(b=>LDDomain.number(b.amount)).filter(n=>n!==null); return known.length?Math.round(known.reduce((a,b)=>a+b,0)*100)/100:null; });
       // 从 expenses 计算每月实际支出
-      const budgetSpent = months.map(m => getSpentByMonth(m));
+      const budgetSpent = months.map(m => Math.round(chartState.expenses.filter(e=>e.month===m).reduce((n,e)=>n+Number(e.amount||0),0)*100)/100);
 
       if (budgetChart) budgetChart.destroy();
       budgetChart = new Chart(document.getElementById('budgetChart'), {
@@ -10023,7 +9725,7 @@ tr:hover td.empty-cell {
         data: {
           labels: monthTickLabels(months),
           datasets: [
-            ...(state.budgets.length ? [{ label: '预算', data: budgetAmount, backgroundColor: colors.muted, borderRadius: 5, maxBarThickness: 28 }] : []),
+            ...(chartState.budgets.length ? [{ label: '预算', data: budgetAmount, backgroundColor: colors.muted, borderRadius: 5, maxBarThickness: 28 }] : []),
             { label: '实际支出', data: budgetSpent, backgroundColor: colors.primary, borderRadius: 5, maxBarThickness: 28 }
           ]
         },
@@ -10032,7 +9734,7 @@ tr:hover td.empty-cell {
           maintainAspectRatio: false,
           interaction: { mode: 'index', intersect: false },
           plugins: {
-            legend: { display: state.budgets.length > 0, position: 'top', align: 'end' },
+            legend: { display: chartState.budgets.length > 0, position: 'top', align: 'end' },
             tooltip: { callbacks: { title: items => months[items[0].dataIndex], label: item => ` ${item.dataset.label}：¥${Number(item.raw || 0).toLocaleString('zh-CN')}` } }
           },
           scales: {
@@ -10043,9 +9745,9 @@ tr:hover td.empty-cell {
       });
 
       // 从 expenses 计算常规/特殊开销
-      const costRegular = state.expenses ? state.expenses.filter(e => e.type === 'regular').reduce((s, e) => s + Number(e.amount), 0) : 0;
-      const costSpecial = state.expenses ? state.expenses.filter(e => e.type === 'special').reduce((s, e) => s + Number(e.amount), 0) : 0;
-      const totalSpent = costRegular + costSpecial;
+      const costRegular = Math.round((costState.expenses || []).filter(e=>e.type==='regular').reduce((s,e)=>s+Number(e.amount||0),0)*100)/100;
+      const costSpecial = Math.round((costState.expenses || []).filter(e=>e.type==='special').reduce((s,e)=>s+Number(e.amount||0),0)*100)/100;
+      const totalSpent = Math.round((costRegular + costSpecial)*100)/100;
 
       // 圆心文字插件
       const centerTextPlugin = {
@@ -12400,6 +12102,7 @@ tr:hover td.empty-cell {
 
   </script>
   <script src="assets/workbench.js"></script>
+  <script src="assets/report-export.js"></script>
   <script src="assets/workflow.js"></script>
 </body>
 

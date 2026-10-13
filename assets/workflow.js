@@ -33,6 +33,7 @@
   function createPage(id,title) {const p=el('div','page');p.id='page-'+id;$('mainContent').append(p);pageTitles[id]=title;return p;}
   const projectPage=createPage('projects','项目进展');
   const monthlyPage=createPage('monthly','月度总结');
+  const annualPage=createPage('annual','年度总结');
   const subbar=el('nav','module-tabs');subbar.setAttribute('aria-label','模块导航');$('mainContent').prepend(subbar);
   const legacyNav=document.querySelector('.sidebar-nav');legacyNav.hidden=true;legacyNav.id='legacyNav';
   const mainNav=el('nav','sidebar-nav primary-navigation');mainNav.setAttribute('aria-label','主导航');legacyNav.after(mainNav);
@@ -40,7 +41,7 @@
     overview:{label:'工作总览',icon:'<rect x="3.5" y="3.5" width="7" height="8" rx="1.8"/><rect x="13.5" y="3.5" width="7" height="5" rx="1.8"/><rect x="13.5" y="11.5" width="7" height="9" rx="1.8"/><rect x="3.5" y="14.5" width="7" height="6" rx="1.8"/>',pages:[['dashboard','培训大屏']]},
     records:{label:'记录',icon:'<rect x="4.5" y="3.5" width="15" height="17" rx="2.2"/><path d="M8.5 8h7M8.5 12h7M8.5 16h4"/>',pages:[['training','培训记录'],['aiknowledge','AI 内容'],['finance','金融百科'],['budget','预算与开销']]},
     projects:{label:'项目',icon:'<path d="m12 3.8 8.2 4.4L12 12.6 3.8 8.2z"/><path d="m3.8 12.2 8.2 4.4 8.2-4.4"/><path d="m3.8 16.1 8.2 4.4 8.2-4.4"/>',pages:[['projects','项目进展']]},
-    results:{label:'成果与报告',icon:'<path d="M7.5 4h9v4.5a4.5 4.5 0 0 1-9 0z"/><path d="M16.5 5.5h2.3a1.7 1.7 0 0 1 0 3.4h-2.5M7.5 5.5H5.2a1.7 1.7 0 0 0 0 3.4h2.5M12 13v4M8.5 20h7"/>',pages:[['caselib','案例与手册'],['assessment','测评报告'],['monthly','月度总结']]}
+    results:{label:'成果与报告',icon:'<path d="M7.5 4h9v4.5a4.5 4.5 0 0 1-9 0z"/><path d="M16.5 5.5h2.3a1.7 1.7 0 0 1 0 3.4h-2.5M7.5 5.5H5.2a1.7 1.7 0 0 0 0 3.4h2.5M12 13v4M8.5 20h7"/>',pages:[['caselib','案例与手册'],['assessment','测评报告'],['monthly','月度总结'],['annual','年度总结']]}
   };
   for(const [key,g] of Object.entries(groups)){
     const b=el('button','primary-nav',`<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">${g.icon}</svg><span>${g.label}</span>`);b.type='button';b.dataset.group=key;b.addEventListener('click',()=>navigate(g.pages[0][0]));mainNav.append(b);
@@ -54,7 +55,8 @@
     $('sidebar').classList.remove('open');document.querySelector('.sidebar-scrim')?.classList.remove('visible');
     if(page==='budget')switchBudgetTab('expense-list');
     if(page==='finance')switchFinanceView('stats');
-    if(page==='monthly')renderMonthly();
+    if(page==='monthly'||page==='annual'){renderMonthly();renderStats();}
+    if(page==='dashboard'&&window.getDashboardAggregate){renderStats();renderCharts();renderOverview();}
     if(page==='projects')renderProjects();
   }
   function navigate(page) {
@@ -115,7 +117,6 @@
   document.querySelector('[data-stage="data"] .kanban-column-header span').textContent='已发布';
   getFinanceStage=function(item){if(D.financeStatus(item).key!=='draft')return 'data';for(const step of financeTaskTemplate.filter(s=>s.stage!=='data'))if(!item.workflow?.[step.stage] || step.stage==='publish')return step.stage;return 'publish';};
   renderFinanceHeatmap=function(){const container=$('financeTimeline');if(!container)return;const list=state.financeWiki||[],published=list.filter(s=>D.financeStatus(s).key!=='draft'),valid=published.map(s=>D.financeMetric(s,'read')).filter(n=>n!==null),pending=published.filter(s=>['pending','review'].includes(D.financeStatus(s).key));container.innerHTML=`<div class="compact-metrics"><div><strong>${published.length} / ${list.length}</strong><span>已发布期数</span></div><div><strong>${valid.length?(valid.reduce((a,b)=>a+b,0)/valid.length).toFixed(1)+'%':'—'}</strong><span>平均查看率 · ${valid.length} 期已回收</span></div><div><strong>${pending.length}</strong><span>已发布 · 待回收或核对</span></div></div>`;};
-  const originalMonthly=getMonthlyData;getMonthlyData=function(month){const data=originalMonthly(month);data.finance.published=data.finance.items.filter(s=>D.financeStatus(s).key!=='draft').length;return data;};
 
   // AI record drawers keep primary fields compact; workflows remain available on demand.
   function makeAIDrawer(kind) {
@@ -199,46 +200,90 @@
   function renderExpenseSummary(){const month=filterState.expenses.period || currentMonth(),data=D.monthly(state,month);expenseSummary.innerHTML=`<div class="compact-metrics"><div><strong>${money(data.spend)}</strong><span>${esc(month)} 实际支出 · ${data.expenses.length} 笔</span></div><div><strong class="${data.budget===null?'is-empty':''}">${data.budget===null?'尚未设置预算':money(data.budget)}</strong><span>${data.budget===null?'可继续记录开销':'本月预算'}</span></div><div><strong class="${data.budget===null?'is-empty':''}">${data.budget===null?'—':money(data.budget-data.spend)}</strong><span>${data.budget===null?'设置预算后显示预实比较':'预算余额'}</span></div></div>`;}
   const budgetCompare=renderBudgetCompare;renderBudgetCompare=function(){budgetCompare();if(!state.budgets.length){const host=$('budgetCompareContainer');if(host)host.innerHTML='<p class="empty-copy">尚未设置预算。实际开销已正常记录，设置预算后可查看预实比较。</p>';}};
 
-  // Automatically assembled overview and project summaries, without extra bookkeeping.
-  const dashboard=$('page-dashboard'), monthGrid=dashboard.querySelector('.stats-grid'),yearGrid=dashboard.querySelectorAll('.stats-grid')[1];
-  const monthName=m=>`${m.slice(0,4)} 年 ${Number(m.slice(5,7))} 月`;
-  const monthLabel=el('div','section-heading',`<h2>本月概览</h2><span>${monthName(currentMonth())}</span>`);monthGrid.before(monthLabel);
-  const annual=el('details','annual-summary',`<summary>${today().slice(0,4)} 年度累计</summary>`);yearGrid.before(annual);annual.append(yearGrid);
+  // One selection survives navigation between overview and both report pages.
+  const R=LDReport, selection={mode:'month',month:R.today().slice(0,7)};
+  let reportSnapshot=null,exportSnapshot=null,exporting=false;
+  const selected=mode=>R.aggregate(state,R.period(mode||selection.mode,selection.month));
+  function setPeriod(mode,month=selection.month){const p=R.period(mode,month);selection.mode=p.mode;selection.month=p.month;renderStats();renderCharts();renderOverview();if(['monthly','annual'].includes(activePage))renderMonthly();}
+  window.getDashboardAggregate=(scope='ytd')=>selected(scope==='selected'?selection.mode:scope);
+  const dashboard=$('page-dashboard'),monthGrid=dashboard.querySelector('.stats-grid'),yearGrid=dashboard.querySelectorAll('.stats-grid')[1];
+  const monthLabel=el('div','section-heading period-heading',`<h2 id="overviewPeriodTitle">本月概览</h2><div class="period-controls"><div class="period-switch" role="group" aria-label="统计范围"><button type="button" data-period="month">月度</button><button type="button" data-period="ytd">年度累计</button></div><label><span id="cutoffLabel">选择月份</span><input aria-label="统计月份" id="overviewMonth" type="month" max="${R.today().slice(0,7)}" value="${selection.month}"></label></div><span id="overviewRange"></span>`);monthGrid.before(monthLabel);
+  monthLabel.querySelectorAll('[data-period]').forEach(b=>b.addEventListener('click',()=>setPeriod(b.dataset.period)));
+  $('overviewMonth').addEventListener('change',e=>{if(e.target.value)setPeriod(selection.mode,e.target.value);else e.target.value=selection.month;});
+  const annual=el('details','annual-summary','<summary>查看年度累计</summary>');yearGrid.before(annual);annual.append(yearGrid);
   const overviewExtra=el('div','overview-extra');annual.after(overviewExtra);
+  function stat(id,value,label,description){const node=$(id);node.textContent=value;const card=node.closest('.stat-card');card.querySelector('.stat-label').textContent=label;card.querySelector('.stat-desc').textContent=description;}
+  renderStats=function(){
+    const main=selected(),fold=selected(selection.mode==='ytd'?'month':'ytd'),p=main.period;selection.month=p.month;
+    const prefix=selection.mode==='ytd'?'年度累计':p.ongoing?'本月':`${Number(p.month.slice(5))} 月`;
+    stat('statSessions',main.sessions.length,prefix+'培训场次',main.sessions.length?'最近：'+[...main.sessions].sort((a,b)=>b.date.localeCompare(a.date))[0].course:'暂无培训记录');
+    stat('statHours',R.fmt(main.hours),prefix+'总人时',main.pending.hours?`${main.pending.hours} 条待补 · 已知人时合计`:'人数 × 时长');
+    stat('statMonthPeople',R.fmt(main.people),prefix+'参训人次',main.pending.people?`${main.pending.people} 条人数待补`:'参加人次合计');
+    stat('statMonthSpend',R.money(main.spend),prefix+'所有项目支出',main.pending.spend?`${main.pending.spend} 条金额待补`:'按归属月份 · 含常规与专项');
+    const foldPrefix=selection.mode==='ytd'?`${Number(p.month.slice(5))} 月`:`${p.year} 年累计`;
+    for(const [id,value,label,key] of [['statYearSessions',fold.sessions.length,'培训场次',null],['statYearPeople',R.fmt(fold.people),'参训人次','people'],['statYearHours',R.fmt(fold.hours),'总人时','hours'],['statYearSpend',R.money(fold.spend),'项目支出','spend']])stat(id,value,foldPrefix+label,key&&fold.pending[key]?`${fold.pending[key]} 条待补`:fold.period.range);
+    $('overviewPeriodTitle').textContent=selection.mode==='ytd'?'年度累计':p.ongoing?'本月概览':'月度概览';
+    $('overviewRange').textContent=p.range+(p.ongoing?' · 本月进行中':'');$('overviewMonth').value=p.month;$('overviewMonth').max=R.today().slice(0,7);$('cutoffLabel').textContent=selection.mode==='ytd'?'截至月份':'选择月份';
+    monthLabel.querySelectorAll('[data-period]').forEach(b=>{b.classList.toggle('active',b.dataset.period===selection.mode);b.setAttribute('aria-pressed',String(b.dataset.period===selection.mode));});
+    annual.querySelector('summary').textContent=selection.mode==='ytd'?`查看 ${Number(p.month.slice(5))} 月数据`:`查看 ${p.year} 年度累计（截至 ${Number(p.month.slice(5))} 月）`;
+    const reportButton=document.querySelector('[onclick="openMonthlyReportModal()"]');if(reportButton){const textNode=[...reportButton.childNodes].find(n=>n.nodeType===3&&n.textContent.trim());if(textNode)textNode.textContent=selection.mode==='ytd'?'年度总结':'月度总结';}
+    if($('statFinanceTotal'))$('statFinanceTotal').textContent=(state.financeWiki||[]).length;
+  };
   const byDateDesc=(a,b)=>String(b.date||'').localeCompare(String(a.date||''));
-  function projectSummaries(){
-    const sessions=state.sessions||[],shares=D.shareEvents(state),people=list=>list.reduce((n,r)=>n+(D.number(r.people)??0),0);
+  function projectSummaries(source=state){
+    const sessions=source.sessions||[],shares=D.shareEvents(source),people=list=>list.reduce((n,r)=>n+(D.number(r.people)??0),0);
     const training=[...new Set(sessions.map(s=>s.project).filter(p=>p&&!D.isShareProject(p)))].map(name=>{const records=sessions.filter(s=>s.project===name).map(s=>({date:s.date,title:s.course,people:s.people}));return {name,page:'training',unit:'场',records,pending:records.filter(r=>D.number(r.people)===null).length,people:people(records)};});
     const list=[
-      {name:'AI 广播站',page:'aiknowledge',tab:'station',unit:'期',records:state.aiStations,pending:state.aiStations.filter(s=>D.stationMetric(s).status!=='collected').length},
+      {name:'AI 广播站',page:'aiknowledge',tab:'station',unit:'期',records:source.aiStations,pending:source.aiStations.filter(s=>D.stationMetric(s).status!=='collected').length},
       {name:'AI 分享月',page:'aiknowledge',tab:'share',unit:'场',records:shares,pending:shares.filter(s=>s.people===null).length,people:people(shares)},
-      {name:'金融小百科',page:'finance',unit:'期',records:state.financeWiki||[],pending:(state.financeWiki||[]).filter(s=>D.financeStatus(s).key==='pending').length,review:(state.financeWiki||[]).filter(s=>D.financeStatus(s).key==='review').length},
+      {name:'金融小百科',page:'finance',unit:'期',records:source.financeWiki||[],pending:(source.financeWiki||[]).filter(s=>D.financeStatus(s).key==='pending').length,review:(source.financeWiki||[]).filter(s=>D.financeStatus(s).key==='review').length},
       ...training];
     list.forEach(p=>{p.latest=[...p.records].filter(r=>r.date).sort(byDateDesc)[0];});
     // Most recently active projects first.
     return list.sort((a,b)=>byDateDesc(a.latest||{},b.latest||{}));
   }
-  function projectRows(max){
-    return projectSummaries().slice(0,max).map(p=>{
+  function projectRows(max,source=state){
+    return projectSummaries(source).slice(0,max).map(p=>{
       const last=p.latest,warn=p.pending||p.review,status=p.review?`${p.review} ${p.unit}待核对`:p.pending?`${p.pending} ${p.unit}待补录`:p.people!==undefined?`累计 ${p.people.toLocaleString('zh-CN')} 人次`:'数据已回收';
       return `<button type="button" class="project-row" data-action="project-open" data-record="${esc(p.name)}"><span class="project-main"><span class="project-name">${esc(p.name)}</span><span class="project-latest">${last?`${esc(shortDate(last.date))} · ${esc(last.title||last.course)}`:'暂无记录'}</span></span><span class="project-stat"><strong>${p.records.length} ${p.unit}</strong><small class="${warn?'is-warn':''}">${status}</small></span>${chevron}</button>`;
     }).join('') || '<p class="empty-copy">暂无项目记录</p>';
   }
-  function recentResults(){
-    const items=[...state.aiStations.map(s=>({...s,kind:'AI 广播站',key:'station'})),...D.shareEvents(state).map(s=>({...s,kind:'AI 分享月',key:'share'})),...(state.financeWiki||[]).filter(s=>D.financeStatus(s).key!=='draft').map(s=>({...s,kind:'金融小百科',key:'finance'}))].filter(s=>s.date).sort(byDateDesc).slice(0,4);
+  function recentResults(source=state){
+    const items=[...source.aiStations.map(s=>({...s,kind:'AI 广播站',key:'station'})),...D.shareEvents(source).map(s=>({...s,kind:'AI 分享月',key:'share'})),...(source.financeWiki||[]).filter(s=>D.financeStatus(s).key!=='draft').map(s=>({...s,kind:'金融小百科',key:'finance'}))].filter(s=>s.date).sort(byDateDesc).slice(0,4);
     return items.map(s=>`<li><button type="button" class="result-row" data-action="project-open" data-record="${s.kind}"><span class="result-main"><strong>${esc(s.title)}</strong><small><span class="kind-tag" data-kind="${s.key}">${s.kind}</span>${esc(shortDate(s.date))}</small></span>${chevron}</button></li>`).join('') || '<li class="empty-copy">暂无已记录成果</li>';
   }
   const linkBtn=(label,action,id)=>`<button type="button" class="link-btn" data-action="${action}" data-record="${esc(id)}">${esc(label)}</button>`;
-  function renderOverview(){overviewExtra.innerHTML=`<section class="card"><div class="card-header"><h2 class="card-title">项目最近更新</h2>${linkBtn('全部项目','navigate','projects')}</div><div class="card-body list-body">${projectRows(4)}</div></section><section class="card"><div class="card-header"><h2 class="card-title">近期成果</h2>${linkBtn('月度总结','navigate','monthly')}</div><div class="card-body list-body"><ul class="result-list">${recentResults()}</ul></div></section>`;}
+  function overviewSource(){if(selection.mode!=='ytd')return state;const d=selected();return {sessions:d.sessions,aiStations:d.stations,aiShares:(state.aiShares||[]).filter(s=>s.date>=d.period.start&&s.date<=d.period.end),financeWiki:d.finance};}
+  function renderOverview(){const ytd=selection.mode==='ytd',source=overviewSource();overviewExtra.innerHTML=`<section class="card"><div class="card-header"><h2 class="card-title">${ytd?'年度项目进展':'项目最近更新'}</h2>${linkBtn('全部项目','navigate','projects')}</div><div class="card-body list-body">${projectRows(4,source)}</div></section><section class="card"><div class="card-header"><h2 class="card-title">${ytd?'年度最新成果':'近期成果'}</h2>${linkBtn(ytd?'年度总结':'月度总结','navigate',ytd?'annual':'monthly')}</div><div class="card-body list-body"><ul class="result-list">${recentResults(source)}</ul></div></section>`;}
   function renderProjects(){projectPage.innerHTML='<div class="section-heading"><h2>项目进展</h2><span>从培训、发布和回收记录自动汇集，按最近更新排序</span></div>'+`<section class="card"><div class="card-body list-body">${projectRows(100)}</div></section>`;}
-  monthlyPage.append(card('月度总结',`<div class="report-controls"><label for="summaryMonth">选择月份</label><input type="month" id="summaryMonth" value="${currentMonth()}">${btn('导出设置','monthly-export')}</div><div id="monthlySummary"></div>`));
-  $('summaryMonth').addEventListener('change',renderMonthly);
-  function renderMonthly(){
-    const month=$('summaryMonth').value || currentMonth(),d=D.monthly(state,month),byDate=(a,b)=>String(a.date).localeCompare(String(b.date));
-    const shares=D.shareEvents(state).filter(s=>s.date.startsWith(month));
-    $('monthlySummary').innerHTML=`<h3 class="report-month">${esc(monthName(month))} 学习发展工作摘要</h3><div class="compact-metrics"><div><strong>${d.sessions.length}</strong><span>培训场次</span></div><div><strong>${fmt(d.people)}</strong><span>参训人次</span></div><div><strong>${fmt(d.hours)}</strong><span>培训人时</span></div><div><strong>${money(d.spend)}</strong><span>实际支出</span></div></div><p class="summary-prose">本月记录 ${d.stations.length} 期 AI 广播站、${shares.length} 场 AI 分享月、${d.finance.length} 期已发布金融百科。广播站中有 ${d.pending} 期待回收或核对。${d.budget===null?'本月尚未设置预算。':'本月预算 '+money(d.budget)+'，余额 '+money(d.budget-d.spend)+'。'}</p><h3>本月培训</h3><ul class="report-list">${[...d.sessions].sort(byDate).map(s=>`<li><span>${esc(s.date)} · ${esc(s.course)}</span><span>${fmt(D.number(s.people))} 人次 · ${fmt(D.number(s.people)===null||D.number(s.duration)===null?null:s.people*s.duration)} 人时</span></li>`).join('')||'<li>本月暂无培训记录</li>'}</ul><h3>本月内容成果</h3><ul class="report-list">${[...d.stations,...d.finance].sort(byDate).map(s=>`<li><span>${esc(s.date)} · 第 ${esc(s.episode)} 期</span><span>${esc(s.title)}</span></li>`).join('')||'<li>本月暂无内容发布记录</li>'}</ul><h3>开销明细</h3><ul class="report-list">${[...d.expenses].sort(byDate).map(s=>`<li><span>${esc(s.date)} · ${esc(s.desc)}</span><span>${money(s.amount)}</span></li>`).join('')||'<li>本月暂无开销记录</li>'}</ul>`;
+  for(const [page,id,label] of [[monthlyPage,'summaryMonth','选择月份'],[annualPage,'annualMonth','截至月份']]){
+    page.append(card(page===annualPage?'年度总结':'月度总结',`<div class="report-controls"><label for="${id}">${label}</label><input type="month" id="${id}" max="${R.today().slice(0,7)}" value="${selection.month}">${btn('导出设置','monthly-export')}</div><div id="${page===annualPage?'annualSummary':'monthlySummary'}"></div>`));
+    $(id).addEventListener('change',e=>{if(e.target.value)setPeriod(page===annualPage?'ytd':'month',e.target.value);else e.target.value=selection.month;});
   }
-  const monthlyExport=window.openMonthlyReportModal;window.openMonthlyReportModal=()=>navigate('monthly');
+  function renderMonthly(){
+    const ytd=activePage==='annual';selection.mode=ytd?'ytd':'month';const d=selected();reportSnapshot=d;selection.month=d.period.month;
+    $('summaryMonth').value=selection.month;$('annualMonth').value=selection.month;
+    const list=(rows,empty)=>rows.join('')||`<li>${empty}</li>`;
+    $(ytd?'annualSummary':'monthlySummary').innerHTML=`<h3 class="report-month">${esc(d.period.title)} 学习发展工作摘要</h3><p class="field-help">${d.period.range}${d.period.ongoing?' · 本月进行中':''} · 按当前已录入记录汇总，后续补录会更新本报告</p><div class="compact-metrics"><div><strong>${d.sessions.length}</strong><span>培训场次</span></div><div><strong>${R.fmt(d.hours)}</strong><span>培训人时${d.pending.hours?' · '+d.pending.hours+' 条待补':''}</span></div><div><strong>${R.fmt(d.people)}</strong><span>参训人次${d.pending.people?' · '+d.pending.people+' 条待补':''}</span></div><div><strong>${R.money(d.spend)}</strong><span>实际支出${d.pending.spend?' · '+d.pending.spend+' 条待补':''}</span></div></div><p class="summary-prose">期间记录 ${d.stations.length} 期 AI 广播站、${d.shares.length} 场 AI 分享月、${d.finance.length} 期已发布金融百科。广播站 ${d.pending.stations} 期待回收或核对；金融百科 ${d.pending.finance} 期待回收、${d.pending.financeReview} 期待核对。${esc(R.budgetNote(d))}。参训人数按人次累加；AI 分享的关联培训只计一次。</p><h3>培训明细</h3><ul class="report-list">${list(d.sessions.map(s=>`<li><span>${esc(s.date)} · ${esc(s.course)}</span><span>${R.fmt(D.number(s.people))} 人次 · ${R.fmt(R.hours(s))} 人时</span></li>`),'期间暂无培训记录')}</ul><h3>内容成果</h3><ul class="report-list">${list([...d.stations.map(s=>({...s,kind:'AI 广播站'})),...d.shares.map(s=>({...s,kind:'AI 分享月'})),...d.finance.map(s=>({...s,kind:'金融小百科'}))].sort((a,b)=>String(b.date).localeCompare(a.date)).map(s=>`<li><span>${esc(s.date)} · ${s.kind}${s.episode?`第 ${esc(s.episode)} 期`:""}</span><span>${esc(s.title)}</span></li>`),'期间暂无内容发布记录')}</ul><h3>开销明细</h3><ul class="report-list">${list(d.expenses.map(s=>`<li><span>${esc(s.date)} · ${esc(s.desc)}<small class="record-note">归属月份 ${esc(s.month)}</small></span><span>${R.money(D.number(s.amount))}</span></li>`),'期间暂无开销记录')}</ul>`;
+  }
+  window.openMonthlyReportModal=()=>navigate(selection.mode==='ytd'?'annual':'monthly');
+  function openExportSettings(){
+    exportSnapshot=structuredClone(reportSnapshot||selected());const d=exportSnapshot;
+    $('monthlyReportModal').querySelector('.modal-header').textContent='生成'+(d.period.mode==='ytd'?'年度':'月度')+'总结报告';
+    const select=$('reportMonthSelect');select.innerHTML=`<option>${esc(d.period.title)}（${d.period.range}）</option>`;select.disabled=true;select.previousElementSibling.textContent='导出范围（与当前报告一致）';$('monthlyReportModal').classList.add('active');
+  }
+  window.generateMonthlyReport=async()=>{
+    if(exporting)return;const pdf=$('exportPdfCheck').checked,xlsx=$('exportExcelCheck').checked;if(!pdf&&!xlsx){showToast('请至少选择一种导出格式','error');return;}
+    const d=exportSnapshot||selected(),opts=Object.fromEntries(['includeTraining','includeBudget','includeAI','includeFinance'].map(k=>[k,$(k).checked]));const model=R.model(d,opts);
+    exporting=true;closeMonthlyReportModal();showToast('正在生成报告…','info');
+    try{if(pdf)await LDReportExport.pdf(model);if(xlsx)LDReportExport.excel(model);showToast('报告生成成功','success');}catch(err){console.error(err);showToast('报告生成失败：'+err.message,'error');}finally{exporting=false;}
+  };
+  const originalPdf=window.exportPdf;
+  window.exportPdf=async()=>{
+    if(!['dashboard','monthly','annual'].includes(activePage))return originalPdf();if(exporting)return;exporting=true;
+    try{const d=activePage==='dashboard'?selected():reportSnapshot;showToast('正在生成完整报告…','info');await LDReportExport.pdf(R.model(d));showToast('PDF 已生成','success');}catch(err){console.error(err);showToast('PDF 生成失败：'+err.message,'error');}finally{exporting=false;}
+  };
+  renderStats();renderCharts();
 
   // Content libraries: keep useful case situations, reduce repeated introductions.
   document.querySelector('.case-hero-subtitle')?.remove();document.querySelector('.case-hero-desc')?.remove();document.querySelector('.case-stats')?.remove();
@@ -254,7 +299,7 @@
   document.querySelectorAll('.assess-year-card[onclick],.assess-manager-card[onclick]').forEach(n=>{n.tabIndex=0;n.setAttribute('role','button');n.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();n.click();}});});
 
   function refreshTables(){renderSessions();renderExpenses();renderStations();renderShares();renderFinanceStatsTable();}
-  function refresh(){if(refreshing)return;refreshing=true;try{refreshTables();renderOverview();if(activePage==='projects')renderProjects();if(activePage==='monthly')renderMonthly();}finally{refreshing=false;}}
+  function refresh(){if(refreshing)return;refreshing=true;try{refreshTables();renderOverview();if(activePage==='projects')renderProjects();if(activePage==='monthly'||activePage==='annual')renderMonthly();}finally{refreshing=false;}}
   document.addEventListener('ld-data-updated',()=>queueMicrotask(refresh));
   document.addEventListener('click',async e=>{
     const target=e.target.closest('[data-action]');if(!target)return;const action=target.dataset.action,id=target.dataset.record;
@@ -263,7 +308,7 @@
     else if(action==='new-station')newStationEpisode();else if(action==='new-share')newShareEpisode();
     else if(action==='copy-session')copySession(id);
     else if(action==='page-prev'||action==='page-next'){filterState[id].page+=action==='page-next'?1:-1;refreshTables();}
-    else if(action==='monthly-export'){monthlyExport();$('reportMonthSelect').value=$('summaryMonth').value;}
+    else if(action==='monthly-export')openExportSettings();
     else if(action==='project-open'){const p=projectSummaries().find(p=>p.name===id);if(p){navigate(p.page);if(p.tab)document.querySelector(`.ai-tab[data-tab="${p.tab}"]`).click();if(p.page==='training'){filterState.sessions.project=p.name;filterState.sessions.page=1;filterState.sessions.bar.querySelector('select').value=p.name;renderSessions();}}}
     else if(action==='finance-step' && financeDraft){financeDraft.workflow[id]=!financeDraft.workflow[id];if(id==='publish')finPublished.checked=!!financeDraft.workflow.publish;renderFinanceDraft();}
     else if(action.startsWith('edit-'))({session:editSession,expense:editExpense,station:editStation,share:editShare,finance:openFinanceModal}[action.slice(5)])?.(id);
