@@ -1,7 +1,7 @@
 const {test}=require('node:test');const assert=require('node:assert/strict');const O=require('../assets/okr.js');
 test('months with OKR documents are present; missing months return null',()=>{
-  for(const m of ['2026-01','2026-03','2026-04','2026-05','2026-06','2026-07','2026-08'])assert.ok(O.forMonth(m),m);
-  for(const m of ['2026-02','2026-09'])assert.equal(O.forMonth(m),null,m);
+  for(const m of ['2026-01','2026-03','2026-04','2026-05','2026-06','2026-07','2026-08','2026-09'])assert.ok(O.forMonth(m),m);
+  for(const m of ['2026-02'])assert.equal(O.forMonth(m),null,m);
 });
 test('every KR has name, valid status and one-line result',()=>{
   for(const [m,os] of Object.entries(O.months)){

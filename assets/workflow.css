@@ -209,3 +209,23 @@ a.record-note:hover { text-decoration:underline; }
 .project-status[data-status="筹备中"] { color:var(--text-muted); background:color-mix(in srgb, var(--text-muted) 12%, transparent); }
 .project-row.is-static { cursor:default; }
 .project-row.is-static:hover { background:transparent; }
+
+/* 手机端：记录表格改为卡片，每行一张卡、每格显示“字段 值”；电脑端不受影响 */
+.closeout-card .card-header .kind-tag { white-space:nowrap; flex:0 0 auto; }
+@media (max-width:640px) {
+  .table-wrap:has(> table.card-table) { overflow:visible; background:transparent; border:0; }
+  table.card-table { min-width:0 !important; width:100%; }
+  table.card-table thead { display:none; }
+  table.card-table, table.card-table tbody, table.card-table tr, table.card-table td { display:block; }
+  /* 紧凑卡片：标题字段独占一行，其余字段两列紧排，操作按钮在底部右侧 */
+  table.card-table tr { display:grid !important; grid-template-columns:1fr 1fr; column-gap:12px; row-gap:2px; background:var(--bg-card); border:1px solid var(--border-faint); border-radius:12px; padding:10px 12px; margin-bottom:8px; }
+  table.card-table td { display:flex; align-items:baseline; gap:6px; padding:2px 0 !important; border:0 !important; text-align:left !important; font-family:var(--font-sans) !important; font-size:13px; min-height:0; min-width:0; overflow-wrap:anywhere; }
+  table.card-table td[data-label]::before { content:attr(data-label); flex:0 0 auto; color:var(--text-muted); font-size:11px; }
+  table.card-table td[data-label="课程"], table.card-table td[data-label="主题"], table.card-table td[data-label="用途说明"] { grid-column:1 / -1; order:-1; font-size:15px; font-weight:600; padding-bottom:4px !important; }
+  table.card-table td[data-label="课程"]::before, table.card-table td[data-label="主题"]::before, table.card-table td[data-label="用途说明"]::before { content:none; }
+  table.card-table td[data-label="项目"], table.card-table td[data-label="备注"] { grid-column:1 / -1; }
+  table.card-table td:empty, table.card-table td[data-label="备注"]:empty { display:none; }
+  table.card-table td.empty-cell { grid-column:1 / -1; justify-content:center; }
+  table.card-table td:last-child { grid-column:1 / -1; justify-content:flex-end; padding-top:6px !important; }
+  table.card-table td:last-child::before { content:none; }
+}
