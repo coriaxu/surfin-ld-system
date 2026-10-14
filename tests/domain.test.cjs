@@ -7,6 +7,24 @@ test('missing metrics, explicit zero and ambiguous historical zero remain distin
  assert.equal(payload.views,null);assert.equal(payload.total,null);assert.equal(payload.collectionState,'pending');
  assert.throws(()=>D.stationPayload({title:'期次',unviewed:101,total:100},'one'));
 });
+test('special broadcast keeps its flag on edit and never takes a regular episode number',()=>{
+ assert.equal(D.stationLabel({episode:123.5,special:true}),'特别篇');
+ assert.equal(D.stationLabel({episode:124}),'第 124 期');
+ assert.equal(D.stationPayload({episode:123.5,title:'大事记',unviewed:61,total:407,date:'2026-10-08',special:true},'sp').special,true);
+ assert.equal('special' in D.stationPayload({episode:125,title:'常规',unviewed:'',total:'',date:'2026-10-21'},'n'),false);
+ const data=require('../user-data.json');
+ const sp=data.aiStations.filter(s=>s.special);
+ assert.equal(sp.length,1);assert.equal(D.stationMetric(sp[0]).value,85);
+ const regular=data.aiStations.filter(s=>!s.special).map(s=>s.episode);
+ assert.ok(regular.every(Number.isInteger));assert.equal(new Set(regular).size,regular.length);
+});
+test('September ledger matches the 2026-09 OKR after the 10-14 correction list',()=>{
+ const sep=require('../user-data.json').sessions.filter(s=>String(s.date).startsWith('2026-09'));
+ const sum=f=>sep.reduce((a,s)=>a+f(s),0);
+ assert.deepEqual([sep.length,sum(s=>s.people),sum(s=>s.duration),sum(s=>s.people*s.duration)],[10,78,10.5,80]);
+ assert.deepEqual(sep.filter(s=>/咖啡座谈/.test(s.course)).map(s=>[s.date,s.course,s.people]).sort(),[['2026-09-16','C 组咖啡座谈',3],['2026-09-18','B 组咖啡座谈',3],['2026-09-22','A 组咖啡座谈',4]]);
+ assert.equal(sep.some(s=>s.course==='小组辅导'),false);
+});
 test('finance ratios clear when a field is blank and all views use one publication rule',()=>{
  assert.equal(D.rate('',100),null);assert.equal(D.rate(0,100),0);assert.equal(D.rate(10,''),null);
  assert.equal(D.financeStatus({workflow:{publish:true},read:null,downloads:0,total:10}).key,'pending');

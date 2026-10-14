@@ -14,11 +14,13 @@
     const value = rate(item.views, item.total);
     return {value,status:value === null ? 'pending' : 'collected',label:value === null ? '待回收' : value + '%'};
   }
+  // 特别篇不占期号：episode 只用于排序（如 123.5 排在第 123 期之后），显示为“特别篇”。
+  const stationLabel = item => item && item.special ? '特别篇' : `第 ${item.episode} 期`;
   function stationPayload(values, id) {
     const total = number(values.total), unviewed = number(values.unviewed);
     if (total !== null && (!Number.isInteger(total) || total <= 0)) throw new Error('公司总人数必须为正整数');
     if (unviewed !== null && (!Number.isInteger(unviewed) || unviewed < 0 || total === null || unviewed > total)) throw new Error('请填写有效总人数，未查看人数应在 0 到总人数之间');
-    return {id,episode:Number(values.episode),date:values.date,title:values.title.trim(),total,views:unviewed === null ? null : total - unviewed,collectionState:unviewed === null ? 'pending' : 'collected',category:values.category,note:values.note};
+    return {id,episode:Number(values.episode),date:values.date,title:values.title.trim(),total,views:unviewed === null ? null : total - unviewed,collectionState:unviewed === null ? 'pending' : 'collected',category:values.category,note:values.note,...(values.special?{special:true}:{})};
   }
   function financeMetric(item, field) {
     const count = number(item[field]), total = number(item.total);
@@ -130,5 +132,5 @@
     if (conflicts.length) { const error=new Error('云端与本机修改了同一记录，请先导出本机副本，再拉取云端核对。'); error.code='CONFLICT'; error.conflicts=conflicts; throw error; }
     return output;
   }
-  return {number,rate,stationMetric,stationPayload,financeMetric,financeStatus,financeConflict,isShareProject,shareEvents,upsertShare,taskPreview,monthly,search,mergeThreeWay};
+  return {number,rate,stationMetric,stationLabel,stationPayload,financeMetric,financeStatus,financeConflict,isShareProject,shareEvents,upsertShare,taskPreview,monthly,search,mergeThreeWay};
 });

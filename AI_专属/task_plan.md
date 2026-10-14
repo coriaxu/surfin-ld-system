@@ -15,6 +15,7 @@
 
 ## ✅ Completed（摘要；细节见 git 历史与 `ProjectDocs/`）
 
+- [2026-10-14] **项目状态标签 + 9 月台账更正**：项目进展加状态（AI 赋能第三期／海外 HR／金融小百科＝已结项，新员工入职＝阶段性已结项，AI 赋能第四期＝筹备中无数据）。金融小百科第 1–6 期总人数 260→343（三种推算一致），第 12 期补勾已发布。按 9 月 OKR 核对清单更正 sessions（9 月＝10 场／78 人次／10.5 小时／80 人时，测试锁定）；广播站新增 10-08 特别篇（`special: true`，期号 123.5 仅用于排序，各处显示“特别篇”，新建期号跳过）。待补：9-08 新员工北京场人数；9 月 OKR 内容（`okr.js`）。
 - [2026-10-14] **菜单重组 + 月度 OKR 上线**：一级菜单改为 工作总览／培训记录／培训项目（项目进展、结项报告）／工作汇报（月度 OKR、年度总结）／管理者发展（案例与手册、测评报告），去掉「成果与报告」。月度页上半部分为 OKR（`assets/okr.js`，O→KR 状态＋一句结果，不写人名），下半部分为系统自动汇总数据。已收录 1、3、4、5、6、7、8 月；6 月据半年报整理、数字以系统为准（13 场／23 人次，含 6-29 两场）。2、9 月待补；新月份每月在 `okr.js` 加一段。
 
 - [2026-10-14] **`.git` 迁出云盘**：仓库数据移至本机 `/Users/surfin/.git-repos/surfin-ld-system.git`，项目目录只留一行 `.git` 指针文件（`gitdir: ...`）。工作区仍在 Drive 同步；git 锁文件、对象、引用不再经过 Drive。注意：该指针只对这台 MacBook 有效，其它电脑需单独 clone。
@@ -30,5 +31,5 @@
 ## ⚠️ 工作约定
 
 - `.git` 已在 Drive 之外（见上）。若 `git` 报“not a git repository”，先确认 `.git` 指针文件存在且 `/Users/surfin/.git-repos/surfin-ld-system.git` 仍在；换电脑需重新 clone。
-- 测试命令：`node --test tests/domain.test.cjs tests/report.test.cjs tests/sync.test.cjs tests/server.test.mjs tests/closeout.test.cjs tests/okr.test.cjs`（34 项）。
+- 测试命令：`node --test tests/domain.test.cjs tests/report.test.cjs tests/sync.test.cjs tests/server.test.mjs tests/closeout.test.cjs tests/okr.test.cjs`（36 项）。
 - 本机 `git fetch/push` 若卡住，多半是钥匙串弹窗；可用 `GIT_TERMINAL_PROMPT=0 git -c credential.helper= fetch origin main` 只读拉取。

@@ -128,7 +128,7 @@
     }
   };
   renderExpenses=function(){rows('expenseTable',records('expenses',[...(state.expenses||[])].sort((a,b)=>String(b.date).localeCompare(a.date))),6,s=>`<tr><td>${esc(s.date)}</td><td>${esc(s.month)}</td><td>${s.type==='special'?'特殊项目':'常规项目'}</td><td>${money(s.amount)}</td><td>${esc(s.desc)}</td><td>${actions('expense',s.id)}</td></tr>`);renderExpenseSummary();};
-  renderStations=function(){rows('stationTable',records('stations',[...state.aiStations].sort((a,b)=>b.episode-a.episode)),9,s=>{const m=D.stationMetric(s);return `<tr><td>第 ${esc(s.episode)} 期</td><td>${esc(s.date)}</td><td>${esc(s.title)}</td><td>${esc({news:'AI 新闻',tool:'AI 工具',paper:'AI 论文',thought:'AI 思考',mixed:'综合'}[s.category] || '综合')}</td><td>${m.status==='collected'?fmt(s.views):'—'}</td><td>${fmt(D.number(s.total))}</td><td><span class="data-state ${m.status}">${m.label}</span></td><td>${esc(s.note)}</td><td>${actions('station',s.id)}</td></tr>`;});renderAIOverview('station');};
+  renderStations=function(){rows('stationTable',records('stations',[...state.aiStations].sort((a,b)=>b.episode-a.episode)),9,s=>{const m=D.stationMetric(s);return `<tr><td>${esc(D.stationLabel(s))}</td><td>${esc(s.date)}</td><td>${esc(s.title)}</td><td>${esc({news:'AI 新闻',tool:'AI 工具',paper:'AI 论文',thought:'AI 思考',mixed:'综合'}[s.category] || '综合')}</td><td>${m.status==='collected'?fmt(s.views):'—'}</td><td>${fmt(D.number(s.total))}</td><td><span class="data-state ${m.status}">${m.label}</span></td><td>${esc(s.note)}</td><td>${actions('station',s.id)}</td></tr>`;});renderAIOverview('station');};
   // AI 分享月 lists share records together with sessions entered under that project in 培训记录.
   renderShares=function(){rows('shareTable',records('shares',D.shareEvents(state)),9,s=>{const r=D.rate(s.people,s.total);return `<tr><td>${s.episode?`第 ${esc(s.episode)} 期`:'—'}</td><td>${esc(s.date)}</td><td>${esc(s.title)}${s.kind==='session'?'<small class="record-note">来自培训记录</small>':''}${/^https?:\/\//.test(s.materialUrl||'')?`<a class="record-note" target="_blank" rel="noopener" href="${esc(s.materialUrl)}">查看分享资料 ↗</a>`:''}</td><td>${fmt(s.people)}</td><td>${s.total===null?'—':fmt(s.total)}</td><td>${r!==null?r+'%':s.total===null?'—':'待回收'}</td><td>${s.minutes===null?'待补录':s.minutes+' 分钟'}</td><td>${esc(s.note)}</td><td>${actions(s.kind,s.id)}</td></tr>`;});renderAIOverview('share');};
   $('financeStatsTable').closest('table').querySelector('thead').innerHTML='<tr>'+['期数','主题','发布日期','状态','已读人数','查看率','下载人数','下载率','操作'].map(v=>'<th>'+v+'</th>').join('')+'</tr>';
@@ -158,7 +158,7 @@
   makeAIDrawer('station');makeAIDrawer('share');
   ['shareAttendees','shareTotal','shareDuration'].forEach(id=>$(id).required=false);
   const material=el('div','form-group span-full','<label class="form-label" for="shareMaterialUrl">资料链接</label><input type="url" id="shareMaterialUrl" placeholder="选填，可供查看分享材料">');$('shareForm').querySelector('.form-grid').append(material);
-  window.newStationEpisode=()=>{resetStationForm();stationEpisode.value=Math.max(0,...state.aiStations.map(s=>s.episode))+1;stationDate.value=today();drawers.station.showModal();stationTitle.focus();};
+  window.newStationEpisode=()=>{resetStationForm();stationEpisode.value=Math.max(0,...state.aiStations.filter(s=>!s.special).map(s=>s.episode))+1;stationDate.value=today();drawers.station.showModal();stationTitle.focus();};
   window.newShareEpisode=()=>{resetShareForm();shareEpisode.value=Math.max(0,...state.aiShares.map(s=>s.episode))+1;shareDate.value=today();drawers.share.showModal();shareTitle.focus();};
   window.editStation=id=>{const s=state.aiStations.find(s=>s.id===id);if(!s)return;stationId.value=s.id;stationEpisode.value=s.episode;stationDate.value=s.date;stationTitle.value=s.title;stationTotal.value=s.total??'';stationCategory.value=s.category||'mixed';stationNote.value=s.note||'';const m=D.stationMetric(s);stationUnviewed.value=m.status==='collected'?s.total-s.views:'';updateStationViewsHint();drawers.station.showModal();};
   window.editShare=id=>{const s=state.aiShares.find(s=>s.id===id);if(!s)return;for(const [field,key] of [['Id','id'],['Episode','episode'],['Date','date'],['Title','title'],['Attendees','attendees'],['Total','total'],['Duration','duration'],['Note','note'],['MaterialUrl','materialUrl']])$('share'+field).value=s[key]??'';drawers.share.showModal();};
@@ -188,7 +188,7 @@
     const list=[...state.aiStations].sort((a,b)=>b.episode-a.episode),latest=list[0];
     if(!latest){host.innerHTML='<p class="empty-copy">还没有记录，可以先记下期数、日期和主题。</p>';return;}
     const values=list.slice(0,6).map(s=>D.stationMetric(s).value).filter(n=>n!==null),pending=list.filter(s=>D.stationMetric(s).status!=='collected').length;
-    host.innerHTML=`<div class="record-latest"><div><span class="record-kicker">最新一期 · ${esc(shortDate(latest.date))}</span><h3>第 ${esc(latest.episode)} 期 · ${esc(latest.title)}</h3></div>${btn('编辑 / 补录','edit-station',latest.id)}</div><div class="compact-metrics"><div><strong>${list.length}</strong><span>累计期数</span></div><div><strong>${values.length?(values.reduce((a,b)=>a+b,0)/values.length).toFixed(1)+'%':'—'}</strong><span>最近 6 期平均查看率 · ${values.length} 期有数据</span></div><div><strong class="${pending?'is-warn':''}">${pending}</strong><span>待回收或核对</span></div></div>`;
+    host.innerHTML=`<div class="record-latest"><div><span class="record-kicker">最新一期 · ${esc(shortDate(latest.date))}</span><h3>${esc(D.stationLabel(latest))} · ${esc(latest.title)}</h3></div>${btn('编辑 / 补录','edit-station',latest.id)}</div><div class="compact-metrics"><div><strong>${list.length}</strong><span>累计期数</span></div><div><strong>${values.length?(values.reduce((a,b)=>a+b,0)/values.length).toFixed(1)+'%':'—'}</strong><span>最近 6 期平均查看率 · ${values.length} 期有数据</span></div><div><strong class="${pending?'is-warn':''}">${pending}</strong><span>待回收或核对</span></div></div>`;
   }
 
   // Finance publication state and workflow share one saved source of truth.
@@ -259,6 +259,10 @@
       {name:'AI 分享月',page:'aiknowledge',tab:'share',unit:'场',records:shares,pending:shares.filter(s=>s.people===null).length,people:people(shares)},
       {name:'金融小百科',page:'finance',unit:'期',records:source.financeWiki||[],pending:(source.financeWiki||[]).filter(s=>D.financeStatus(s).key==='pending').length,review:(source.financeWiki||[]).filter(s=>D.financeStatus(s).key==='review').length},
       ...training];
+    // 项目状态与显示名由负责人确认；未登记的项目不加标签。筹备中的项目暂无记录。
+    const meta={'AI 赋能训练营':{label:'AI 赋能训练营 · 第三期',status:'已结项'},'海外 HR 分享项目':{status:'已结项'},'新员工入职培训':{status:'阶段性已结项'},'金融小百科':{status:'已结项'}};
+    list.forEach(p=>Object.assign(p,meta[p.name]||{}));
+    list.push({name:'AI 赋能第四期',unit:'场',records:[],status:'筹备中',note:'尚无培训记录'});
     list.forEach(p=>{p.latest=[...p.records].filter(r=>r.date).sort(byDateDesc)[0];});
     // Most recently active projects first.
     return list.sort((a,b)=>byDateDesc(a.latest||{},b.latest||{}));
@@ -266,7 +270,10 @@
   function projectRows(max,source=state){
     return projectSummaries(source).slice(0,max).map(p=>{
       const last=p.latest,warn=p.pending||p.review,status=p.review?`${p.review} ${p.unit}待核对`:p.pending?`${p.pending} ${p.unit}待补录`:p.people!==undefined?`累计 ${p.people.toLocaleString('zh-CN')} 人次`:'数据已回收';
-      return `<button type="button" class="project-row" data-action="project-open" data-record="${esc(p.name)}"><span class="project-main"><span class="project-name">${esc(p.name)}</span><span class="project-latest">${last?`${esc(shortDate(last.date))} · ${esc(last.title||last.course)}`:'暂无记录'}</span></span><span class="project-stat"><strong>${p.records.length} ${p.unit}</strong><small class="${warn?'is-warn':''}">${status}</small></span>${chevron}</button>`;
+      const tag=p.status?`<span class="project-status" data-status="${esc(p.status)}">${esc(p.status)}</span>`:'';
+      const main=`<span class="project-main"><span class="project-name">${esc(p.label||p.name)}${tag}</span><span class="project-latest">${last?`${esc(shortDate(last.date))} · ${esc(last.title||last.course)}`:esc(p.note||'暂无记录')}</span></span>`;
+      if(!p.page)return `<div class="project-row is-static">${main}<span class="project-stat"><strong>—</strong><small>暂无数据</small></span><span></span></div>`;
+      return `<button type="button" class="project-row" data-action="project-open" data-record="${esc(p.name)}">${main}<span class="project-stat"><strong>${p.records.length} ${p.unit}</strong><small class="${warn?'is-warn':''}">${status}</small></span>${chevron}</button>`;
     }).join('') || '<p class="empty-copy">暂无项目记录</p>';
   }
   function recentResults(source=state){

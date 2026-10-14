@@ -39,7 +39,7 @@
     const sections=[];
     if(include('includeTraining'))sections.push({name:'培训明细',header:['日期','课程','项目','讲师','人次','时长(h)','人时'],rows:d.sessions.map(s=>[s.date,s.course,s.project,s.lecturer,D.number(s.people)??'待补',D.number(s.duration)??'待补',hours(s)??'待补'])});
     if(include('includeBudget'))sections.push({name:'预算明细',header:['归属月份','类型','预算'],rows:d.budgets.map(b=>[b.month,b.type,D.number(b.amount)??'待补'])},{name:'实际开销',header:['日期','归属月份','类型','金额','用途'],rows:d.expenses.map(e=>[e.date,e.month,e.type,D.number(e.amount)??'待补',e.desc])});
-    if(include('includeAI'))sections.push({name:'AI 广播站',header:['日期','期数','主题','回收状态'],rows:d.stations.map(s=>[s.date,s.episode,s.title,D.stationMetric(s).label])},{name:'AI 分享月',header:['日期','期数','主题','参训人次','时长(分钟)'],rows:d.shares.map(s=>[s.date,s.episode,s.title,D.number(s.people)??'待补',D.number(s.minutes)??'待补'])});
+    if(include('includeAI'))sections.push({name:'AI 广播站',header:['日期','期数','主题','回收状态'],rows:d.stations.map(s=>[s.date,s.special?'特别篇':s.episode,s.title,D.stationMetric(s).label])},{name:'AI 分享月',header:['日期','期数','主题','参训人次','时长(分钟)'],rows:d.shares.map(s=>[s.date,s.episode,s.title,D.number(s.people)??'待补',D.number(s.minutes)??'待补'])});
     if(include('includeFinance'))sections.push({name:'金融小百科',header:['日期','期数','主题','状态','查看率'],rows:d.finance.map(s=>[s.date,s.episode,s.title,D.financeStatus(s).label,D.financeMetric(s,'read')===null?'待回收':D.financeMetric(s,'read')+'%'])});
     return {title:d.period.title,range:d.period.range,filename:`Surfin_${d.period.mode==='ytd'?'Annual_YTD':'Monthly'}_${d.period.month}`,overview,sections};
   }

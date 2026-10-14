@@ -692,11 +692,11 @@
     },
     {
       "id": "zu1yxksl",
-      "date": "2026-09-16",
-      "course": "小组辅导",
+      "date": "2026-09-18",
+      "course": "B 组咖啡座谈",
       "project": "AI 赋能训练营",
       "lecturer": "徐浩",
-      "people": 4,
+      "people": 3,
       "duration": 1,
       "note": ""
     },
@@ -706,7 +706,7 @@
       "course": "betterbuddy 使用分享",
       "project": "AI 分享月",
       "lecturer": "冯世祺",
-      "people": 31,
+      "people": 30,
       "duration": 1,
       "note": ""
     },
@@ -716,29 +716,29 @@
       "course": "管理者角色与时间账",
       "project": "2026管理者训练营 1.0",
       "lecturer": "徐浩",
-      "people": 6,
-      "duration": 2,
-      "note": ""
+      "people": 5,
+      "duration": 1.5,
+      "note": "宋阳梅请假"
     },
     {
       "id": "83xktdj2",
-      "date": "2026-09-14",
-      "course": "小组辅导",
+      "date": "2026-09-16",
+      "course": "C 组咖啡座谈",
       "project": "AI 赋能训练营",
       "lecturer": "徐浩",
       "people": 3,
       "duration": 1,
-      "note": ""
+      "note": "路璐请假"
     },
     {
       "id": "lsub5rnp",
-      "date": "2026-09-21",
-      "course": "小组辅导",
+      "date": "2026-09-22",
+      "course": "A 组咖啡座谈",
       "project": "AI 赋能训练营",
       "lecturer": "徐浩",
       "people": 4,
       "duration": 1,
-      "note": ""
+      "note": "原定 9 月 14 日"
     },
     {
       "id": "ugda3252",
@@ -809,6 +809,16 @@
       "people": 1,
       "duration": 1,
       "note": "韩丽辉"
+    },
+    {
+      "id": "dwym70dx",
+      "date": "2026-09-22",
+      "course": "管理者角色与时间账",
+      "project": "2026管理者训练营 1.0",
+      "lecturer": "徐浩",
+      "people": 1,
+      "duration": 1,
+      "note": "宋阳梅补课"
     }
   ],
   "budgets": [],
@@ -1620,6 +1630,18 @@
       "collectionState": "pending",
       "category": "news",
       "note": ""
+    },
+    {
+      "id": "4whszn83",
+      "episode": 123.5,
+      "special": true,
+      "date": "2026-10-08",
+      "title": "2026 年 10 月 1—8 日全球 AI 大事记",
+      "total": 407,
+      "views": 346,
+      "collectionState": "collected",
+      "category": "news",
+      "note": "特别篇，不占期号；未读 61 人，查看率 85.0%"
     }
   ],
   "aiShares": [
@@ -4956,7 +4978,7 @@
         "data": true,
         "copy": true
       },
-      "total": 260,
+      "total": 343,
       "note": ""
     },
     {
@@ -4980,7 +5002,7 @@
         "data": true,
         "copy": true
       },
-      "total": 260,
+      "total": 343,
       "note": ""
     },
     {
@@ -5004,7 +5026,7 @@
         "data": false,
         "copy": true
       },
-      "total": 260,
+      "total": 343,
       "note": ""
     },
     {
@@ -5028,7 +5050,7 @@
         "data": false,
         "copy": true
       },
-      "total": 260,
+      "total": 343,
       "note": ""
     },
     {
@@ -5052,7 +5074,7 @@
         "data": false,
         "copy": true
       },
-      "total": 260,
+      "total": 343,
       "note": ""
     },
     {
@@ -5076,7 +5098,7 @@
         "data": false,
         "copy": true
       },
-      "total": 260,
+      "total": 343,
       "note": ""
     },
     {
@@ -5203,8 +5225,8 @@
         "ppt": true,
         "video": true,
         "copy": true,
-        "publish": false,
-        "data": false
+        "publish": true,
+        "data": true
       },
       "episode": 12,
       "title": "稳定币的终局：一套新金融操作系统正在成型",

@@ -6925,9 +6925,9 @@ tr:hover td.empty-cell {
 
 </style>
   <link rel="stylesheet" href="assets/workbench.css">
-  <link rel="stylesheet" href="assets/workflow.css?v=20261014-nav5">
-  <script src="assets/ld-domain.js?v=20261013-ytd2"></script>
-  <script src="assets/ld-report.js?v=20261013-ytd2"></script>
+  <link rel="stylesheet" href="assets/workflow.css?v=20261014-proj">
+  <script src="assets/ld-domain.js?v=20261014-special"></script>
+  <script src="assets/ld-report.js?v=20261014-special"></script>
   <script src="assets/closeout-reports.js?v=20261014-closeout"></script>
   <script src="assets/okr.js?v=20261014-okr"></script>
   <script src="assets/ld-sync.js"></script>
@@ -10646,7 +10646,7 @@ tr:hover td.empty-cell {
       const end = total - stationChartRange.start;
       const data = sorted.slice(start, end);
 
-      const labels = data.map(d => `第${d.episode}期`);
+      const labels = data.map(d => d.special ? '特别篇' : `第${d.episode}期`);
       const rates = data.map(d => LDDomain.stationMetric(d).value);
       // Rates cluster near 90%; a floor ten points below the lowest value keeps changes visible.
       const known = rates.filter(v => v !== null);
@@ -10864,7 +10864,7 @@ tr:hover td.empty-cell {
       state.aiStations.forEach(s => {
         const d = new Date(s.date);
         if (d.getFullYear() === year) {
-          dataMap[s.date] = { rate: (s.views / s.total) * 100, title: s.title, episode: s.episode };
+          dataMap[s.date] = { rate: (s.views / s.total) * 100, title: s.title, episode: s.episode, special: !!s.special };
         }
       });
 
@@ -10899,7 +10899,7 @@ tr:hover td.empty-cell {
             if (data) {
               const level = data.rate >= 95 ? 4 : data.rate >= 90 ? 3 : data.rate >= 85 ? 2 : 1;
               dayDiv.dataset.level = level;
-              dayDiv.innerHTML = `<div class="heatmap-tooltip">第${data.episode}期: ${data.title}<br>${data.rate.toFixed(1)}%</div>`;
+              dayDiv.innerHTML = `<div class="heatmap-tooltip">${data.special ? '特别篇' : `第${data.episode}期`}: ${data.title}<br>${data.rate.toFixed(1)}%</div>`;
             }
           } else {
             dayDiv.style.visibility = 'hidden';
@@ -11207,7 +11207,8 @@ tr:hover td.empty-cell {
 
     // 新建期次
     window.newStationEpisode = function () {
-      const maxEpisode = state.aiStations.length > 0 ? Math.max(...state.aiStations.map(s => s.episode)) : 0;
+      const regularStations = state.aiStations.filter(s => !s.special);
+      const maxEpisode = regularStations.length > 0 ? Math.max(...regularStations.map(s => s.episode)) : 0;
       const newEpisode = maxEpisode + 1;
       applyStationEpisode(newEpisode);
       window.toggleEpisodeEdit('station', false);
@@ -11373,7 +11374,7 @@ tr:hover td.empty-cell {
     document.getElementById('stationForm').addEventListener('submit', e => {
       e.preventDefault();
       try {
-        const payload = LDDomain.stationPayload({episode:stationEpisode.value,date:stationDate.value,title:stationTitle.value,unviewed:stationUnviewed.value,total:stationTotal.value,category:stationCategory.value,note:stationNote.value},stationId.value || uid());
+        const payload = LDDomain.stationPayload({episode:stationEpisode.value,date:stationDate.value,title:stationTitle.value,unviewed:stationUnviewed.value,total:stationTotal.value,category:stationCategory.value,note:stationNote.value,special:!!(state.aiStations.find(item=>item.id===stationId.value)||{}).special},stationId.value || uid());
         if (state.aiStations.some(item=>item.id!==payload.id && item.episode===payload.episode)) throw new Error('该期数已存在，请编辑已有记录');
         const existing=state.aiStations.find(item=>item.id===payload.id);
         if(existing)Object.assign(existing,payload);else state.aiStations.push(payload);
@@ -12105,7 +12106,7 @@ tr:hover td.empty-cell {
   </script>
   <script src="assets/workbench.js"></script>
   <script src="assets/report-export.js?v=20261013-ytd2"></script>
-  <script src="assets/workflow.js?v=20261014-nav5"></script>
+  <script src="assets/workflow.js?v=20261014-special"></script>
 </body>
 
 </html>
