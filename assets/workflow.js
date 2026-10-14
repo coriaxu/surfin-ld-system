@@ -34,6 +34,7 @@
   const projectPage=createPage('projects','项目进展');
   const monthlyPage=createPage('monthly','月度总结');
   const annualPage=createPage('annual','年度总结');
+  const closeoutPage=createPage('closeout','结项报告');
   const subbar=el('nav','module-tabs');subbar.setAttribute('aria-label','模块导航');$('mainContent').prepend(subbar);
   const legacyNav=document.querySelector('.sidebar-nav');legacyNav.hidden=true;legacyNav.id='legacyNav';
   const mainNav=el('nav','sidebar-nav primary-navigation');mainNav.setAttribute('aria-label','主导航');legacyNav.after(mainNav);
@@ -41,7 +42,7 @@
     overview:{label:'工作总览',icon:'<rect x="3.5" y="3.5" width="7" height="8" rx="1.8"/><rect x="13.5" y="3.5" width="7" height="5" rx="1.8"/><rect x="13.5" y="11.5" width="7" height="9" rx="1.8"/><rect x="3.5" y="14.5" width="7" height="6" rx="1.8"/>',pages:[['dashboard','培训大屏']]},
     records:{label:'记录',icon:'<rect x="4.5" y="3.5" width="15" height="17" rx="2.2"/><path d="M8.5 8h7M8.5 12h7M8.5 16h4"/>',pages:[['training','培训记录'],['aiknowledge','AI 内容'],['finance','金融百科'],['budget','预算与开销']]},
     projects:{label:'项目',icon:'<path d="m12 3.8 8.2 4.4L12 12.6 3.8 8.2z"/><path d="m3.8 12.2 8.2 4.4 8.2-4.4"/><path d="m3.8 16.1 8.2 4.4 8.2-4.4"/>',pages:[['projects','项目进展']]},
-    results:{label:'成果与报告',icon:'<path d="M7.5 4h9v4.5a4.5 4.5 0 0 1-9 0z"/><path d="M16.5 5.5h2.3a1.7 1.7 0 0 1 0 3.4h-2.5M7.5 5.5H5.2a1.7 1.7 0 0 0 0 3.4h2.5M12 13v4M8.5 20h7"/>',pages:[['caselib','案例与手册'],['assessment','测评报告'],['monthly','月度总结'],['annual','年度总结']]}
+    results:{label:'成果与报告',icon:'<path d="M7.5 4h9v4.5a4.5 4.5 0 0 1-9 0z"/><path d="M16.5 5.5h2.3a1.7 1.7 0 0 1 0 3.4h-2.5M7.5 5.5H5.2a1.7 1.7 0 0 0 0 3.4h2.5M12 13v4M8.5 20h7"/>',pages:[['caselib','案例与手册'],['assessment','测评报告'],['monthly','月度总结'],['annual','年度总结'],['closeout','结项报告']]}
   };
   for(const [key,g] of Object.entries(groups)){
     const b=el('button','primary-nav',`<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">${g.icon}</svg><span>${g.label}</span>`);b.type='button';b.dataset.group=key;b.addEventListener('click',()=>navigate(g.pages[0][0]));mainNav.append(b);
@@ -58,6 +59,25 @@
     if(page==='monthly'||page==='annual'){renderMonthly();renderStats();}
     if(page==='dashboard'&&window.getDashboardAggregate){renderStats();renderCharts();renderOverview();}
     if(page==='projects')renderProjects();
+    if(page==='closeout')renderCloseout();
+  }
+  // 结项报告：手写结论在前，系统记录在后；数字口径与月度/年度总结一致。
+  function renderCloseout(){
+    const C=window.LDCloseout;if(!C)return;
+    const n=v=>Number(v).toLocaleString('zh-CN',{maximumFractionDigits:2});
+    closeoutPage.innerHTML='<div class="section-heading"><h2>结项报告</h2><span>每个项目一页：先看结论，再看数据和经验</span></div>'+C.reports.map(r=>{
+      const rec=C.records(state,r);
+      const links=r.links.length?r.links.map(l=>`<a class="btn btn-secondary btn-sm" href="${esc(l.url)}" target="_blank" rel="noopener">${esc(l.label)}</a>`).join(''):'<span class="closeout-muted">完整报告：内部渠道查阅</span>';
+      return `<section class="card closeout-card"><div class="card-header"><div><h2 class="card-title">${esc(r.name)}</h2><span class="closeout-muted">${esc(r.start)} 至 ${esc(r.end)} · 报告日期 ${esc(r.reportDate)}</span></div><span class="kind-tag" data-kind="finance">${esc(r.status)}</span></div><div class="card-body">
+        <p class="summary-prose closeout-lead">${esc(r.conclusion)}</p>
+        <div class="compact-metrics">${r.results.map(([v,l])=>`<div><strong>${esc(v)}</strong><span>${esc(l)}</span></div>`).join('')}</div>
+        <p class="closeout-muted closeout-note">${esc(r.resultsNote)}</p>
+        <ul class="report-list">${r.verdict.map(([k,v])=>`<li><span>${esc(k)}</span><span>${esc(v)}</span></li>`).join('')}</ul>
+        <h3 class="closeout-sub">经验与风险</h3><ul class="closeout-lessons">${r.lessons.map(t=>`<li>${esc(t)}</li>`).join('')}</ul>
+        <h3 class="closeout-sub">系统记录（自动汇总）</h3><div class="compact-metrics"><div><strong>${rec.sessions}</strong><span>培训与辅导场次</span></div><div><strong>${n(rec.people)}</strong><span>参训人次</span></div><div><strong>${n(rec.hours)}</strong><span>总人时${rec.pending?`（${rec.pending} 条待补）`:''}</span></div></div>
+        <p class="closeout-muted closeout-note">按培训记录中项目「${esc(r.project)}」、${esc(r.start)} 至 ${esc(r.end)} 汇总，与月度、年度总结同一口径。</p>
+        <div class="closeout-links">${links}</div></div></section>`;
+    }).join('');
   }
   function navigate(page) {
     const original=document.querySelector(`#legacyNav [data-page="${page}"]`);
