@@ -952,6 +952,14 @@
       "type": "regular",
       "amount": 1376.52,
       "desc": "ChatGPT 5x2 个月"
+    },
+    {
+      "id": "c8v1mzia",
+      "date": "2026-10-13",
+      "month": "2026-10",
+      "type": "regular",
+      "amount": 168,
+      "desc": "Claude pro 会员"
     }
   ],
   "aiStations": [
