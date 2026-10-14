@@ -15,6 +15,8 @@
 
 ## ✅ Completed（摘要；细节见 git 历史与 `ProjectDocs/`）
 
+- [2026-10-14] **菜单重组 + 月度 OKR 上线**：一级菜单改为 工作总览／培训记录／培训项目（项目进展、结项报告）／工作汇报（月度 OKR、年度总结）／管理者发展（案例与手册、测评报告），去掉「成果与报告」。月度页上半部分为 OKR（`assets/okr.js`，O→KR 状态＋一句结果，不写人名），下半部分为系统自动汇总数据。已收录 1、3、4、5、6、7、8 月；6 月据半年报整理、数字以系统为准（13 场／23 人次，含 6-29 两场）。2、9 月待补；新月份每月在 `okr.js` 加一段。
+
 - [2026-10-14] **`.git` 迁出云盘**：仓库数据移至本机 `/Users/surfin/.git-repos/surfin-ld-system.git`，项目目录只留一行 `.git` 指针文件（`gitdir: ...`）。工作区仍在 Drive 同步；git 锁文件、对象、引用不再经过 Drive。注意：该指针只对这台 MacBook 有效，其它电脑需单独 clone。
 - [2026-10-14] **git 仓库修复与清理**（提交 `2f8ea91`）：9 月 12 日中断的 merge 在 Google Drive 中留下锁文件，导致本地 `main` 丢失。已删锁、恢复分支并对齐 `origin/main`（`dcbc760`），工作区与线上一致；删除已合并的临时分支和过期 `.agent/` 计划、未被引用的 `assets/module-icons.png`。`_explorations/` 核实不存在。
 - [2026-10-13] **年度累计与统一导出上线**（`dcbc760`）：见 `ProjectDocs/产品设计存档/2026-10-13-年度累计与导出上线验收.md`。
@@ -28,5 +30,5 @@
 ## ⚠️ 工作约定
 
 - `.git` 已在 Drive 之外（见上）。若 `git` 报“not a git repository”，先确认 `.git` 指针文件存在且 `/Users/surfin/.git-repos/surfin-ld-system.git` 仍在；换电脑需重新 clone。
-- 测试命令：`node --test tests/domain.test.cjs tests/report.test.cjs tests/sync.test.cjs tests/server.test.mjs tests/closeout.test.cjs`（29 项）。
+- 测试命令：`node --test tests/domain.test.cjs tests/report.test.cjs tests/sync.test.cjs tests/server.test.mjs tests/closeout.test.cjs tests/okr.test.cjs`（34 项）。
 - 本机 `git fetch/push` 若卡住，多半是钥匙串弹窗；可用 `GIT_TERMINAL_PROMPT=0 git -c credential.helper= fetch origin main` 只读拉取。

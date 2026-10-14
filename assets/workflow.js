@@ -32,7 +32,7 @@
   const chevron='<svg class="row-chevron" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>';
   function createPage(id,title) {const p=el('div','page');p.id='page-'+id;$('mainContent').append(p);pageTitles[id]=title;return p;}
   const projectPage=createPage('projects','项目进展');
-  const monthlyPage=createPage('monthly','月度总结');
+  const monthlyPage=createPage('monthly','月度 OKR');
   const annualPage=createPage('annual','年度总结');
   const closeoutPage=createPage('closeout','结项报告');
   const subbar=el('nav','module-tabs');subbar.setAttribute('aria-label','模块导航');$('mainContent').prepend(subbar);
@@ -40,9 +40,10 @@
   const mainNav=el('nav','sidebar-nav primary-navigation');mainNav.setAttribute('aria-label','主导航');legacyNav.after(mainNav);
   const groups={
     overview:{label:'工作总览',icon:'<rect x="3.5" y="3.5" width="7" height="8" rx="1.8"/><rect x="13.5" y="3.5" width="7" height="5" rx="1.8"/><rect x="13.5" y="11.5" width="7" height="9" rx="1.8"/><rect x="3.5" y="14.5" width="7" height="6" rx="1.8"/>',pages:[['dashboard','培训大屏']]},
-    records:{label:'记录',icon:'<rect x="4.5" y="3.5" width="15" height="17" rx="2.2"/><path d="M8.5 8h7M8.5 12h7M8.5 16h4"/>',pages:[['training','培训记录'],['aiknowledge','AI 内容'],['finance','金融百科'],['budget','预算与开销']]},
-    projects:{label:'项目',icon:'<path d="m12 3.8 8.2 4.4L12 12.6 3.8 8.2z"/><path d="m3.8 12.2 8.2 4.4 8.2-4.4"/><path d="m3.8 16.1 8.2 4.4 8.2-4.4"/>',pages:[['projects','项目进展']]},
-    results:{label:'成果与报告',icon:'<path d="M7.5 4h9v4.5a4.5 4.5 0 0 1-9 0z"/><path d="M16.5 5.5h2.3a1.7 1.7 0 0 1 0 3.4h-2.5M7.5 5.5H5.2a1.7 1.7 0 0 0 0 3.4h2.5M12 13v4M8.5 20h7"/>',pages:[['caselib','案例与手册'],['assessment','测评报告'],['monthly','月度总结'],['annual','年度总结'],['closeout','结项报告']]}
+    records:{label:'培训记录',icon:'<rect x="4.5" y="3.5" width="15" height="17" rx="2.2"/><path d="M8.5 8h7M8.5 12h7M8.5 16h4"/>',pages:[['training','培训记录'],['aiknowledge','AI 内容'],['finance','金融百科'],['budget','预算与开销']]},
+    projects:{label:'培训项目',icon:'<path d="m12 3.8 8.2 4.4L12 12.6 3.8 8.2z"/><path d="m3.8 12.2 8.2 4.4 8.2-4.4"/><path d="m3.8 16.1 8.2 4.4 8.2-4.4"/>',pages:[['projects','项目进展'],['closeout','结项报告']]},
+    reports:{label:'工作汇报',icon:'<path d="M4.5 20h15"/><path d="M7 16.5v-5M12 16.5V7M17 16.5v-8"/>',pages:[['monthly','月度 OKR'],['annual','年度总结']]},
+    managers:{label:'管理者发展',icon:'<circle cx="9" cy="8" r="3.2"/><path d="M3.8 19.5a5.2 5.2 0 0 1 10.4 0"/><path d="M16 5.5a3 3 0 0 1 0 5.6M17.5 14.2a5 5 0 0 1 2.7 5.3"/>',pages:[['caselib','案例与手册'],['assessment','测评报告']]}
   };
   for(const [key,g] of Object.entries(groups)){
     const b=el('button','primary-nav',`<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">${g.icon}</svg><span>${g.label}</span>`);b.type='button';b.dataset.group=key;b.addEventListener('click',()=>navigate(g.pages[0][0]));mainNav.append(b);
@@ -191,7 +192,7 @@
   }
 
   // Finance publication state and workflow share one saved source of truth.
-  const pub=el('div','form-group span-2','<label class="checkbox-line"><input type="checkbox" id="finPublished">已正式发布</label><small class="field-help">发布日期和发布状态用于列表、项目摘要与月度总结。</small>');$('financeForm').querySelector('.form-grid').append(pub);finDate.required=false;
+  const pub=el('div','form-group span-2','<label class="checkbox-line"><input type="checkbox" id="finPublished">已正式发布</label><small class="field-help">发布日期和发布状态用于列表、项目摘要与月度 OKR。</small>');$('financeForm').querySelector('.form-grid').append(pub);finDate.required=false;
   let financeDraft=null;const openFinance=window.openFinanceModal;
   window.openFinanceModal=function(id,temp){const item=temp||state.financeWiki.find(i=>i.id===id);if(!item)return;openFinance(id,temp);financeDraft=structuredClone(item);financeDraft.workflow||={};finPublished.checked=D.financeStatus(item).key!=='draft';renderFinanceDraft();};
   function renderFinanceDraft(){if(!financeDraft)return;$('finWorkflowChips').innerHTML=financeTaskTemplate.map(step=>`<button class="fin-chip ${financeDraft.workflow[step.stage]?'done':''}" type="button" data-action="finance-step" data-record="${step.stage}">${financeDraft.workflow[step.stage]?'✓ ':''}${step.name}</button>`).join('');}
@@ -246,7 +247,7 @@
     $('overviewRange').textContent=p.range+(p.ongoing?' · 本月进行中':'');$('overviewMonth').value=p.month;$('overviewMonth').max=R.today().slice(0,7);$('cutoffLabel').textContent=selection.mode==='ytd'?'截至月份':'选择月份';
     monthLabel.querySelectorAll('[data-period]').forEach(b=>{b.classList.toggle('active',b.dataset.period===selection.mode);b.setAttribute('aria-pressed',String(b.dataset.period===selection.mode));});
     annual.querySelector('summary').textContent=selection.mode==='ytd'?`查看 ${Number(p.month.slice(5))} 月数据`:`查看 ${p.year} 年度累计（截至 ${Number(p.month.slice(5))} 月）`;
-    document.querySelectorAll('[onclick="openMonthlyReportModal()"]').forEach(reportButton=>{const textNode=[...reportButton.childNodes].find(n=>n.nodeType===3&&n.textContent.trim());if(textNode)textNode.textContent=selection.mode==='ytd'?'年度总结':'月度总结';});
+    document.querySelectorAll('[onclick="openMonthlyReportModal()"]').forEach(reportButton=>{const textNode=[...reportButton.childNodes].find(n=>n.nodeType===3&&n.textContent.trim());if(textNode)textNode.textContent=selection.mode==='ytd'?'年度总结':'月度 OKR';});
     if($('statFinanceTotal'))$('statFinanceTotal').textContent=(state.financeWiki||[]).length;
   };
   const byDateDesc=(a,b)=>String(b.date||'').localeCompare(String(a.date||''));
@@ -274,17 +275,25 @@
   }
   const linkBtn=(label,action,id)=>`<button type="button" class="link-btn" data-action="${action}" data-record="${esc(id)}">${esc(label)}</button>`;
   function overviewSource(){if(selection.mode!=='ytd')return state;const d=selected();return {sessions:d.sessions,aiStations:d.stations,aiShares:(state.aiShares||[]).filter(s=>s.date>=d.period.start&&s.date<=d.period.end),financeWiki:d.finance};}
-  function renderOverview(){const ytd=selection.mode==='ytd',source=overviewSource();overviewExtra.innerHTML=`<section class="card"><div class="card-header"><h2 class="card-title">${ytd?'年度项目进展':'项目最近更新'}</h2>${linkBtn('全部项目','navigate','projects')}</div><div class="card-body list-body">${projectRows(4,source)}</div></section><section class="card"><div class="card-header"><h2 class="card-title">${ytd?'年度最新成果':'近期成果'}</h2>${linkBtn(ytd?'年度总结':'月度总结','navigate',ytd?'annual':'monthly')}</div><div class="card-body list-body"><ul class="result-list">${recentResults(source)}</ul></div></section>`;}
+  function renderOverview(){const ytd=selection.mode==='ytd',source=overviewSource();overviewExtra.innerHTML=`<section class="card"><div class="card-header"><h2 class="card-title">${ytd?'年度项目进展':'项目最近更新'}</h2>${linkBtn('全部项目','navigate','projects')}</div><div class="card-body list-body">${projectRows(4,source)}</div></section><section class="card"><div class="card-header"><h2 class="card-title">${ytd?'年度最新成果':'近期成果'}</h2>${linkBtn(ytd?'年度总结':'月度 OKR','navigate',ytd?'annual':'monthly')}</div><div class="card-body list-body"><ul class="result-list">${recentResults(source)}</ul></div></section>`;}
   function renderProjects(){projectPage.innerHTML='<div class="section-heading"><h2>项目进展</h2><span>从培训、发布和回收记录自动汇集，按最近更新排序</span></div>'+`<section class="card"><div class="card-body list-body">${projectRows(100)}</div></section>`;}
   for(const [page,id,label] of [[monthlyPage,'summaryMonth','选择月份'],[annualPage,'annualMonth','截至月份']]){
-    page.append(card(page===annualPage?'年度总结':'月度总结',`<div class="report-controls"><label for="${id}">${label}</label><input type="month" id="${id}" max="${R.today().slice(0,7)}" value="${selection.month}">${btn('导出设置','monthly-export')}</div><div id="${page===annualPage?'annualSummary':'monthlySummary'}"></div>`));
+    page.append(card(page===annualPage?'年度总结':'月度 OKR',`<div class="report-controls"><label for="${id}">${label}</label><input type="month" id="${id}" max="${R.today().slice(0,7)}" value="${selection.month}">${btn('导出设置','monthly-export')}</div><div id="${page===annualPage?'annualSummary':'monthlySummary'}"></div>`));
     $(id).addEventListener('change',e=>{if(e.target.value)setPeriod(page===annualPage?'ytd':'month',e.target.value);else e.target.value=selection.month;});
   }
   function renderMonthly(){
     const ytd=activePage==='annual';selection.mode=ytd?'ytd':'month';const d=selected();reportSnapshot=d;selection.month=d.period.month;
     $('summaryMonth').value=selection.month;$('annualMonth').value=selection.month;
     const list=(rows,empty)=>rows.join('')||`<li>${empty}</li>`;
-    $(ytd?'annualSummary':'monthlySummary').innerHTML=`<h3 class="report-month">${esc(d.period.title)} 学习发展工作摘要</h3><p class="field-help">${d.period.range}${d.period.ongoing?' · 本月进行中':''} · 按当前已录入记录汇总，后续补录会更新本报告</p><div class="compact-metrics"><div><strong>${d.sessions.length}</strong><span>培训场次</span></div><div><strong>${R.fmt(d.hours)}</strong><span>培训人时${d.pending.hours?' · '+d.pending.hours+' 条待补':''}</span></div><div><strong>${R.fmt(d.people)}</strong><span>参训人次${d.pending.people?' · '+d.pending.people+' 条待补':''}</span></div><div><strong>${R.money(d.spend)}</strong><span>实际支出${d.pending.spend?' · '+d.pending.spend+' 条待补':''}</span></div></div><p class="summary-prose">期间记录 ${d.stations.length} 期 AI 广播站、${d.shares.length} 场 AI 分享月、${d.finance.length} 期已发布金融百科。广播站 ${d.pending.stations} 期待回收或核对；金融百科 ${d.pending.finance} 期待回收、${d.pending.financeReview} 期待核对。${esc(R.budgetNote(d))}。参训人数按人次累加；AI 分享的关联培训只计一次。</p><h3>培训明细</h3><ul class="report-list">${list(d.sessions.map(s=>`<li><span>${esc(s.date)} · ${esc(s.course)}</span><span>${R.fmt(D.number(s.people))} 人次 · ${R.fmt(R.hours(s))} 人时</span></li>`),'期间暂无培训记录')}</ul><h3>内容成果</h3><ul class="report-list">${list([...d.stations.map(s=>({...s,kind:'AI 广播站'})),...d.shares.map(s=>({...s,kind:'AI 分享月'})),...d.finance.map(s=>({...s,kind:'金融小百科'}))].sort((a,b)=>String(b.date).localeCompare(a.date)).map(s=>`<li><span>${esc(s.date)} · ${s.kind}${s.episode?`第 ${esc(s.episode)} 期`:""}</span><span>${esc(s.title)}</span></li>`),'期间暂无内容发布记录')}</ul><h3>开销明细</h3><ul class="report-list">${list(d.expenses.map(s=>`<li><span>${esc(s.date)} · ${esc(s.desc)}<small class="record-note">归属月份 ${esc(s.month)}</small></span><span>${R.money(D.number(s.amount))}</span></li>`),'期间暂无开销记录')}</ul>`;
+    $(ytd?'annualSummary':'monthlySummary').innerHTML=(ytd?'':okrBlock(d.period.month))+`<h3 class="report-month">${esc(d.period.title)} ${ytd?'学习发展工作摘要':'本月数据'}</h3><p class="field-help">${d.period.range}${d.period.ongoing?' · 本月进行中':''} · 按当前已录入记录汇总，后续补录会更新本报告</p><div class="compact-metrics"><div><strong>${d.sessions.length}</strong><span>培训场次</span></div><div><strong>${R.fmt(d.hours)}</strong><span>培训人时${d.pending.hours?' · '+d.pending.hours+' 条待补':''}</span></div><div><strong>${R.fmt(d.people)}</strong><span>参训人次${d.pending.people?' · '+d.pending.people+' 条待补':''}</span></div><div><strong>${R.money(d.spend)}</strong><span>实际支出${d.pending.spend?' · '+d.pending.spend+' 条待补':''}</span></div></div><p class="summary-prose">期间记录 ${d.stations.length} 期 AI 广播站、${d.shares.length} 场 AI 分享月、${d.finance.length} 期已发布金融百科。广播站 ${d.pending.stations} 期待回收或核对；金融百科 ${d.pending.finance} 期待回收、${d.pending.financeReview} 期待核对。${esc(R.budgetNote(d))}。参训人数按人次累加；AI 分享的关联培训只计一次。</p><h3>培训明细</h3><ul class="report-list">${list(d.sessions.map(s=>`<li><span>${esc(s.date)} · ${esc(s.course)}</span><span>${R.fmt(D.number(s.people))} 人次 · ${R.fmt(R.hours(s))} 人时</span></li>`),'期间暂无培训记录')}</ul><h3>内容成果</h3><ul class="report-list">${list([...d.stations.map(s=>({...s,kind:'AI 广播站'})),...d.shares.map(s=>({...s,kind:'AI 分享月'})),...d.finance.map(s=>({...s,kind:'金融小百科'}))].sort((a,b)=>String(b.date).localeCompare(a.date)).map(s=>`<li><span>${esc(s.date)} · ${s.kind}${s.episode?`第 ${esc(s.episode)} 期`:""}</span><span>${esc(s.title)}</span></li>`),'期间暂无内容发布记录')}</ul><h3>开销明细</h3><ul class="report-list">${list(d.expenses.map(s=>`<li><span>${esc(s.date)} · ${esc(s.desc)}<small class="record-note">归属月份 ${esc(s.month)}</small></span><span>${R.money(D.number(s.amount))}</span></li>`),'期间暂无开销记录')}</ul>`;
+  }
+  // 月度 OKR：上半部分是目标与结果（手写，来自 OKR 文档），下半部分是系统自动汇总的本月数据。
+  function okrBlock(month){
+    const os=window.LDOkr&&LDOkr.forMonth(month);
+    if(!os)return `<div class="okr-empty">本月 OKR 未整理，下方为系统自动汇总的本月数据。</div>`;
+    const c=LDOkr.count(month);
+    const src=LDOkr.sourceNote?LDOkr.sourceNote(month):'';
+    return `<div class="okr-block"><p class="field-help">${c.objectives} 个目标 · ${c.krs} 项关键结果 · 已完成 ${c.done} 项${src?`　｜　${esc(src)}`:''}</p>${os.map((o,i)=>`<section class="okr-objective"><h3>O${i+1}　${esc(o.o)}</h3><ul class="okr-krs">${o.krs.map(([kr,st,res])=>`<li><span class="okr-status okr-${{'完成':'done','进行中':'doing','部分完成':'partial','改期':'moved'}[st]||'doing'}">${esc(st)}</span><div><strong>${esc(kr)}</strong><span>${esc(res)}</span></div></li>`).join('')}</ul></section>`).join('')}</div>`;
   }
   window.openMonthlyReportModal=()=>navigate(selection.mode==='ytd'?'annual':'monthly');
   function openExportSettings(){

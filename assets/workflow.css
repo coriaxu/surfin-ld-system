@@ -136,6 +136,19 @@ a.record-note:hover { text-decoration:underline; }
 .closeout-card .report-list li>span:last-child { text-align:left; flex:1; }
 .closeout-sub { margin:24px 0 8px; font-size:14px; font-weight:600; color:var(--text-strong); }
 .closeout-lessons { margin:0; padding-left:1.2em; font-size:14px; line-height:1.85; color:var(--text-body); }
+.okr-block { margin:4px 0 28px; padding-bottom:20px; border-bottom:1px solid var(--border-faint); }
+.okr-empty { margin:4px 0 24px; padding:12px 14px; border-radius:10px; background:rgba(0,0,0,.035); color:var(--text-muted); font-size:13px; }
+.okr-objective { margin-top:18px; }
+.okr-objective h3 { margin:0 0 8px; font-size:15px; font-weight:600; color:var(--text-strong); }
+.okr-krs { list-style:none; margin:0; padding:0; }
+.okr-krs li { display:flex; gap:12px; align-items:flex-start; padding:9px 0; border-top:1px solid var(--border-faint); }
+.okr-krs li div { flex:1; display:flex; flex-direction:column; gap:2px; }
+.okr-krs strong { font-size:14px; font-weight:600; color:var(--text-strong); }
+.okr-krs li div span { font-size:13.5px; line-height:1.6; color:var(--text-body); }
+.okr-status { flex:0 0 64px; text-align:center; font-size:12px; line-height:22px; border-radius:11px; font-weight:600; }
+.okr-done { background:rgba(46,125,82,.12); color:#2e7d52; }
+.okr-doing, .okr-partial { background:rgba(176,122,26,.13); color:#9a6a12; }
+.okr-moved { background:rgba(120,120,120,.14); color:#666; }
 .closeout-links { display:flex; flex-wrap:wrap; gap:8px; margin-top:20px; padding-top:16px; border-top:1px solid var(--border-faint); }
 
 /* ---------- Libraries ---------- */
