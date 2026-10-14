@@ -819,6 +819,16 @@
       "people": 1,
       "duration": 1,
       "note": "宋阳梅补课"
+    },
+    {
+      "id": "63wiwv64",
+      "date": "2026-09-08",
+      "course": "新员工AI 课程（北京场）",
+      "project": "新员工入职培训",
+      "lecturer": "徐浩",
+      "people": 13,
+      "duration": 0.67,
+      "note": "40 分钟"
     }
   ],
   "budgets": [],

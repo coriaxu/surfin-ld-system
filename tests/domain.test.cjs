@@ -19,9 +19,13 @@ test('special broadcast keeps its flag on edit and never takes a regular episode
  assert.ok(regular.every(Number.isInteger));assert.equal(new Set(regular).size,regular.length);
 });
 test('September ledger matches the 2026-09 OKR after the 10-14 correction list',()=>{
- const sep=require('../user-data.json').sessions.filter(s=>String(s.date).startsWith('2026-09'));
+ const all=require('../user-data.json').sessions.filter(s=>String(s.date).startsWith('2026-09'));
+ const bj=all.filter(s=>s.date==='2026-09-08'&&/北京/.test(s.course));
+ assert.deepEqual(bj.map(s=>[s.project,s.people,s.duration]),[['新员工入职培训',13,0.67]]);
+ const sep=all.filter(s=>!bj.includes(s));
  const sum=f=>sep.reduce((a,s)=>a+f(s),0);
  assert.deepEqual([sep.length,sum(s=>s.people),sum(s=>s.duration),sum(s=>s.people*s.duration)],[10,78,10.5,80]);
+ assert.equal(all.length,11);
  assert.deepEqual(sep.filter(s=>/咖啡座谈/.test(s.course)).map(s=>[s.date,s.course,s.people]).sort(),[['2026-09-16','C 组咖啡座谈',3],['2026-09-18','B 组咖啡座谈',3],['2026-09-22','A 组咖啡座谈',4]]);
  assert.equal(sep.some(s=>s.course==='小组辅导'),false);
 });
