@@ -1,5 +1,14 @@
 # 💡 Findings: surfin-ld-system
 
+## [2026-10-15] 「明账」改版：配色依据、令牌管线与上线经验
+
+- **设计资产（均仅徐老师可见，分享走页面 Share 菜单）**：设计稿画布「学习发展系统 · 设计升级方案」https://claude.ai/artifact/V5HnmwyvM3JcuiC224gsh9 （含截图三色浅色版、四主色方向对比；画布里的「待补齐」区块是方案稿，网站已删）；Claude Design System「学习发展 · 明账」https://claude.ai/artifact/W1yTRufQR27R6vj6bnLSRc （8 套主题＝浅深 × 四主色，9 个组件，品牌手册，标识两枚）。账户里另一个空的 Design System（JHKX3uEYqebZfseasr4Kw6）未使用。
+- **配色核心判断**：徐老师喜欢的深色截图三色（#7FB3A2、#E2B262、#EE8B7F）在白底上只有 1.95–2.43:1，浅色下不能当文字或图标，只做图表填充和大色块；文字改用同色相压深的墨色。三色固定当状态色，主色只管操作与选中，所以主色要避开三色色相。晴山蓝作默认的依据：与状态色不撞、蓝橙组合色弱可辨（Datawrapper「colorblindness part 2」）、偏好研究蓝色为峰值（Palmer & Schloss 2010，PMC2889342，单色偏好，非界面场景）。同色相浅深取不同明度有官方依据（Material 3 tone 40／80，Radix 12 阶，Apple HIG）；图形 3:1、正文 4.5:1 依 WCAG 2.1 1.4.11 与 2.2。山梗紫、淡咖啡做主色没找到实证，是判断；淡咖啡色相夹在两个状态色之间，状态标签必须带文字。
+- **令牌管线**：颜色只在 `tools/tokens.py` 改，`python3 tools/tokens.py` 生成 `assets/tokens.css` 并校验对比度，不达标报错不出文件；`--json <路径>` 输出设计系统 tokens.json，改色后要同步到 Design System，否则两边走样。新变量前缀 `--mz-*`，同时映射旧变量名（`--bg-*`、`--text-*`、`--brand*`），旧样式层不用逐个改。
+- **开发教训**：删 `index.html` 里旧主题选择器时多留一个 `</div>`，导致 `#mainContent` 跑出 `.main-wrapper`、首屏空白；大块删 HTML 后先截图再往下做。本地 Playwright 截图要用 `ThreadingTCPServer` 和 `wait_until='domcontentloaded'`，单线程服务器会被 CDN 并发拖出 ERR_CONNECTION_RESET。系统 `/usr/bin/python3` 装有 playwright，Homebrew Python 没装。
+- **上线边界**：线上站点要口令，AI 不在线上代输口令，只验证登录前一层（令牌、脚本、入口加载）加资源散列一致；登录后的页面靠本地同版本验证，需徐老师自己过目。`AI_专属/` 与 `ProjectDocs/` 跟踪进仓库，实现与笔记分两个提交。
+- **用户偏好**：总览不要「待补齐」队列（2026-10-15 删除）；侧栏分组叫「台账」。
+
 ## [2026-09-11] 当前实施方向与发布验收
 
 - 已实施“锤子系统应用”方向：暖灰工作区、白色面板、少量精绘模块图标和清楚的操作层级。主主题替代历史 C3 彩色 KPI 卡片方案；旧探索记录仅作为历史背景。
