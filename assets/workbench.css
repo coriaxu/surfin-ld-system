@@ -4,42 +4,7 @@
  * Themes still switch through :root[data-theme]; this layer only reads their variables.
  * ============================================================ */
 
-/* ---------- Tokens · default theme (暖灰工作台) ---------- */
-:root:not([data-theme]), :root[data-theme="default"] {
-  --bg-page:#F4F4F0; --bg-sidebar:#EDEDE8; --bg-card:#FFFFFF; --bg-card-soft:#F8F8F5;
-  --bg-hover:rgba(31,36,34,.045); --bg-active:rgba(80,117,104,.09);
-  --border-faint:#EEEDE8; --border-light:#E2E1DB; --border-mid:#CFCEC7;
-  --text-strong:#1F2422; --text-body:#464C49; --text-muted:#6B726F; --text-faint:#8F9591; --text-title:#1F2422;
-  --brand:#507568; --brand-light:#628A7B; --brand-dark:#3D5E52;
-  --brand-alpha-04:rgba(80,117,104,.04); --brand-alpha-08:rgba(80,117,104,.08);
-  --brand-alpha-12:rgba(80,117,104,.12); --brand-alpha-25:rgba(80,117,104,.25);
-  --btn-action:#507568; --btn-action-hover:#446a5c; --btn-action-dark:#3D5E52;
-  --primary:#507568; --primary-light:#628A7B;
-  --dashboard-chart-primary:#507568; --dashboard-chart-primary-light:#7FA193;
-  --dashboard-chart-primary-fill:rgba(80,117,104,.10); --dashboard-chart-accent:#C08A5B;
-  --chart-grid:rgba(31,36,34,.06);
-}
-
-/* ---------- Tokens · shared by every theme ---------- */
-:root {
-  --font-sans:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue","PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",Arial,sans-serif;
-  --font-en:var(--font-sans); --font-display:var(--font-sans);
-  --font-mono:"SF Mono",ui-monospace,Menlo,Consolas,monospace;
-  --fw-thin:400; --fw-light:400; --fw-regular:400; --fw-medium:500;
-  --fs-nano:12px; --fs-micro:12px; --fs-caption:12px; --fs-body-s:13px;
-  --sidebar-w:240px; --topbar-h:64px;
-  --radius-sm:6px; --radius:8px; --radius-lg:12px; --radius-xl:14px;
-  --shadow-xs:0 1px 2px rgba(22,28,25,.05);
-  --shadow-sm:0 1px 2px rgba(22,28,25,.04),0 3px 8px rgba(22,28,25,.04);
-  --shadow-pop:0 12px 32px rgba(22,28,25,.12),0 2px 6px rgba(22,28,25,.06);
-  --shadow-sheet:0 24px 64px rgba(22,28,25,.18),0 4px 12px rgba(22,28,25,.06);
-  --seg-track:color-mix(in srgb,var(--text-strong) 6%,var(--bg-page));
-  --scrim:rgba(24,30,27,.34);
-  --warn:#94651F; --warn-bg:#FAF0DE;
-  --danger:#AE463F; --danger-bg:#FBEDEB;
-  --ok:var(--brand-dark); --ok-bg:var(--brand-alpha-08);
-  --chart-grid:rgba(31,36,34,.06);
-}
+/* 颜色、字体、圆角令牌统一来自 assets/tokens.css（tools/tokens.py 生成）。 */
 
 /* ---------- Base ---------- */
 html { -webkit-text-size-adjust:100%; }

@@ -7,6 +7,7 @@
 本轮功能迭代覆盖修改清单第 4–20 项。第 4–18、20 项可在现有静态站点运行；第 19 项提供独立私有服务，实现服务器身份核验、编辑/只读权限和逐份个人报告授权，正式启用仍需配置账号、HTTPS 部署位置和报告文件。
 
 - 界面：`index.html`、`assets/workbench.*`、`assets/workflow.*`
+- 设计语言「明账」：颜色、字体、圆角令牌只在 `tools/tokens.py` 里改，运行 `python3 tools/tokens.py` 生成 `assets/tokens.css` 并校验对比度；外观切换 `assets/appearance.js`（浅色／深色／跟随系统 × 晴山蓝、鼠尾草、山梗紫、淡咖啡，偏好只存本浏览器）；改版样式与交互 `assets/mingzhang.*`（记一笔、手机底栏、汇报排版）。Claude Design System「学习发展 · 明账」与这里同源，改令牌后用 `--json` 输出 tokens.json 同步过去。
 - 期间汇总与导出：`assets/ld-report.js`、`assets/report-export.js`
 - 数据与同步：`assets/ld-domain.js`、`assets/ld-sync.js`
 - 私有服务：`server/app.mjs`、`assets/secure-client.js`

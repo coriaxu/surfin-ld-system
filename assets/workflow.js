@@ -40,7 +40,7 @@
   const mainNav=el('nav','sidebar-nav primary-navigation');mainNav.setAttribute('aria-label','主导航');legacyNav.after(mainNav);
   const groups={
     overview:{label:'工作总览',icon:'<rect x="3.5" y="3.5" width="7" height="8" rx="1.8"/><rect x="13.5" y="3.5" width="7" height="5" rx="1.8"/><rect x="13.5" y="11.5" width="7" height="9" rx="1.8"/><rect x="3.5" y="14.5" width="7" height="6" rx="1.8"/>',pages:[['dashboard','培训大屏']]},
-    records:{label:'培训记录',icon:'<rect x="4.5" y="3.5" width="15" height="17" rx="2.2"/><path d="M8.5 8h7M8.5 12h7M8.5 16h4"/>',pages:[['training','培训记录'],['aiknowledge','AI 内容'],['finance','金融百科'],['budget','预算与开销']]},
+    records:{label:'台账',icon:'<rect x="4.5" y="3.5" width="15" height="17" rx="2.2"/><path d="M8.5 8h7M8.5 12h7M8.5 16h4"/>',pages:[['training','培训场次'],['aiknowledge','AI 内容'],['finance','金融百科'],['budget','预算与开销']]},
     projects:{label:'培训项目',icon:'<path d="m12 3.8 8.2 4.4L12 12.6 3.8 8.2z"/><path d="m3.8 12.2 8.2 4.4 8.2-4.4"/><path d="m3.8 16.1 8.2 4.4 8.2-4.4"/>',pages:[['projects','项目进展'],['closeout','结项报告']]},
     reports:{label:'工作汇报',icon:'<path d="M4.5 20h15"/><path d="M7 16.5v-5M12 16.5V7M17 16.5v-8"/>',pages:[['monthly','月度 OKR'],['annual','年度总结']]},
     managers:{label:'管理者发展',icon:'<circle cx="9" cy="8" r="3.2"/><path d="M3.8 19.5a5.2 5.2 0 0 1 10.4 0"/><path d="M16 5.5a3 3 0 0 1 0 5.6M17.5 14.2a5 5 0 0 1 2.7 5.3"/>',pages:[['caselib','案例与手册'],['assessment','测评报告']]}
@@ -106,6 +106,7 @@
     const pages=Math.max(1,Math.ceil(result.length/20));f.page=Math.min(f.page,pages);
     f.pager.innerHTML=`<span>共 ${result.length} 条 · 第 ${f.page} / ${pages} 页</span>${btn('上一页','page-prev',key)}${btn('下一页','page-next',key)}`;
     f.pager.querySelector('[data-action="page-prev"]').disabled=f.page===1;f.pager.querySelector('[data-action="page-next"]').disabled=f.page===pages;
+    f.result=result;
     return result.slice((f.page-1)*20,f.page*20);
   }
   const actions=(kind,id,copy=false)=>`<div class="actions-row">${btn('编辑','edit-'+kind,id)}${copy?btn('复制','copy-session',id):''}<button type="button" class="btn btn-delete" data-action="delete-${kind}" data-record="${esc(id)}">删除</button></div>`;
@@ -128,6 +129,12 @@
     const options=filterState.sessions.bar.querySelector('select');const selected=options.value;
     options.innerHTML='<option value="">全部项目</option>'+[...new Set(state.sessions.map(s=>s.project).filter(Boolean))].sort().map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('');options.value=selected;
     rows('sessionTable',records('sessions',[...state.sessions].sort((a,b)=>String(b.date).localeCompare(a.date))),9,s=>`<tr><td>${esc(s.date)}</td><td>${esc(s.course)}${s.source==='ai_share'?'<small class="record-note">来自 AI 分享月</small>':''}</td><td>${esc(s.project)}</td><td>${esc(s.lecturer)}</td><td>${fmt(D.number(s.people))}</td><td>${fmt(D.number(s.duration))} h</td><td>${D.number(s.people)===null || D.number(s.duration)===null?'待补录':fmt(s.people*s.duration)}</td><td>${esc(s.note || '—')}</td><td>${actions('session',s.id,true)}</td></tr>`);
+    // 筛选合计：和总览、月度汇报同一口径，人数或时长缺失的场次只计条数、不按 0 计入。
+    const f=filterState.sessions,list=f.result||[],known=list.filter(x=>D.number(x.people)!==null&&D.number(x.duration)!==null);
+    const people=list.reduce((n,x)=>n+(D.number(x.people)??0),0),hours=known.reduce((n,x)=>n+x.people*x.duration,0),missing=list.length-known.length;
+    const scope=[f.period||'全部月份',f.project||'全部项目',f.query?`含“${f.query}”`:''].filter(Boolean).join(' · ');
+    const table=$('sessionTable').closest('table');let foot=table.querySelector('tfoot');if(!foot){foot=document.createElement('tfoot');table.append(foot);}
+    foot.innerHTML=list.length?`<tr class="table-total"><td data-label="筛选合计">筛选合计</td><td colspan="3">${esc(scope)} · ${list.length} 条${missing?` · ${missing} 条待补`:''}</td><td data-label="人次">${fmt(people)}</td><td></td><td data-label="人时">${fmt(Math.round(hours*100)/100)}</td><td colspan="2"></td></tr>`:'';
     for(const [input,field] of [['sessionProject','project'],['sessionLecturer','lecturer']]){
       let list=$(input+'-suggestions');if(!list){list=el('datalist');list.id=input+'-suggestions';document.body.append(list);$(input).setAttribute('list',list.id);}
       list.innerHTML=[...new Set(state.sessions.map(s=>s[field]).filter(Boolean))].map(v=>`<option value="${esc(v)}"></option>`).join('');

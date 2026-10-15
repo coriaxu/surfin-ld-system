@@ -129,7 +129,7 @@
   });
   // Move existing forms, preserving listeners, validation and save behavior.
   const formDrawers = [
-    ['sessionForm', '培训记录', 'editSession', 'resetSessionForm'],
+    ['sessionForm', '培训场次', 'editSession', 'resetSessionForm'],
     ['budgetForm', '预算计划', 'editBudget', 'resetBudgetForm'],
     ['expenseForm', '开销记录', 'editExpense', 'resetExpenseForm']
   ];
@@ -154,6 +154,8 @@
     add.addEventListener('click', () => {
       window[resetName](); heading.textContent = '新增' + label; drawer.showModal();
     });
+    // 侧栏「记一笔」从这里打开同一个抽屉。
+    (window.LDNew ||= {})[id] = () => add.click();
     const edit = window[editName];
     window[editName] = function(...args) {
       const result = edit.apply(this, args); heading.textContent = '编辑' + label;
