@@ -176,13 +176,9 @@ summary::-webkit-details-marker { display:none; }
 .row-more-panel { min-width:132px; }
 .row-more-panel .btn-delete { color:var(--danger); }
 .row-more-panel .btn-delete:hover { background:var(--danger-bg); color:var(--danger); }
-.tools-panel .theme-switcher { width:100%; }
 .tools-panel-caption { color:var(--text-muted); font-size:12px; padding:6px 10px 6px; margin-bottom:2px; }
 .tools-panel-divider { height:1px; margin:4px 6px; background:var(--border-faint); }
 .tools-panel .mobile-only { display:none; }
-.theme-dropdown { z-index:1000; padding:6px; border:1px solid var(--border-light); border-radius:12px; box-shadow:var(--shadow-pop); }
-.theme-option { height:34px; border-radius:var(--radius); font-size:13px; }
-.theme-dot { width:12px; height:12px; border:0; box-shadow:inset 0 0 0 1px rgba(0,0,0,.08); }
 
 /* ---------- Drawers, modals, toasts ---------- */
 .modal-overlay { background:var(--scrim); backdrop-filter:blur(2px); -webkit-backdrop-filter:blur(2px); }

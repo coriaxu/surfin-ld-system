@@ -120,7 +120,7 @@ a.record-note { color:var(--mz-accent-ink); }
 .toast .toast-icon { color:var(--mz-ground); background:color-mix(in srgb,var(--mz-ground) 18%,transparent); }
 .toast.success .toast-icon { background:var(--mz-done-deep); color:var(--mz-surface); }
 .toast.error .toast-icon { background:var(--mz-review-deep); color:var(--mz-surface); }
-.tools-panel, .row-more-panel, .theme-dropdown, .record-drawer, .modal, .modal-content, #financeModal .fin-modal { background:var(--mz-raised); border-color:var(--mz-line); }
+.tools-panel, .row-more-panel, .record-drawer, .modal, .modal-content, #financeModal .fin-modal { background:var(--mz-raised); border-color:var(--mz-line); }
 .record-drawer .form-footer, #financeModal .form-footer, .modal-header, .modal-overlay .modal-header { background:var(--mz-raised); }
 
 /* ---------- 外观面板（工具菜单内） ---------- */

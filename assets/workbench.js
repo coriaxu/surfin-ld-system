@@ -63,15 +63,6 @@
   shortcuts.append(Object.assign(document.createElement('div'), { className: 'tools-panel-divider mobile-only' }));
   panel.prepend(shortcuts);
   actions.append(tools);
-  const defaultTheme = document.querySelector('.theme-option');
-  if (defaultTheme) {
-    defaultTheme.lastChild.textContent = ' 暖灰工作台';
-    defaultTheme.querySelector('.theme-dot').style.background = '#507568';
-  }
-  document.querySelectorAll('.theme-option').forEach(option => {
-    option.setAttribute('role', 'button'); option.tabIndex = 0;
-    option.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); option.click(); } });
-  });
   const positionMenu = details => {
     const popup = details.querySelector('.tools-panel,.row-more-panel');
     const rect = details.querySelector('summary').getBoundingClientRect();
@@ -89,7 +80,7 @@
     });
   };
   wireMenu(tools);
-  panel.addEventListener('click', e => { if (e.target.closest('button:not(#themeBtn)')) tools.open = false; });
+  panel.addEventListener('click', e => { if (e.target.closest('button:not(.appearance-option)')) tools.open = false; });
   const wrapDeleteActions = () => {
     document.querySelectorAll('.actions-row > .btn-delete, #financeForm .form-footer > .btn-delete').forEach(button => {
       const details = document.createElement('details'); details.className = 'row-more';
@@ -101,7 +92,7 @@
   wrapDeleteActions();
   new MutationObserver(wrapDeleteActions).observe(document.getElementById('mainContent'), {childList:true,subtree:true});
   const closeMenus = () => document.querySelectorAll('.workbench-tools[open],.row-more[open]').forEach(d => d.open = false);
-  document.addEventListener('click', e => { if (!e.target.closest('.workbench-tools,.row-more,.theme-dropdown')) closeMenus(); });
+  document.addEventListener('click', e => { if (!e.target.closest('.workbench-tools,.row-more')) closeMenus(); });
   document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeSidebar(); closeMenus(); } });
   window.addEventListener('resize', () => { closeMenus(); if (!matchMedia('(max-width:1024px)').matches) closeSidebar(); });
   document.addEventListener('scroll', closeMenus, true);

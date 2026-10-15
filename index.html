@@ -1658,84 +1658,6 @@ tr:hover td.empty-cell {
 
 
 /* ============================================================
- * 5. 主题切换 dropdown
- * ============================================================ */
-
-.theme-switcher {
-  position: relative;
-  display: inline-flex;
-}
-
-.theme-btn {
-  /* 继承 .btn .btn-secondary 风格，这里只做位置微调 */
-}
-
-/* dropdown 用 fixed 跳出 .topbar-actions 的 overflow-y:hidden 裁切 */
-.theme-dropdown {
-  position: fixed;
-  top: 0;
-  left: 0;
-  min-width: 180px;
-  padding: 6px;
-  background: var(--bg-card);
-  border: 1px solid var(--border-faint);
-  border-radius: var(--r-md);
-  box-shadow: var(--shadow-elev);
-  display: none;
-  flex-direction: column;
-  gap: 2px;
-  z-index: 200;
-  /* 显示时由 JS 动态设置 top/left 跟随按钮（见下方 IIFE） */
-}
-
-.theme-dropdown.active,
-.theme-dropdown.show {
-  display: flex;
-}
-
-.theme-option {
-  height: 32px;
-  padding: 0 16px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-family: var(--font-sans);
-  font-weight: var(--fw-light);
-  font-size: 13px;
-  color: var(--text-body);
-  border-radius: var(--r-sm);
-  cursor: pointer;
-  transition:
-    background var(--t-fast),
-    color var(--t-fast);
-}
-
-.theme-option:hover {
-  /* 蓝紫 4% alpha hover */
-  background: rgba(92, 124, 200, 0.04);
-  background: var(--bg-hover);
-  color: var(--text-strong);
-}
-
-.theme-option.active {
-  /* 蓝紫 8% alpha active */
-  background: rgba(92, 124, 200, 0.08);
-  background: var(--bg-active);
-  color: var(--text-strong);
-  font-weight: var(--fw-regular);
-}
-
-.theme-dot {
-  width: 12px;
-  height: 12px;
-  flex: 0 0 12px;
-  border-radius: 50%;
-  border: 1px solid var(--border-light);
-  /* inline style 已设置 background，这里只兜底外观 */
-}
-
-
-/* ============================================================
  * 6. Main Wrapper + Page Switcher
  * ============================================================ */
 
@@ -5951,21 +5873,19 @@ tr:hover td.empty-cell {
 }
 .assess-team-banner-inner {
   background: var(--bg-card);
-  border: 1px solid var(--border-faint);
-  border-left: 3px solid var(--brand);
-  border-radius: var(--r-lg);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
   padding: var(--sp-5) var(--sp-6);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: var(--sp-5);
-  box-shadow: var(--shadow-card);
-  transition: border-color var(--t-fast), box-shadow var(--t-smooth), transform var(--t-fast);
+  transition: border-color var(--t-fast), background-color var(--t-fast);
 }
 .assess-team-banner-inner:hover {
-  box-shadow: var(--shadow-brand);
-  transform: translateY(-1px);
+  border-color: var(--border-mid);
+  background: var(--bg-card-soft);
 }
 .assess-team-banner-left {
   display: flex;
@@ -5978,9 +5898,9 @@ tr:hover td.empty-cell {
   width: 44px;
   height: 44px;
   flex: 0 0 44px;
-  background: var(--brand-alpha-08);
-  color: var(--brand);
-  border-radius: var(--r-md);
+  background: var(--mz-accent-tint);
+  color: var(--mz-accent-ink);
+  border-radius: var(--radius-sm);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -5992,10 +5912,9 @@ tr:hover td.empty-cell {
 }
 .assess-team-text h3 {
   font-family: var(--font-sans);
-  font-weight: var(--fw-light);
-  font-size: var(--fs-h3);
+  font-weight: 600;
+  font-size: 16px;
   color: var(--text-strong);
-  letter-spacing: var(--ls-tight);
   margin: 0 0 var(--sp-1);
 }
 .assess-team-text p {
