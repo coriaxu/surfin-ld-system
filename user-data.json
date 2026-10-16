@@ -829,6 +829,16 @@
       "people": 13,
       "duration": 0.67,
       "note": "40 分钟"
+    },
+    {
+      "id": "4fyxekxc",
+      "date": "2026-10-15",
+      "course": "绩效辅导：先问后给",
+      "project": "2026管理者训练营 1.0",
+      "lecturer": "徐浩",
+      "people": 6,
+      "duration": 2,
+      "note": ""
     }
   ],
   "budgets": [],
