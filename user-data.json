@@ -1000,6 +1000,14 @@
       "type": "regular",
       "amount": 168,
       "desc": "Claude pro 会员"
+    },
+    {
+      "id": "l27snwka",
+      "date": "2026-10-15",
+      "month": "2026-10",
+      "type": "regular",
+      "amount": 140,
+      "desc": "ChatGPT plus 费用"
     }
   ],
   "aiStations": [
