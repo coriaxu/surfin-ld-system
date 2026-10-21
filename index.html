@@ -6726,6 +6726,8 @@ tr:hover td.empty-cell {
   <script src="assets/closeout-reports.js?v=20261014-closeout2"></script>
   <script src="assets/okr.js?v=20261014-okr09"></script>
   <script src="assets/ld-sync.js"></script>
+  <script src="assets/ld-data-load.js?v=20261021-fallback"></script>
+  <link rel="stylesheet" href="assets/ld-data-load.css?v=20261021-fallback">
 </head>
 
 <body>
@@ -8656,47 +8658,29 @@ tr:hover td.empty-cell {
       currentFinanceEpisode: null
     };
 
+    window.LDLoadInfo={status:PRIVATE_MODE?'cloud':'loading',cloudTimestamp:null};
+    function setDataLoadState(status){
+      window.LDLoadInfo={status,cloudTimestamp:syncController.getStatus().lastCloud};
+      document.documentElement.dataset.dataLoad=status;
+      document.dispatchEvent(new Event('ld-load-state'));
+    }
+
     async function loadRemoteData() {
       if(PRIVATE_MODE){
         try{const response=await fetch('/api/data',{cache:'no-store'});if(!response.ok)throw Error('读取失败，请重新登录后重试');syncController.acceptRemote(await response.json());dataStorage.setItem(STORAGE_KEY+'_version',String(DATA_VERSION));}
         catch(error){showToast(error.message,'error');}
         return true;
       }
-      // First, try to load from cloud (user-data.json via raw.githubusercontent.com)
-      // This allows all visitors to see the latest synced data without needing a Token
-      try {
-        const cloudUrl = 'https://raw.githubusercontent.com/coriaxu/surfin-ld-system/main/user-data.json';
-        const cloudResponse = await fetch(cloudUrl + '?t=' + Date.now(), { cache: 'no-store' });
-        if (cloudResponse.ok) {
-          const cloudData = await cloudResponse.json();
-          const hasCloudPayload = ['sessions', 'budgets', 'aiStations', 'aiShares', 'aiStationTasks', 'aiShareTasks']
-            .some(key => Array.isArray(cloudData[key]));
-          if (hasCloudPayload) {
-            console.log('✅ 已从云端加载最新数据');
-            syncController.acceptRemote(cloudData);
-            dataStorage.setItem(STORAGE_KEY + '_version', String(DATA_VERSION));
-            return true;
-          }
-        }
-      } catch (err) {
-        console.log('云端数据加载失败，尝试本地 data.json');
-      }
-
-      // Fallback: try local data.json
-      try {
-        const response = await fetch(`data.json?v=${DATA_VERSION}`, { cache: 'no-store' });
-        if (!response.ok) return false;
-        const data = await response.json();
-        const payload = data && data.data && typeof data.data === 'object' ? data.data : data;
-        const hasPayload = ['sessions', 'budgets', 'aiStations', 'aiShares', 'aiStationTasks', 'aiShareTasks']
-          .some(key => Array.isArray(payload[key]));
-        if (!hasPayload) return false;
-        syncController.acceptRemote(payload);
-        dataStorage.setItem(STORAGE_KEY + '_version', String(DATA_VERSION));
+      setDataLoadState('loading');
+      const result=await LDDataLoad.load();
+      if(!result.payload){setDataLoadState('failed');return false;}
+      try{
+        // 沿用原有基线建立和版本记录，不改任何写入/合并路径。
+        syncController.acceptRemote(result.payload);
+        dataStorage.setItem(STORAGE_KEY+'_version',String(DATA_VERSION));
+        setDataLoadState(result.source);
         return true;
-      } catch (err) {
-        return false;
-      }
+      }catch(error){setDataLoadState('failed');return false;}
     }
 
     function seedDefaultData() {
@@ -8707,29 +8691,13 @@ tr:hover td.empty-cell {
 
     async function initData() {
       const raw = dataStorage.getItem(STORAGE_KEY);
-      const savedVersion = dataStorage.getItem(STORAGE_KEY + '_version');
-
       if (syncController.hasPending() && raw) {
-        try { applyImportedState(JSON.parse(raw)); syncController.emit(); syncController.schedule(); return; } catch (_) {}
+        try { applyImportedState(JSON.parse(raw)); setDataLoadState('local'); syncController.emit(); syncController.schedule(); return; } catch (_) {}
       }
       // Load cloud unless this browser has unsynced edits.
       // This ensures every browser sees the latest synced data by default.
-      const loaded = await loadRemoteData();
-      if (!loaded) {
-        // If cloud load failed, try using local cache as fallback
-        if (raw && savedVersion === String(DATA_VERSION)) {
-          try {
-            const localData = JSON.parse(raw);
-            Object.assign(state, localData);
-            if (!state.aiStationTitles || typeof state.aiStationTitles !== 'object') state.aiStationTitles = {};
-            if (!state.aiShareTitles || typeof state.aiShareTitles !== 'object') state.aiShareTitles = {};
-            return;
-          } catch (err) {
-            // ignore
-          }
-        }
-        seedDefaultData();
-      }
+      // 两个读取来源均失败时不把缓存/默认空数据标作本次加载成功，也不覆盖缓存。
+      await loadRemoteData();
     }
 
 

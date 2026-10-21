@@ -12,8 +12,19 @@
   // Persistent save status distinguishes local durability from remote visibility.
   const syncBar=el('div','save-status'); syncBar.setAttribute('role','status');syncBar.setAttribute('aria-live','polite');
   $('topbarActions').before(syncBar);
+  const loadBanner=el('div','data-load-banner');loadBanner.id='dataLoadBanner';loadBanner.setAttribute('role','alert');$('mainContent').prepend(loadBanner);
+  const loadUnavailable=()=>LDDataLoad.unavailable(window.LDLoadInfo.status);
   function syncStatus(info) {
-    const labels={'save-error':'本机保存失败',ready:'已载入',local:'本机已保存 · 待同步',syncing:'正在同步…',synced:'云端已同步',error:'同步失败 · 本机已保留'};
+    // 后续真正拉取/同步成功时恢复读取展示；不更改同步控制器本身。
+    const load=window.LDLoadInfo;
+    if(info.status==='synced'&&info.lastCloud&&info.lastCloud!==load.cloudTimestamp&&['failed','snapshot'].includes(load.status)){
+      window.LDLoadInfo={status:'cloud',cloudTimestamp:info.lastCloud};
+    }
+    document.documentElement.dataset.dataLoad=window.LDLoadInfo.status;
+    loadBanner.hidden=!loadUnavailable();
+    loadBanner.textContent=window.LDLoadInfo.status==='failed'?LDDataLoad.FAILURE:'正在加载数据，请稍候…';
+    info=LDDataLoad.presentation(window.LDLoadInfo,info);
+    const labels={'save-error':'本机保存失败',ready:'已载入',local:'本机已保存 · 待同步',syncing:'正在同步…',synced:'云端已同步',error:'同步失败 · 本机已保留',...LDDataLoad.LABELS};
     syncBar.dataset.status=info.status;
     syncBar.innerHTML=`<span>${labels[info.status] || '已载入'}</span>${info.lastCloud?`<time title="最近成功同步：${esc(new Date(info.lastCloud).toLocaleString('zh-CN'))}">${new Date(info.lastCloud).toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'})}</time>`:''}${info.status==='error'?btn('重试','retry-sync'):''}`;
     syncBar.title=info.error || (info.lastLocal?'本机保存：'+new Date(info.lastLocal).toLocaleString('zh-CN'):'');
@@ -23,6 +34,7 @@
     if(box){box.className='sync-status';box.textContent=labels[info.status]+(info.error?'：'+info.error:'');}
   }
   document.addEventListener('ld-sync-state',e=>syncStatus(e.detail));syncController.emit();
+  document.addEventListener('ld-load-state',()=>{syncStatus(syncController.getStatus());renderStats();if(['monthly','annual'].includes(activePage))renderMonthly();});
   const syncSettingsUpdate=updateSyncUI;
   updateSyncUI=function(){syncSettingsUpdate();syncController.emit();};
 
@@ -246,7 +258,7 @@
   $('overviewMonth').addEventListener('change',e=>{if(e.target.value)setPeriod(selection.mode,e.target.value);else e.target.value=selection.month;});
   const annual=el('details','annual-summary','<summary>查看年度累计</summary>');yearGrid.before(annual);annual.append(yearGrid);
   const overviewExtra=el('div','overview-extra');annual.after(overviewExtra);
-  function stat(id,value,label,description){const node=$(id);node.textContent=value;const card=node.closest('.stat-card');card.querySelector('.stat-label').textContent=label;card.querySelector('.stat-desc').textContent=description;}
+  function stat(id,value,label,description){const node=$(id);node.textContent=LDDataLoad.metric(value,window.LDLoadInfo.status);const card=node.closest('.stat-card');card.querySelector('.stat-label').textContent=label;card.querySelector('.stat-desc').textContent=loadUnavailable()?'未加载':description;}
   renderStats=function(){
     const main=selected(),fold=selected(selection.mode==='ytd'?'month':'ytd'),p=main.period;selection.month=p.month;
     const prefix=selection.mode==='ytd'?'年度累计':p.ongoing?'本月':`${Number(p.month.slice(5))} 月`;
@@ -312,6 +324,11 @@
   function renderMonthly(){
     const ytd=activePage==='annual';selection.mode=ytd?'ytd':'month';const d=selected();reportSnapshot=d;selection.month=d.period.month;
     $('summaryMonth').value=selection.month;$('annualMonth').value=selection.month;
+    if(loadUnavailable()){
+      reportSnapshot=null;
+      $(ytd?'annualSummary':'monthlySummary').innerHTML=`<p class="field-help">${window.LDLoadInfo.status==='failed'?LDDataLoad.FAILURE:'正在加载数据，请稍候…'}</p><div class="compact-metrics">${['培训场次','培训人时','参训人次','实际支出'].map(label=>`<div><strong>—</strong><span>${label} · 未加载</span></div>`).join('')}</div>`;
+      return;
+    }
     const list=(rows,empty)=>rows.join('')||`<li>${empty}</li>`;
     $(ytd?'annualSummary':'monthlySummary').innerHTML=(ytd?'':okrBlock(d.period.month))+`<h3 class="report-month">${esc(d.period.title)} ${ytd?'学习发展工作摘要':'本月数据'}</h3><p class="field-help">${d.period.range}${d.period.ongoing?' · 本月进行中':''} · 按当前已录入记录汇总，后续补录会更新本报告</p><div class="compact-metrics"><div><strong>${d.sessions.length}</strong><span>培训场次</span></div><div><strong>${R.fmt(d.hours)}</strong><span>培训人时${d.pending.hours?' · '+d.pending.hours+' 条待补':''}</span></div><div><strong>${R.fmt(d.people)}</strong><span>参训人次${d.pending.people?' · '+d.pending.people+' 条待补':''}</span></div><div><strong>${R.money(d.spend)}</strong><span>实际支出${d.pending.spend?' · '+d.pending.spend+' 条待补':''}</span></div></div><p class="summary-prose">期间记录 ${d.stations.length} 期 AI 广播站、${d.shares.length} 场 AI 分享月、${d.finance.length} 期已发布金融百科。广播站 ${d.pending.stations} 期待回收或核对；金融百科 ${d.pending.finance} 期待回收、${d.pending.financeReview} 期待核对。${esc(R.budgetNote(d))}。参训人数按人次累加；AI 分享的关联培训只计一次。</p><h3>培训明细</h3><ul class="report-list">${list(d.sessions.map(s=>`<li><span>${esc(s.date)} · ${esc(s.course)}</span><span>${R.fmt(D.number(s.people))} 人次 · ${R.fmt(R.hours(s))} 人时</span></li>`),'期间暂无培训记录')}</ul><h3>内容成果</h3><ul class="report-list">${list([...d.stations.map(s=>({...s,kind:'AI 广播站'})),...d.shares.map(s=>({...s,kind:'AI 分享月'})),...d.finance.map(s=>({...s,kind:'金融小百科'}))].sort((a,b)=>String(b.date).localeCompare(a.date)).map(s=>`<li><span>${esc(s.date)} · ${s.kind}${s.special?' 特别篇':s.episode?`第 ${esc(s.episode)} 期`:""}</span><span>${esc(s.title)}</span></li>`),'期间暂无内容发布记录')}</ul><h3>开销明细</h3><ul class="report-list">${list(d.expenses.map(s=>`<li><span>${esc(s.date)} · ${esc(s.desc)}<small class="record-note">归属月份 ${esc(s.month)}</small></span><span>${R.money(D.number(s.amount))}</span></li>`),'期间暂无开销记录')}</ul>`;
   }
@@ -325,11 +342,13 @@
   }
   window.openMonthlyReportModal=()=>navigate(selection.mode==='ytd'?'annual':'monthly');
   function openExportSettings(){
+    if(loadUnavailable()){showToast(LDDataLoad.FAILURE,'error');return;}
     exportSnapshot=structuredClone(reportSnapshot||selected());const d=exportSnapshot;
     $('monthlyReportModal').querySelector('.modal-header').textContent='生成'+(d.period.mode==='ytd'?'年度':'月度')+'总结报告';
     const select=$('reportMonthSelect');select.innerHTML=`<option>${esc(d.period.title)}（${d.period.range}）</option>`;select.disabled=true;select.previousElementSibling.textContent='导出范围（与当前报告一致）';$('monthlyReportModal').classList.add('active');
   }
   window.generateMonthlyReport=async()=>{
+    if(loadUnavailable()){showToast(LDDataLoad.FAILURE,'error');return;}
     if(exporting)return;const pdf=$('exportPdfCheck').checked,xlsx=$('exportExcelCheck').checked;if(!pdf&&!xlsx){showToast('请至少选择一种导出格式','error');return;}
     const d=exportSnapshot||selected(),opts=Object.fromEntries(['includeTraining','includeBudget','includeAI','includeFinance'].map(k=>[k,$(k).checked]));const model=R.model(d,opts);
     exporting=true;closeMonthlyReportModal();showToast('正在生成报告…','info');
@@ -337,11 +356,13 @@
   };
   const originalExcel=window.exportExcel;
   window.exportExcel=()=>{
+    if(loadUnavailable()){showToast(LDDataLoad.FAILURE,'error');return;}
     if(!['dashboard','monthly','annual'].includes(activePage))return originalExcel();
     try{const d=activePage==='dashboard'?selected():reportSnapshot;LDReportExport.excel(R.model(d));showToast('Excel 已生成','success');}catch(err){console.error(err);showToast('Excel 生成失败：'+err.message,'error');}
   };
   const originalPdf=window.exportPdf;
   window.exportPdf=async()=>{
+    if(loadUnavailable()){showToast(LDDataLoad.FAILURE,'error');return;}
     if(!['dashboard','monthly','annual'].includes(activePage))return originalPdf();if(exporting)return;exporting=true;
     try{const d=activePage==='dashboard'?selected():reportSnapshot;showToast('正在生成完整报告…','info');await LDReportExport.pdf(R.model(d));showToast('PDF 已生成','success');}catch(err){console.error(err);showToast('PDF 生成失败：'+err.message,'error');}finally{exporting=false;}
   };

@@ -1,0 +1,19 @@
+/* 仅用于数据读取状态；复用明账的颜色令牌。 */
+.data-load-banner { margin:0 0 16px; padding:14px 18px; border:1px solid #b42318; border-radius:10px; background:#fff1f0; color:#9f2018; font-size:15px; font-weight:600; line-height:1.65; overflow-wrap:anywhere; }
+.data-load-banner[hidden] { display:none; }
+.is-dark .data-load-banner { background:#3d2020; border-color:#f38b82; color:#ffd5cf; }
+html[data-data-load="loading"] .data-load-banner { background:var(--bg-surface); border-color:var(--border); color:var(--text-muted); }
+.save-status[data-status="failed"] { color:var(--mz-review-ink); }
+.save-status[data-status="snapshot"] { color:var(--mz-pending-ink); }
+.save-status[data-status="failed"]>span:first-child::before { background:var(--mz-review-ink); }
+.save-status[data-status="snapshot"]>span:first-child::before { background:var(--mz-pending-ink); }
+.save-status[data-status="snapshot"] { white-space:normal; line-height:1.4; }
+/* 未取得数据时，图表和派生项目不展示空账；月度与年度卡片由渲染器给出 —。 */
+html:is([data-data-load="loading"],[data-data-load="failed"]) #page-dashboard .charts-grid,
+html:is([data-data-load="loading"],[data-data-load="failed"]) #page-dashboard .overview-extra { display:none; }
+@media(max-width:640px) {
+  .save-status:is([data-status="snapshot"],[data-status="failed"],[data-status="loading"],[data-status="synced"]) { max-width:156px; font-size:11px; line-height:1.4; white-space:normal; }
+  .save-status:is([data-status="snapshot"],[data-status="failed"],[data-status="loading"],[data-status="synced"])>span:first-child { font-size:11px; gap:5px; }
+  .save-status>span:first-child::before { flex-shrink:0; }
+  .data-load-banner { padding:12px; font-size:14px; }
+}
