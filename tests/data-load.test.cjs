@@ -58,3 +58,24 @@ test('actual dashboard stat renderer replaces 0 and currency zero with unloaded 
  ctx.window.LDLoadInfo.status='cloud';ctx.stat('statSessions',0,'指标','说明');assert.equal(node.textContent,0);
  assert.match(workflow,/if\(loadUnavailable\(\)\)\{\s+reportSnapshot=null/);
 });
+test('总览初始标题、导航标签与点击后的标题映射保持一致，不改dashboard路由',()=>{
+ assert.match(html,/<h1 class="page-title" id="pageTitle">工作总览<\/h1>/);
+ assert.match(html,/dashboard: '工作总览'/);
+ assert.match(workflow,/pages:\[\['dashboard','工作总览'\]\]/);
+ assert.match(html,/id="page-dashboard"/);
+ assert.match(html,/document\.getElementById\('pageTitle'\)\.textContent = pageTitles\[page\]/);
+ assert.doesNotMatch(workflow,/\['dashboard','培训大屏'\]/);
+});
+test('快照桌面简述、手机短标签和完整title提示均由真实状态渲染器提供',()=>{
+ const syncBar={dataset:{}},loadBanner={};
+ const ctx={syncBar,loadBanner,LDDataLoad:L,window:{LDLoadInfo:{status:'snapshot',cloudTimestamp:'old'}},document:{documentElement:{dataset:{}}},loadUnavailable:()=>false,esc:v=>v,btn:()=>'',$:()=>null};
+ vm.createContext(ctx);vm.runInContext(workflow.slice(workflow.indexOf('  function syncStatus(info)'),workflow.indexOf("  document.addEventListener('ld-sync-state'")),ctx);
+ ctx.syncStatus({status:'synced',lastCloud:'old'});
+ assert.equal(syncBar.title,'已从站点快照载入（可能延迟几分钟）');
+ assert.match(syncBar.innerHTML,/<span class="snapshot-compact">站点快照<\/span>/);
+ assert.match(syncBar.innerHTML,/<span class="snapshot-full">站点快照 · 可能延迟几分钟<\/span>/);
+ const css=fs.readFileSync(path.join(__dirname,'../assets/ld-data-load.css'),'utf8');
+ assert.match(css,/\.snapshot-compact \{ display:none; \}/);
+ const mobile=css.slice(css.indexOf('@media(max-width:640px)'));
+ assert.match(mobile,/\.snapshot-full \{ display:none; \}/);assert.match(mobile,/\.snapshot-compact \{ display:inline; \}/);
+});

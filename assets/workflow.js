@@ -26,8 +26,9 @@
     info=LDDataLoad.presentation(window.LDLoadInfo,info);
     const labels={'save-error':'本机保存失败',ready:'已载入',local:'本机已保存 · 待同步',syncing:'正在同步…',synced:'云端已同步',error:'同步失败 · 本机已保留',...LDDataLoad.LABELS};
     syncBar.dataset.status=info.status;
-    syncBar.innerHTML=`<span>${labels[info.status] || '已载入'}</span>${info.lastCloud?`<time title="最近成功同步：${esc(new Date(info.lastCloud).toLocaleString('zh-CN'))}">${new Date(info.lastCloud).toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'})}</time>`:''}${info.status==='error'?btn('重试','retry-sync'):''}`;
-    syncBar.title=info.error || (info.lastLocal?'本机保存：'+new Date(info.lastLocal).toLocaleString('zh-CN'):'');
+    const statusLabel=info.status==='snapshot'?`<span class="snapshot-compact">站点快照</span><span class="snapshot-full">${esc(labels.snapshot)}</span>`:esc(labels[info.status] || '已载入');
+    syncBar.innerHTML=`<span>${statusLabel}</span>${info.lastCloud?`<time title="最近成功同步：${esc(new Date(info.lastCloud).toLocaleString('zh-CN'))}">${new Date(info.lastCloud).toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'})}</time>`:''}${info.status==='error'?btn('重试','retry-sync'):''}`;
+    syncBar.title=info.status==='snapshot'?LDDataLoad.SNAPSHOT_TITLE:info.error || (info.lastLocal?'本机保存：'+new Date(info.lastLocal).toLocaleString('zh-CN'):'');
     if($('syncBtnText'))$('syncBtnText').textContent='同步设置';
     if($('syncLastTime'))$('syncLastTime').textContent=info.lastCloud?new Date(info.lastCloud).toLocaleString('zh-CN'):'尚未成功同步';
     const box=$('syncStatusBox');
@@ -51,7 +52,7 @@
   const legacyNav=document.querySelector('.sidebar-nav');legacyNav.hidden=true;legacyNav.id='legacyNav';
   const mainNav=el('nav','sidebar-nav primary-navigation');mainNav.setAttribute('aria-label','主导航');legacyNav.after(mainNav);
   const groups={
-    overview:{label:'工作总览',icon:'<rect x="3.5" y="3.5" width="7" height="8" rx="1.8"/><rect x="13.5" y="3.5" width="7" height="5" rx="1.8"/><rect x="13.5" y="11.5" width="7" height="9" rx="1.8"/><rect x="3.5" y="14.5" width="7" height="6" rx="1.8"/>',pages:[['dashboard','培训大屏']]},
+    overview:{label:'工作总览',icon:'<rect x="3.5" y="3.5" width="7" height="8" rx="1.8"/><rect x="13.5" y="3.5" width="7" height="5" rx="1.8"/><rect x="13.5" y="11.5" width="7" height="9" rx="1.8"/><rect x="3.5" y="14.5" width="7" height="6" rx="1.8"/>',pages:[['dashboard','工作总览']]},
     records:{label:'台账',icon:'<rect x="4.5" y="3.5" width="15" height="17" rx="2.2"/><path d="M8.5 8h7M8.5 12h7M8.5 16h4"/>',pages:[['training','培训场次'],['aiknowledge','AI 内容'],['finance','金融百科'],['budget','预算与开销']]},
     projects:{label:'培训项目',icon:'<path d="m12 3.8 8.2 4.4L12 12.6 3.8 8.2z"/><path d="m3.8 12.2 8.2 4.4 8.2-4.4"/><path d="m3.8 16.1 8.2 4.4 8.2-4.4"/>',pages:[['projects','项目进展'],['closeout','结项报告']]},
     reports:{label:'工作汇报',icon:'<path d="M4.5 20h15"/><path d="M7 16.5v-5M12 16.5V7M17 16.5v-8"/>',pages:[['monthly','月度 OKR'],['annual','年度总结']]},

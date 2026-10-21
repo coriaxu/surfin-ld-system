@@ -4,7 +4,8 @@
   if(typeof module==='object'&&module.exports)module.exports=api;else root.LDDataLoad=api;
 })(globalThis,()=>{
   const FAILURE='数据未能加载，当前数字不完整，请刷新';
-  const LABELS={loading:'正在加载数据…',cloud:'云端已同步',snapshot:'已从站点快照载入（可能延迟几分钟）',failed:'加载失败'};
+  const LABELS={loading:'正在加载数据…',cloud:'云端已同步',snapshot:'站点快照 · 可能延迟几分钟',failed:'加载失败'};
+  const SNAPSHOT_TITLE='已从站点快照载入（可能延迟几分钟）';
   const unavailable=status=>status==='loading'||status==='failed';
   const metric=(value,status)=>unavailable(status)?'—':value;
   async function load({fetcher=fetch,timeoutMs=5000,now=Date.now}={}){
@@ -39,5 +40,5 @@
     if(!['loading','snapshot','failed'].includes(loadInfo.status))return info;
     return {...info,status:loadInfo.status,lastCloud:null,error:loadInfo.status==='failed'?FAILURE:''};
   }
-  return {load,FAILURE,LABELS,unavailable,metric,presentation};
+  return {load,FAILURE,LABELS,SNAPSHOT_TITLE,unavailable,metric,presentation};
 });
