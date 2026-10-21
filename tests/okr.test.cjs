@@ -9,6 +9,11 @@ test('every KR has name, valid status and one-line result',()=>{
     for(const o of os){assert.ok(o.o);for(const k of o.krs){assert.equal(k.length,3);assert.ok(O.STATUS.includes(k[1]),m+' '+k[1]);assert.ok(k[2].length>4);}}
   }
 });
+test('九月第三期Skill应用数为26并保留截至日期',()=>{
+  const kr=O.forMonth('2026-09').find(o=>o.o==='AI 赋能第三期').krs.find(k=>k[0]==='项目整体报告与复盘');
+  assert.ok(kr[2].includes('36 个 Skill 中 26 个已用于实际工作（截至 9 月 5 日）。'));
+  assert.ok(!kr[2].includes('36 个 Skill 中 25 个已用于实际工作。'));
+});
 test('count summarises objectives, KRs and done',()=>{
   assert.deepEqual(O.count('2026-01'),{objectives:3,krs:5,done:4});
   assert.deepEqual(O.count('2026-02'),{objectives:0,krs:0,done:0});
