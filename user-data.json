@@ -1,6 +1,176 @@
 {
   "sessions": [
     {
+      "id": "saevmhvx",
+      "date": "2026-10-20",
+      "course": "1 对 1 辅导答疑",
+      "project": "AI 赋能训练营第四期",
+      "lecturer": "徐浩",
+      "people": 1,
+      "duration": 0.5,
+      "note": "高磊"
+    },
+    {
+      "id": "81swgwnv",
+      "date": "2026-10-20",
+      "course": "1 对 1 辅导答疑",
+      "project": "AI 赋能训练营第四期",
+      "lecturer": "徐浩",
+      "people": 1,
+      "duration": 0.5,
+      "note": "秦园春"
+    },
+    {
+      "id": "pdy6umuj",
+      "date": "2026-10-16",
+      "course": "1 对 1 辅导答疑",
+      "project": "AI 赋能训练营第四期",
+      "lecturer": "徐浩",
+      "people": 1,
+      "duration": 1,
+      "note": "陈雨菲"
+    },
+    {
+      "id": "4fyxekxc",
+      "date": "2026-10-15",
+      "course": "绩效辅导：先问后给",
+      "project": "2026管理者训练营 1.0",
+      "lecturer": "徐浩",
+      "people": 6,
+      "duration": 2,
+      "note": ""
+    },
+    {
+      "id": "813s0j4w",
+      "date": "2026-10-13",
+      "course": "1 对 1 辅导答疑",
+      "project": "2026管理者训练营 1.0",
+      "lecturer": "徐浩",
+      "people": 1,
+      "duration": 1,
+      "note": "戴鸿超"
+    },
+    {
+      "id": "b9vkkcds",
+      "date": "2026-10-12",
+      "course": "1 对 1 辅导答疑",
+      "project": "2026管理者训练营 1.0",
+      "lecturer": "徐浩",
+      "people": 1,
+      "duration": 1,
+      "note": "张立夏"
+    },
+    {
+      "id": "csuwqeth",
+      "date": "2026-10-10",
+      "course": "1 对 1 辅导答疑",
+      "project": "2026管理者训练营 1.0",
+      "lecturer": "徐浩",
+      "people": 1,
+      "duration": 1,
+      "note": "安广海"
+    },
+    {
+      "id": "djtbmtcp",
+      "date": "2026-10-10",
+      "course": "任务授权与分配",
+      "project": "2026管理者训练营 1.0",
+      "lecturer": "徐浩",
+      "people": 1,
+      "duration": 2,
+      "note": "安广海补课"
+    },
+    {
+      "id": "ost6lcuq",
+      "date": "2026-10-09",
+      "course": "1 对 1 辅导答疑",
+      "project": "2026管理者训练营 1.0",
+      "lecturer": "徐浩",
+      "people": 1,
+      "duration": 1,
+      "note": "韩丽辉"
+    },
+    {
+      "id": "2faxhfg3",
+      "date": "2026-09-24",
+      "course": "任务授权与分配",
+      "project": "2026管理者训练营 1.0",
+      "lecturer": "徐浩",
+      "people": 5,
+      "duration": 1.5,
+      "note": ""
+    },
+    {
+      "id": "ugda3252",
+      "date": "2026-09-23",
+      "course": "betterbuddy 使用分享第二期",
+      "project": "AI 分享月",
+      "lecturer": "冯世祺",
+      "people": 20,
+      "duration": 1,
+      "note": ""
+    },
+    {
+      "id": "lsub5rnp",
+      "date": "2026-09-22",
+      "course": "A 组咖啡座谈",
+      "project": "AI 赋能训练营",
+      "lecturer": "徐浩",
+      "people": 4,
+      "duration": 1,
+      "note": "原定 9 月 14 日"
+    },
+    {
+      "id": "dwym70dx",
+      "date": "2026-09-22",
+      "course": "管理者角色与时间账",
+      "project": "2026管理者训练营 1.0",
+      "lecturer": "徐浩",
+      "people": 1,
+      "duration": 1,
+      "note": "宋阳梅补课"
+    },
+    {
+      "id": "zu1yxksl",
+      "date": "2026-09-18",
+      "course": "B 组咖啡座谈",
+      "project": "AI 赋能训练营",
+      "lecturer": "徐浩",
+      "people": 3,
+      "duration": 1,
+      "note": ""
+    },
+    {
+      "id": "83xktdj2",
+      "date": "2026-09-16",
+      "course": "C 组咖啡座谈",
+      "project": "AI 赋能训练营",
+      "lecturer": "徐浩",
+      "people": 3,
+      "duration": 1,
+      "note": "路璐请假"
+    },
+    {
+      "id": "ffkbzo29",
+      "date": "2026-09-15",
+      "course": "betterbuddy 使用分享",
+      "project": "AI 分享月",
+      "lecturer": "冯世祺",
+      "people": 30,
+      "duration": 1,
+      "note": ""
+    },
+    {
+      "id": "avpclds6",
+      "date": "2026-09-10",
+      "course": "管理者角色与时间账",
+      "project": "2026管理者训练营 1.0",
+      "lecturer": "徐浩",
+      "people": 5,
+      "duration": 1.5,
+      "note": "宋阳梅请假"
+    },
+    {
       "id": "nfybezgz",
       "date": "2026-09-09",
       "course": "1 对 1 辅导答疑",
@@ -9,6 +179,16 @@
       "people": 1,
       "duration": 1,
       "note": "张立夏"
+    },
+    {
+      "id": "63wiwv64",
+      "date": "2026-09-08",
+      "course": "新员工AI 课程（北京场）",
+      "project": "新员工入职培训",
+      "lecturer": "徐浩",
+      "people": 13,
+      "duration": 0.67,
+      "note": "40 分钟"
     },
     {
       "id": "pgu9ke7b",
@@ -691,188 +871,50 @@
       "note": "跟双双"
     },
     {
-      "id": "zu1yxksl",
-      "date": "2026-09-18",
-      "course": "B 组咖啡座谈",
-      "project": "AI 赋能训练营",
-      "lecturer": "徐浩",
-      "people": 3,
-      "duration": 1,
-      "note": ""
-    },
-    {
-      "id": "ffkbzo29",
-      "date": "2026-09-15",
-      "course": "betterbuddy 使用分享",
-      "project": "AI 分享月",
-      "lecturer": "冯世祺",
-      "people": 30,
-      "duration": 1,
-      "note": ""
-    },
-    {
-      "id": "avpclds6",
-      "date": "2026-09-10",
-      "course": "管理者角色与时间账",
-      "project": "2026管理者训练营 1.0",
-      "lecturer": "徐浩",
-      "people": 5,
-      "duration": 1.5,
-      "note": "宋阳梅请假"
-    },
-    {
-      "id": "83xktdj2",
-      "date": "2026-09-16",
-      "course": "C 组咖啡座谈",
-      "project": "AI 赋能训练营",
-      "lecturer": "徐浩",
-      "people": 3,
-      "duration": 1,
-      "note": "路璐请假"
-    },
-    {
-      "id": "lsub5rnp",
-      "date": "2026-09-22",
-      "course": "A 组咖啡座谈",
-      "project": "AI 赋能训练营",
-      "lecturer": "徐浩",
-      "people": 4,
-      "duration": 1,
-      "note": "原定 9 月 14 日"
-    },
-    {
-      "id": "ugda3252",
-      "date": "2026-09-23",
-      "course": "betterbuddy 使用分享第二期",
-      "project": "AI 分享月",
-      "lecturer": "冯世祺",
-      "people": 20,
-      "duration": 1,
-      "note": ""
-    },
-    {
-      "id": "2faxhfg3",
-      "date": "2026-09-24",
-      "course": "任务授权与分配",
-      "project": "2026管理者训练营 1.0",
-      "lecturer": "徐浩",
-      "people": 5,
-      "duration": 1.5,
-      "note": ""
-    },
-    {
-      "id": "813s0j4w",
-      "date": "2026-10-13",
-      "course": "1 对 1 辅导答疑",
-      "project": "2026管理者训练营 1.0",
-      "lecturer": "徐浩",
-      "people": 1,
-      "duration": 1,
-      "note": "戴鸿超"
-    },
-    {
-      "id": "b9vkkcds",
-      "date": "2026-10-12",
-      "course": "1 对 1 辅导答疑",
-      "project": "2026管理者训练营 1.0",
-      "lecturer": "徐浩",
-      "people": 1,
-      "duration": 1,
-      "note": "张立夏"
-    },
-    {
-      "id": "csuwqeth",
-      "date": "2026-10-10",
-      "course": "1 对 1 辅导答疑",
-      "project": "2026管理者训练营 1.0",
-      "lecturer": "徐浩",
-      "people": 1,
-      "duration": 1,
-      "note": "安广海"
-    },
-    {
-      "id": "djtbmtcp",
-      "date": "2026-10-10",
-      "course": "任务授权与分配",
-      "project": "2026管理者训练营 1.0",
-      "lecturer": "徐浩",
-      "people": 1,
-      "duration": 2,
-      "note": "安广海补课"
-    },
-    {
-      "id": "ost6lcuq",
-      "date": "2026-10-09",
-      "course": "1 对 1 辅导答疑",
-      "project": "2026管理者训练营 1.0",
-      "lecturer": "徐浩",
-      "people": 1,
-      "duration": 1,
-      "note": "韩丽辉"
-    },
-    {
-      "id": "dwym70dx",
-      "date": "2026-09-22",
-      "course": "管理者角色与时间账",
-      "project": "2026管理者训练营 1.0",
-      "lecturer": "徐浩",
-      "people": 1,
-      "duration": 1,
-      "note": "宋阳梅补课"
-    },
-    {
-      "id": "63wiwv64",
-      "date": "2026-09-08",
-      "course": "新员工AI 课程（北京场）",
-      "project": "新员工入职培训",
-      "lecturer": "徐浩",
-      "people": 13,
-      "duration": 0.67,
-      "note": "40 分钟"
-    },
-    {
-      "id": "4fyxekxc",
-      "date": "2026-10-15",
-      "course": "绩效辅导：先问后给",
-      "project": "2026管理者训练营 1.0",
-      "lecturer": "徐浩",
-      "people": 6,
-      "duration": 2,
-      "note": ""
-    },
-    {
-      "id": "pdy6umuj",
-      "date": "2026-10-16",
+      "id": "wgras0qf",
+      "date": "2026-10-21",
       "course": "1 对 1 辅导答疑",
       "project": "AI 赋能训练营第四期",
       "lecturer": "徐浩",
       "people": 1,
       "duration": 1,
-      "note": "陈雨菲"
-    },
-    {
-      "id": "saevmhvx",
-      "date": "2026-10-20",
-      "course": "1 对 1 辅导答疑",
-      "project": "AI 赋能训练营第四期",
-      "lecturer": "徐浩",
-      "people": 1,
-      "duration": 0.5,
-      "note": "高磊"
-    },
-    {
-      "id": "81swgwnv",
-      "date": "2026-10-20",
-      "course": "1 对 1 辅导答疑",
-      "project": "AI 赋能训练营第四期",
-      "lecturer": "徐浩",
-      "people": 1,
-      "duration": 0.5,
-      "note": "秦园春"
+      "note": "江国浩"
     }
   ],
   "budgets": [],
   "expenses": [
+    {
+      "id": "l27snwka",
+      "date": "2026-10-15",
+      "month": "2026-10",
+      "type": "regular",
+      "amount": 140,
+      "desc": "ChatGPT plus 费用"
+    },
+    {
+      "id": "c8v1mzia",
+      "date": "2026-10-13",
+      "month": "2026-10",
+      "type": "regular",
+      "amount": 168,
+      "desc": "Claude pro 会员"
+    },
+    {
+      "id": "hzjicbb3",
+      "date": "2026-09-16",
+      "month": "2026-09",
+      "type": "regular",
+      "amount": 1376.52,
+      "desc": "ChatGPT 5x2 个月"
+    },
+    {
+      "id": "xiios3kp",
+      "date": "2026-09-12",
+      "month": "2026-09",
+      "type": "regular",
+      "amount": 880,
+      "desc": "Claude 5max"
+    },
     {
       "id": "t4azreyy",
       "date": "2026-08-11",
@@ -976,38 +1018,6 @@
       "type": "regular",
       "amount": 150,
       "desc": "Gemini 订阅费用"
-    },
-    {
-      "id": "xiios3kp",
-      "date": "2026-09-12",
-      "month": "2026-09",
-      "type": "regular",
-      "amount": 880,
-      "desc": "Claude 5max"
-    },
-    {
-      "id": "hzjicbb3",
-      "date": "2026-09-16",
-      "month": "2026-09",
-      "type": "regular",
-      "amount": 1376.52,
-      "desc": "ChatGPT 5x2 个月"
-    },
-    {
-      "id": "c8v1mzia",
-      "date": "2026-10-13",
-      "month": "2026-10",
-      "type": "regular",
-      "amount": 168,
-      "desc": "Claude pro 会员"
-    },
-    {
-      "id": "l27snwka",
-      "date": "2026-10-15",
-      "month": "2026-10",
-      "type": "regular",
-      "amount": 140,
-      "desc": "ChatGPT plus 费用"
     }
   ],
   "aiStations": [
