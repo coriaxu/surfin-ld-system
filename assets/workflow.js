@@ -327,7 +327,7 @@
       {name:'金融小百科',page:'finance',unit:'期',records:source.financeWiki||[],pending:(source.financeWiki||[]).filter(s=>D.financeStatus(s).key==='pending').length,review:(source.financeWiki||[]).filter(s=>D.financeStatus(s).key==='review').length},
       ...training];
     // 项目状态与显示名由负责人确认；未登记的项目不加标签。筹备中的项目暂无记录。
-    const meta={'海外 HR 分享项目':{status:'已结项'},'新员工入职培训':{status:'阶段性已结项'},'金融小百科':{status:'已结项'},'AI 广播站':{status:'项目持续进行'},'AI 分享月':{status:'项目持续进行'},'2026管理者训练营 1.0':{status:'项目持续进行'}};
+    const meta={'海外 HR 分享项目':{status:'已结项'},'新员工入职培训':{status:'阶段性已结项'},'金融小百科':{status:'已结项',label:'金融小百科（2025–2026 年）'},'AI 广播站':{status:'项目持续进行'},'AI 分享月':{status:'项目持续进行'},'2026管理者训练营 1.0':{status:'项目持续进行'}};
     list.forEach(p=>Object.assign(p,meta[p.name]||{}));
     const fourth=list.find(p=>p.name===trainingProjectName('AI 赋能第四期'));
     if(fourth)fourth.status='项目持续进行';
@@ -375,7 +375,8 @@
     if(!os)return `<div class="okr-empty">本月 OKR 未整理，下方为系统自动汇总的本月数据。</div>`;
     const c=LDOkr.count(month);
     const src=LDOkr.sourceNote?LDOkr.sourceNote(month):'';
-    return `<div class="okr-block"><p class="field-help">${c.objectives} 个目标 · ${c.krs} 项关键结果 · 已完成 ${c.done} 项${src?`　｜　${esc(src)}`:''}</p>${os.map((o,i)=>`<section class="okr-objective"><h3>O${i+1}　${esc(o.o)}</h3><ul class="okr-krs">${o.krs.map(([kr,st,res])=>`<li><span class="okr-status okr-${{'完成':'done','进行中':'doing','部分完成':'partial','改期':'moved'}[st]||'doing'}">${esc(st)}</span><div><strong>${esc(kr)}</strong><span>${esc(res)}</span></div></li>`).join('')}</ul></section>`).join('')}</div>`;
+    const sum=LDOkr.summary?LDOkr.summary(month):'';
+    return `<div class="okr-block"><p class="field-help">${c.objectives} 个目标 · ${c.krs} 项关键结果 · 已完成 ${c.done} 项${src?`　｜　${esc(src)}`:''}</p>${sum?`<p class="summary-prose okr-summary">${esc(sum)}</p>`:''}${os.map((o,i)=>`<section class="okr-objective"><h3>O${i+1}　${esc(o.o)}</h3><ul class="okr-krs">${o.krs.map(([kr,st,res])=>`<li><span class="okr-status okr-${{'完成':'done','进行中':'doing','部分完成':'partial','改期':'moved'}[st]||'doing'}">${esc(st)}</span><div><strong>${esc(kr)}</strong><span>${esc(res)}</span></div></li>`).join('')}</ul></section>`).join('')}</div>`;
   }
   window.openMonthlyReportModal=()=>navigate(selection.mode==='ytd'?'annual':'monthly');
   function openExportSettings(){

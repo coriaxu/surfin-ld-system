@@ -120,8 +120,11 @@
   };
   /* 没有单独月度 OKR、从其他文档补整理的月份，页面上注明来源 */
   const sources={'2026-06':'6 月无单独 OKR 文档，据《2026 年上半年学习发展汇报》整理；数字以下方系统记录为准。','2026-09':'9 月 OKR 费用合计 ¥4,593.42，含第三期优秀学员报销 ¥2,336.90（走项目报销表，网站不记）；下方系统支出只含 AI 订阅 ¥2,256.52。'};
+  /* 当月培训总量概述（负责人确认的口径），显示在目标列表上方 */
+  const summaries={'2026-09':'9 月共开展培训 11 场、91 人次。'};
   function forMonth(month){return months[month]||null;}
   function sourceNote(month){return sources[month]||'';}
+  function summary(month){return summaries[month]||'';}
   function count(month){const os=forMonth(month)||[];const krs=os.flatMap(o=>o.krs);return {objectives:os.length,krs:krs.length,done:krs.filter(k=>k[1]==='完成').length};}
-  return {STATUS,months,forMonth,count,sourceNote};
+  return {STATUS,months,forMonth,count,sourceNote,summary};
 });
