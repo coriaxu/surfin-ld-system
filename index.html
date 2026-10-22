@@ -6718,7 +6718,7 @@ tr:hover td.empty-cell {
   <link rel="stylesheet" href="assets/workbench.css?v=20261014-mz">
   <link rel="stylesheet" href="assets/tokens.css?v=20261022-mz2">
   <link rel="stylesheet" href="assets/workflow.css?v=20261014-mz">
-  <link rel="stylesheet" href="assets/mingzhang.css?v=20261022-mz7">
+  <link rel="stylesheet" href="assets/mingzhang.css?v=20261022-mz8">
   <script src="assets/ld-domain.js?v=20261014-special"></script>
   <script src="assets/ld-report.js?v=20261022-sort"></script>
   <script src="assets/closeout-reports.js?v=20261014-closeout2"></script>
@@ -9517,7 +9517,7 @@ tr:hover td.empty-cell {
           maintainAspectRatio: false,
           cutout: '80%',
           plugins: {
-            legend: { position: 'bottom', labels: { color: colors.text, generateLabels: chart => Chart.overrides.doughnut.plugins.legend.labels.generateLabels(chart).map(l => ({ ...l, text: `${l.text} ¥${Number(chart.data.datasets[0].data[l.index] || 0).toLocaleString('zh-CN')}` })) } },
+            legend: { position: 'bottom', labels: { color: colors.text, generateLabels: chart => Chart.overrides.doughnut.plugins.legend.labels.generateLabels(chart).map(l => ({ ...l, text: `${l.text} ¥${Number(chart.data.datasets[0].data[l.index] || 0).toLocaleString('zh-CN')}`, ...(Number(chart.data.datasets[0].data[l.index]) > 0 ? {} : { fillStyle: colors.grid, strokeStyle: colors.grid, fontColor: chartTint(colors.text.startsWith('#') ? colors.text : '#888888', 0.6) }) })) } },
             tooltip: { callbacks: { label: item => ` ${item.label}：¥${Number(item.raw || 0).toLocaleString('zh-CN')}` } }
           }
         },

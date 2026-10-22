@@ -445,3 +445,40 @@ body .assess-year-card.current .assess-year-num { color:var(--mz-ink); }
   repeating-linear-gradient(180deg,transparent 0 31px,color-mix(in srgb,var(--mz-brand) 11%,transparent) 31px 32px); }
 .auth-overlay::after { bottom:6vh; left:calc(18% + 24px); opacity:.16; }
 @media (max-width:640px) { .auth-overlay::before { background:repeating-linear-gradient(180deg,transparent 0 31px,color-mix(in srgb,var(--mz-brand) 11%,transparent) 31px 32px); } .auth-overlay::after { left:16px; } }
+
+/* ---------- 明账 2.0 · 第五轮自检修正 ---------- */
+/* 页面本身不再铺底色（金融百科页四角露出的方块） */
+#mainContent > .page { background:transparent; }
+/* 首屏：柔光收小一圈，账本横线更清楚，左侧加红色页边线（双线） */
+#page-dashboard::before { background:radial-gradient(45% 80% at 8% 0%,var(--mz-hero-1) 0%,transparent 62%),radial-gradient(38% 70% at 62% 0%,var(--mz-hero-2) 0%,transparent 60%),
+    radial-gradient(35% 75% at 100% 10%,var(--mz-hero-3) 0%,transparent 62%),linear-gradient(180deg,var(--mz-hero-wash),var(--mz-surface)); }
+#page-dashboard::after { background:
+    linear-gradient(90deg,transparent 15px,color-mix(in srgb,var(--mz-review-mid) 60%,transparent) 15px 16px,transparent 16px 19px,color-mix(in srgb,var(--mz-review-mid) 38%,transparent) 19px 20px,transparent 20px),
+    repeating-linear-gradient(180deg,transparent 0 31px,color-mix(in srgb,var(--mz-brand) 13%,transparent) 31px 32px);
+  -webkit-mask:linear-gradient(180deg,#000 50%,transparent 95%); mask:linear-gradient(180deg,#000 50%,transparent 95%); }
+@media (max-width:640px) {
+  #page-dashboard::after { background:linear-gradient(90deg,transparent 5px,color-mix(in srgb,var(--mz-review-mid) 60%,transparent) 5px 6px,transparent 6px),repeating-linear-gradient(180deg,transparent 0 31px,color-mix(in srgb,var(--mz-brand) 13%,transparent) 31px 32px); }
+  .auth-overlay::before { background:linear-gradient(90deg,transparent 10px,color-mix(in srgb,var(--mz-review-mid) 55%,transparent) 10px 11px,transparent 11px 14px,color-mix(in srgb,var(--mz-review-mid) 35%,transparent) 14px 15px,transparent 15px),
+    repeating-linear-gradient(180deg,transparent 0 31px,color-mix(in srgb,var(--mz-brand) 11%,transparent) 31px 32px); }
+}
+/* 台账各页：表格在卡片里贴边铺满，与金融百科同一做法 */
+@media (min-width:641px) {
+  #mainContent .card .card-body > .table-wrap, #mainContent .card .table-wrap { margin-left:-22px; margin-right:-22px; border-width:1px 0; border-radius:0; }
+  #mainContent .card .table-wrap table th:first-child, #mainContent .card .table-wrap table td:first-child { padding-left:22px; }
+  #mainContent .card .table-wrap table th:last-child, #mainContent .card .table-wrap table td:last-child { padding-right:22px; }
+}
+/* 金融百科页头压成一行：标题与说明并排 */
+body .fin-header { padding:18px 24px; display:flex; align-items:baseline; gap:14px; }
+body .fin-header > div:first-child { display:flex; align-items:baseline; gap:14px; flex-wrap:wrap; }
+body .fin-title { font-size:20px; }
+body .fin-subtitle { margin-top:0; }
+/* 手机：台账卡片去外框，记录卡直接落在页面上；清除筛选跟在筛选项后 */
+@media (max-width:640px) {
+  #page-training > .card, #page-budget .card:has(.table-wrap), #page-aiknowledge .card:has(.table-wrap) { background:transparent; border:0; box-shadow:none; }
+  #page-training > .card > .card-body, #page-budget .card:has(.table-wrap) > .card-body, #page-aiknowledge .card:has(.table-wrap) > .card-body { padding-left:0; padding-right:0; }
+  #page-training > .card > .card-header { padding-left:0; padding-right:0; }
+  .record-filters [data-reset] { flex:0 0 auto; }
+}
+/* 汇报页：长说明在分隔符处换行，段落控制行长 */
+.compact-metrics small, .compact-metrics span, .stat-desc { word-break:keep-all; overflow-wrap:anywhere; }
+#monthlySummary > p:not(.field-help), #annualSummary > p:not(.field-help) { max-width:38em; text-wrap:pretty; }
