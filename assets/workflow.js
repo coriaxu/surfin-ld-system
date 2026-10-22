@@ -63,7 +63,7 @@
   }
   function groupFor(page){return Object.keys(groups).find(key=>groups[key].pages.some(p=>p[0]===page)) || 'overview';}
   function updateRoute(page) {
-    activePage=page;const key=groupFor(page);
+    activePage=page;document.body.dataset.page=page;const key=groupFor(page);
     mainNav.querySelectorAll('button').forEach(b=>{b.classList.toggle('active',b.dataset.group===key);b.setAttribute('aria-current',b.dataset.group===key?'page':'false');});
     subbar.innerHTML=groups[key].pages.map(([id,label])=>`<button class="module-tab ${id===page?'active':''}" data-action="navigate" data-record="${id}" aria-current="${id===page?'page':'false'}">${label}</button>`).join('');
     subbar.hidden=groups[key].pages.length===1;

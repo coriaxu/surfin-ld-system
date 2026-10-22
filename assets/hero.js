@@ -78,7 +78,7 @@
       const a = get(cur), b = get(before);
       if (a === null || b === null || a === undefined || b === undefined) continue;
       const d = Math.round((Number(a) - Number(b)) * 100) / 100;
-      chip(id, d === 0 ? `与 ${Number(prev.slice(5))} 月${ongoing ? '同期' : ''}持平` : `${label}${d > 0 ? '多' : '少'} ${num(Math.abs(d))}${pct(d, b)}`, d > 0 ? 'up' : d < 0 ? 'down' : 'flat',
+      chip(id, d === 0 ? `与 ${Number(prev.slice(5))} 月${ongoing ? '同期' : ''}持平` : `<span class="mz-delta-ctx">${label}</span>${d > 0 ? '多' : '少'} ${num(Math.abs(d))}${pct(d, b)}`, d > 0 ? 'up' : d < 0 ? 'down' : 'flat',
         `${prev}-01 至 ${prev}-${String(day).padStart(2, '0')}：${num(b)}`);
     }
     // 四张卡同一结构：支出看预算使用率，没设预算也占位说明

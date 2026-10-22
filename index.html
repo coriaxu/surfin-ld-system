@@ -6718,7 +6718,7 @@ tr:hover td.empty-cell {
   <link rel="stylesheet" href="assets/workbench.css?v=20261014-mz">
   <link rel="stylesheet" href="assets/tokens.css?v=20261022-mz2">
   <link rel="stylesheet" href="assets/workflow.css?v=20261014-mz">
-  <link rel="stylesheet" href="assets/mingzhang.css?v=20261022-mz6">
+  <link rel="stylesheet" href="assets/mingzhang.css?v=20261022-mz7">
   <script src="assets/ld-domain.js?v=20261014-special"></script>
   <script src="assets/ld-report.js?v=20261022-sort"></script>
   <script src="assets/closeout-reports.js?v=20261014-closeout2"></script>
@@ -7504,8 +7504,8 @@ tr:hover td.empty-cell {
         <div class="fin-container">
           <div class="fin-header">
             <div>
-              <div class="fin-title">金融小百科</div>
-              <div class="fin-subtitle">第一季 · 稳定币超入门</div>
+              <div class="fin-title">金融百科</div>
+              <div class="fin-subtitle">金融小百科第一季 · 稳定币超入门</div>
             </div>
             <div class="fin-controls">
               <button class="fin-btn active" id="finTab-stablecoin">稳定币 (Season 1)</button>
@@ -9484,7 +9484,8 @@ tr:hover td.empty-cell {
           ctx.fillStyle = colors.text;
           ctx.textBaseline = 'middle';
           ctx.textAlign = 'center';
-          ctx.fillText('总支出', centerX, centerY - 11);
+          // 只有一类时直接说明，避免一整圈色环让人以为还有别的类别
+          ctx.fillText(bothKinds ? '总支出' : costRegular > 0 ? '全部为常规开销' : costSpecial > 0 ? '全部为特殊开销' : '暂无支出', centerX, centerY - 11);
 
           // 金额
           ctx.font = `600 19px ${family}`;
@@ -11816,9 +11817,9 @@ tr:hover td.empty-cell {
   </script>
   <script src="assets/workbench.js?v=20261014-mz"></script>
   <script src="assets/report-export.js?v=20261022-lazy"></script>
-  <script src="assets/workflow.js?v=20261022-mz3"></script>
+  <script src="assets/workflow.js?v=20261022-mz7"></script>
   <script src="assets/mingzhang.js?v=20261022-mz2"></script>
-  <script src="assets/hero.js?v=20261022-mz6"></script>
+  <script src="assets/hero.js?v=20261022-mz7"></script>
   <script src="assets/monthpicker.js?v=20261022-mz3"></script>
   <script src="assets/motion.js?v=20261022-mz3"></script>
 </body>

@@ -412,3 +412,36 @@ body .fin-header, body .case-hero, body .assess-hero { background:var(--mz-surfa
 .record-filters .mz-month-btn { height:38px; }
 .record-filters [data-reset] { height:38px; border:1px solid var(--mz-line-strong) !important; background:var(--mz-surface) !important; color:var(--mz-ink-2) !important; }
 .record-filters [data-reset]:hover { color:var(--mz-ink) !important; border-color:color-mix(in srgb,var(--mz-brand) 35%,var(--mz-line-strong)) !important; }
+
+/* ---------- 明账 2.0 · 第四轮自检修正 ---------- */
+/* 手机：16px 侧边距；变化提示只留数字，不换行 */
+@media (max-width:640px) {
+  #mainContent { padding-left:16px; padding-right:16px; }
+  #page-dashboard::before, #page-dashboard::after { left:-16px; right:-16px; }
+  .mz-delta .mz-delta-ctx { display:none; }
+  .mz-delta { white-space:nowrap; }
+}
+/* 工作汇报页：标签和页标题已写明「月度 OKR / 年度总结」，卡片标题与顶栏同名快捷按钮不再重复 */
+#page-monthly > .card > .card-header, #page-annual > .card > .card-header { display:none; }
+body[data-page="monthly"] .topbar [onclick="openMonthlyReportModal()"], body[data-page="annual"] .topbar [onclick="openMonthlyReportModal()"] { display:none; }
+/* 金融百科：日期与数字统一等宽、不加字距；年份筛选与其它下拉同样带箭头 */
+#page-finance .fin-stats-table td, #page-finance .fin-stats-table td * { letter-spacing:0 !important; font-variant-numeric:tabular-nums; }
+.record-filters input[type="number"] { background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2360676F' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 10px center; background-size:16px; padding-right:32px; -moz-appearance:textfield; }
+.record-filters input[type="number"]::-webkit-inner-spin-button, .record-filters input[type="number"]::-webkit-outer-spin-button { -webkit-appearance:none; margin:0; }
+/* 案例库：国旗放进和其它卡片同尺寸的图标框 */
+body .case-card .case-card-icon { width:44px; height:44px; border-radius:10px; background:var(--mz-sunken); filter:none; }
+body .case-card .case-card-icon .flag-3d { width:30px !important; height:30px !important; object-fit:contain; }
+/* 测评报告：介绍文字顶对齐；补充说明放到搜索框下；选中年份只用边框和标记 */
+#page-assessment .assess-hero-body { align-items:start; }
+#page-assessment .library-search { flex-direction:column; align-items:stretch; gap:6px; }
+#page-assessment .library-search .field-help { padding:0; font-size:12.5px; color:var(--mz-ink-3); }
+#page-assessment .assess-content { margin-top:8px; }
+body .assess-year-card.current .assess-year-num { color:var(--mz-ink); }
+/* 表格「更多」与表头右缘对齐 */
+#page-training td:last-child .actions-row, #page-budget td:last-child .actions-row, #page-aiknowledge td:last-child .actions-row { margin-right:-9px; }
+/* 登录页：账本横线更清楚，加一道红色页边线；字标完整落在画面里 */
+.auth-overlay::before { background:
+  linear-gradient(90deg,transparent calc(18% - 1px),color-mix(in srgb,var(--mz-review-mid) 55%,transparent) calc(18% - 1px) 18%,transparent 18%,transparent calc(18% + 3px),color-mix(in srgb,var(--mz-review-mid) 35%,transparent) calc(18% + 3px) calc(18% + 4px),transparent calc(18% + 4px)),
+  repeating-linear-gradient(180deg,transparent 0 31px,color-mix(in srgb,var(--mz-brand) 11%,transparent) 31px 32px); }
+.auth-overlay::after { bottom:6vh; left:calc(18% + 24px); opacity:.16; }
+@media (max-width:640px) { .auth-overlay::before { background:repeating-linear-gradient(180deg,transparent 0 31px,color-mix(in srgb,var(--mz-brand) 11%,transparent) 31px 32px); } .auth-overlay::after { left:16px; } }
