@@ -227,7 +227,7 @@ def build_css():
     return ''.join(out), problems
 
 def design_system_tokens():
-    """Claude Design System 的 tokens.json：浅色、深色 × 四个主色 = 8 套主题，第一套为默认（浅色 · 晴山蓝）。"""
+    """Claude Design System 的 tokens.json：浅色、深色 × 三个主色 = 6 套主题，第一套为默认（浅色 · 晴空蓝）。"""
     order = [DEFAULT_ACCENT] + [k for k in ACCENTS if k != DEFAULT_ACCENT]
     themes, pal = [], {}
     for key in order:
