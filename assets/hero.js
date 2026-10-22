@@ -107,10 +107,35 @@
     timers.set(node, requestAnimationFrame(step));
   }
 
+  // 大数字始终一行：放不下时按比例缩小字号（最小 24px），不截断、不换行。
+  const FIT_IDS = ['statSessions', 'statHours', 'statMonthPeople', 'statMonthSpend', 'statYearSessions', 'statYearPeople', 'statYearHours', 'statYearSpend'];
+  // 返回这个数字一行放下所需的字号；同一组四张卡取最小值统一，避免大小参差。
+  function need(node, finalText) {
+    if (!node || !node.offsetParent) return null;
+    node.style.fontSize = '';
+    const box = node.parentElement, room = box.clientWidth - parseFloat(getComputedStyle(box).paddingLeft) - parseFloat(getComputedStyle(box).paddingRight);
+    const shown = node.textContent;
+    if (finalText) node.textContent = finalText;
+    const width = node.scrollWidth, base = parseFloat(getComputedStyle(node).fontSize);
+    if (finalText) node.textContent = shown;
+    return room > 0 && width > room ? Math.max(24, Math.floor(base * room / width)) : base;
+  }
+  const fitAll = () => [FIT_IDS.slice(0, 4), FIT_IDS.slice(4)].forEach(group => {
+    const nodes = group.map($).filter(Boolean);
+    const sizes = nodes.map(n => need(n, n.dataset.mzFinal)).filter(v => v !== null);
+    if (!sizes.length) return;
+    const size = Math.min(...sizes), base = Math.max(...sizes);
+    nodes.forEach(n => { n.style.fontSize = size < base ? size + 'px' : ''; });
+  });
+  let fitTimer;
+  addEventListener('resize', () => { clearTimeout(fitTimer); fitTimer = setTimeout(fitAll, 120); });
+
   const base = renderStats;
   renderStats = function () {
     base.apply(this, arguments);
     try { drawSparks(); drawDeltas(); } catch (err) { console.warn('趋势线未绘制', err); }
+    FIT_IDS.forEach(id => { const n = $(id); if (n) n.dataset.mzFinal = n.textContent; });
+    fitAll();
     METRICS.forEach(([id]) => { const n = $(id); if (n) roll(n); });
   };
   renderStats();

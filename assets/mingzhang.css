@@ -220,7 +220,7 @@ body #page-dashboard > .stats-grid .stat-card { border-left-color:color-mix(in s
 #page-dashboard > .stats-grid .stat-card:nth-child(2) { --series:var(--mz-series-2); }
 #page-dashboard > .stats-grid .stat-card:nth-child(3) { --series:var(--mz-series-3); }
 #page-dashboard > .stats-grid .stat-card:nth-child(4) { --series:var(--mz-series-4); }
-#page-dashboard > .stats-grid .stat-value { font-size:54px; font-weight:400; letter-spacing:-.035em; line-height:1.08; }
+#page-dashboard > .stats-grid .stat-value { font-size:54px; font-weight:400; letter-spacing:-.035em; line-height:1.08; white-space:nowrap; }
 .mz-spark { display:block; width:100%; height:34px; margin-top:10px; overflow:visible; color:var(--series,var(--mz-series-1)); }
 .mz-spark .area { fill:currentColor; opacity:.12; }
 .mz-spark .line { fill:none; stroke:currentColor; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; vector-effect:non-scaling-stroke; }
