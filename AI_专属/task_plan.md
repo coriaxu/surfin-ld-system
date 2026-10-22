@@ -8,9 +8,11 @@
 
 ## 📝 Todo
 
+- [ ] **明账 2.0（2026-10-22 启动，分支 `claude/lucid-archimedes-2t1rjj`）**：第 1 步色彩材质、第 2 步首屏与登录页、月报排序已完成，等徐老师看截图确认；之后第 3 步组件精修 → 第 4 步图表 → 第 5 步动效 → 第 6 步一致性收尾（老页面、标题与标签统一、导出库按需加载、锁 Chart.js 版本、favicon），最后用 `--json` 同步 Claude Design System。
+
 - [ ] 第 19 项：确认正式账号与查看范围、HTTPS 部署位置、旧公开报告入口迁移范围，再启用私有服务（代码与隔离测试已完成，启用步骤见 `README.md`）。
 - [ ] 结项报告（付玲姐 2026-10-14 提出）：样板「AI 赋能第三期」2026-10-14 已上线（不含学员姓名）。后续：挂原文链接、加其它项目、具名案例等第 19 项后再加。数据在 `assets/closeout-reports.js`（手写摘要 + 按项目名与起止日期自动汇总培训记录），页面在 `workflow.js` 的 `renderCloseout`。公开站点只放不含学员姓名的汇总结论；原文链接 `links` 暂空。
-- [ ] 改颜色时：先改 `tools/tokens.py` 再运行生成，并用 `--json` 同步 Claude Design System「学习发展 · 明账」。
+- [ ] 改颜色时：先改 `tools/tokens.py` 再运行生成，并用 `--json` 同步 Claude Design System「学习发展 · 明账」（明账 2.0 收尾时统一同步）。
 - [ ] 按需：其它模块新功能。
 
 ## ✅ Completed（摘要；细节见 git 历史与 `ProjectDocs/`）
@@ -35,5 +37,5 @@
 ## ⚠️ 工作约定
 
 - `.git` 已在 Drive 之外（见上）。若 `git` 报“not a git repository”，先确认 `.git` 指针文件存在且 `/Users/surfin/.git-repos/surfin-ld-system.git` 仍在；换电脑需重新 clone。
-- 测试命令：`node --test tests/domain.test.cjs tests/report.test.cjs tests/sync.test.cjs tests/server.test.mjs tests/closeout.test.cjs tests/okr.test.cjs`（36 项）。
+- 测试命令：`node --test tests/*.test.*`（2026-10-22 为 67 项）。
 - 本机 `git fetch/push` 若卡住，多半是钥匙串弹窗；可用 `GIT_TERMINAL_PROMPT=0 git -c credential.helper= fetch origin main` 只读拉取。
