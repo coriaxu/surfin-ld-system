@@ -1,5 +1,25 @@
 /* Both file formats consume the exact same report model; neither reads live state. */
 (() => {
+  // 导出库只在导出时加载：xlsx、jsPDF、html2canvas 合计约 1.4MB，不再拖慢首屏。版本与原先页头引用一致。
+  const LIBS={
+    xlsx:['https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js',()=>window.XLSX],
+    jspdf:['https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js',()=>window.jspdf],
+    html2canvas:['https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js',()=>window.html2canvas]
+  };
+  const loading={};
+  function need(...names){
+    return Promise.all(names.map(name=>{
+      const [src,ready]=LIBS[name];
+      if(ready())return null;
+      return loading[name]||=new Promise((resolve,reject)=>{
+        const tag=document.createElement('script');tag.src=src;tag.async=true;
+        tag.onload=()=>ready()?resolve():reject(new Error('导出组件加载不完整，请刷新后重试'));
+        tag.onerror=()=>{delete loading[name];tag.remove();reject(new Error('导出组件加载失败，请检查网络后重试'));};
+        document.head.append(tag);
+      });
+    }));
+  }
+  window.LDExportLibs={need};
   const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   function workbook(model){
     const wb=XLSX.utils.book_new();
@@ -46,6 +66,7 @@
     }catch(error){host.remove();throw error;}
   }
   async function pdf(model,{save=true}={}){
+    await need('jspdf','html2canvas');
     const {host,pages}=pdfPages(model);
     try{
       await document.fonts.ready;const doc=new jspdf.jsPDF('p','mm','a4');
@@ -56,5 +77,5 @@
       if(save)doc.save(model.filename+'.pdf');return doc;
     }finally{host.remove();}
   }
-  window.LDReportExport={workbook,pdfPages,pdf,excel(model){XLSX.writeFile(workbook(model),model.filename+'.xlsx');}};
+  window.LDReportExport={workbook,pdfPages,pdf,async excel(model){await need('xlsx');XLSX.writeFile(workbook(model),model.filename+'.xlsx');}};
 })();

@@ -42,10 +42,12 @@
     const dot = last === null ? '' : `<circle class="dot" cx="${x(li).toFixed(1)}" cy="${y(last).toFixed(1)}" r="3"/>`;
     return `<svg class="mz-spark" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img" aria-label="${labels[0]} 至 ${labels[li]} 每月趋势"><path class="area" d="${area}"/><path class="line" d="${line}"/>${tail ? `<path class="line ongoing" d="${path(tail)}"/>` : ''}${dot}</svg>`;
   }
-  const short = (m, ref) => (m.slice(0, 4) === ref.slice(0, 4) ? '' : `${m.slice(2, 4)}年`) + `${Number(m.slice(5))}月`;
+  // 与图表横轴同一写法：同一年写「10月」，跨年都写「25.11」「26.10」
+  const short = (m, ref, cross) => cross ? `${m.slice(2, 4)}.${m.slice(5, 7)}` : `${Number(m.slice(5))}月`;
 
   function drawSparks() {
     const list = months(), data = list.map(m => R.aggregate(state, R.period('month', m)));
+    const cross = list[0].slice(0, 4) !== list[list.length - 1].slice(0, 4);
     for (const [id, get] of METRICS) {
       const card = $(id)?.closest('.stat-card');
       if (!card) continue;
@@ -53,8 +55,35 @@
       const values = data.map(d => { const v = get(d); return v === null || v === undefined ? null : Number(v); });
       const svg = spark(values, list, list[list.length - 1] === R.today().slice(0, 7));
       if (!svg) continue;
-      card.querySelector('.stat-desc').insertAdjacentHTML('beforebegin', svg + `<div class="mz-spark-cap" aria-hidden="true"><span>${short(list[0], list[list.length - 1])}</span><span>${short(list[list.length - 1], list[list.length - 1])}</span></div>`);
+      card.querySelector('.stat-desc').insertAdjacentHTML('beforebegin', svg + `<div class="mz-spark-cap" aria-hidden="true"><span>${short(list[0], 0, cross)}</span><span>${short(list[list.length - 1], 0, cross)}</span></div>`);
     }
+  }
+
+  // 与上月比：本月没过完时比上月同期（同样截到今天的日号），已结束的月份比上月整月。
+  // 任一边缺数就不显示；支出改看预算使用率，没设预算不显示。只在月度视图出现。
+  const num = v => Number(v).toLocaleString('zh-CN', { maximumFractionDigits: 2 });
+  function drawDeltas() {
+    document.querySelectorAll('#page-dashboard .mz-delta').forEach(n => n.remove());
+    const ytd = document.querySelector('.period-switch [data-period="ytd"]')?.classList.contains('active');
+    const month = $('overviewMonth')?.value;
+    if (ytd || !month || ['loading', 'failed'].includes(window.LDLoadInfo?.status)) return;
+    const today = R.today(), ongoing = month === today.slice(0, 7);
+    const [y, m] = month.split('-').map(Number), prev = new Date(Date.UTC(y, m - 2, 1)).toISOString().slice(0, 7);
+    const prevLast = new Date(Date.UTC(y, m - 1, 0)).getUTCDate(), day = ongoing ? Math.min(Number(today.slice(8)), prevLast) : prevLast;
+    const cur = R.aggregate(state, R.period('month', month)), before = R.aggregate(state, R.period('month', prev, `${prev}-${String(day).padStart(2, '0')}`));
+    const label = `比 ${Number(prev.slice(5))} 月${ongoing ? '同期' : ''}`;
+    const pct = (d, b) => Number(b) ? `（${d > 0 ? '+' : '−'}${Math.round(Math.abs(d) / Number(b) * 100)}%）` : '';
+    const chip = (id, text, kind, title) => $(id)?.insertAdjacentHTML('afterend', `<span class="mz-delta ${kind}" title="${title}">${text}</span>`);
+    for (const [id, get] of METRICS.slice(0, 3)) {
+      const a = get(cur), b = get(before);
+      if (a === null || b === null || a === undefined || b === undefined) continue;
+      const d = Math.round((Number(a) - Number(b)) * 100) / 100;
+      chip(id, d === 0 ? `与 ${Number(prev.slice(5))} 月${ongoing ? '同期' : ''}持平` : `${label}${d > 0 ? '多' : '少'} ${num(Math.abs(d))}${pct(d, b)}`, d > 0 ? 'up' : d < 0 ? 'down' : 'flat',
+        `${prev}-01 至 ${prev}-${String(day).padStart(2, '0')}：${num(b)}`);
+    }
+    // 四张卡同一结构：支出看预算使用率，没设预算也占位说明
+    if (cur.budget && cur.spend !== null) chip('statMonthSpend', `预算已用 ${Math.round(cur.spend / cur.budget * 100)}%`, cur.spend > cur.budget ? 'over' : 'flat', `本月预算 ¥${num(cur.budget)}`);
+    else chip('statMonthSpend', '本月未设预算', 'flat', '在「预算与开销」里设置预算后显示使用率');
   }
 
   // 数字滚动：只处理纯数值（可带 ¥ 与千分位），待补、未加载等文字原样显示。
@@ -81,7 +110,7 @@
   const base = renderStats;
   renderStats = function () {
     base.apply(this, arguments);
-    try { drawSparks(); } catch (err) { console.warn('趋势线未绘制', err); }
+    try { drawSparks(); drawDeltas(); } catch (err) { console.warn('趋势线未绘制', err); }
     METRICS.forEach(([id]) => { const n = $(id); if (n) roll(n); });
   };
   renderStats();

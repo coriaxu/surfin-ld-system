@@ -254,3 +254,161 @@ body .auth-btn:hover { background:linear-gradient(180deg,var(--mz-brand),var(--m
   #page-dashboard::before { animation:none; }
   .quick-add-trigger, body .btn-primary, body .auth-btn, .primary-nav { transition:none; }
 }
+
+/* ---------- 明账 2.0 · 第三步：组件精修 ---------- */
+/* 按钮：统一高度、图标间距与按下反馈 */
+body .btn, body .fin-btn { transition:background-color var(--dur-2) var(--ease), border-color var(--dur-2) var(--ease), color var(--dur-2) var(--ease), transform var(--dur-1) var(--ease), box-shadow var(--dur-2) var(--ease); }
+body .btn:active:not(:disabled), body .fin-btn:active { transform:scale(.98); }
+body .btn svg { width:15px; height:15px; flex:none; }
+body .btn-secondary:hover, body .btn-edit:hover, body .fin-btn:hover { border-color:color-mix(in srgb,var(--mz-brand) 35%,var(--mz-line-strong)); }
+
+/* 卡片里的表格不再叠第二层阴影 */
+.card .table-wrap { box-shadow:none; border-color:var(--mz-line-faint); }
+/* 表格：项目、讲师、日期不折行；数字右对齐等宽 */
+#page-training td:nth-child(3), #page-training td:nth-child(4) { white-space:nowrap; }
+#page-training td:nth-child(2) { min-width:180px; }
+#page-training td:nth-child(8) { min-width:96px; }
+table td { transition:background-color var(--dur-1) var(--ease); }
+/* 行操作：能悬停的设备上默认收起，悬停、键盘聚焦或菜单打开时出现；手机与触屏保持常显 */
+@media (hover:hover) and (min-width:641px) {
+  table tbody .actions-row { opacity:0; transition:opacity var(--dur-2) var(--ease); }
+  table tbody tr:hover .actions-row, table tbody tr:focus-within .actions-row, table tbody .actions-row:has(.row-more[open]) { opacity:1; }
+}
+
+/* 月份选择器 */
+.mz-month { position:relative; display:flex; min-width:0; vertical-align:top; }
+.mz-month > input[type="month"] { position:absolute; inset:0; opacity:0; pointer-events:none; width:100%; height:100%; }
+.mz-month-btn { display:inline-flex; align-items:center; justify-content:space-between; gap:10px; width:100%; min-width:148px; height:36px; padding:0 12px; border:1px solid var(--mz-line-strong); border-radius:var(--radius-sm);
+  background:var(--mz-surface); color:var(--mz-ink); font:500 14px var(--font-num); font-variant-numeric:tabular-nums; cursor:pointer; transition:border-color var(--dur-2) var(--ease), box-shadow var(--dur-2) var(--ease); }
+.mz-month-btn:hover { border-color:color-mix(in srgb,var(--mz-brand) 45%,var(--mz-line-strong)); }
+.mz-month-btn[aria-expanded="true"], .mz-month-btn:focus-visible { border-color:var(--mz-brand); box-shadow:0 0 0 3px color-mix(in srgb,var(--mz-brand) 22%,transparent); outline:0; }
+.mz-month-btn.is-empty .mz-month-text { color:var(--mz-ink-3); font-family:var(--font-sans); font-weight:400; }
+.mz-month-btn svg { width:16px; height:16px; color:var(--mz-ink-3); flex:none; }
+.mz-month-btn:disabled { background:var(--mz-sunken); color:var(--mz-ink-3); cursor:not-allowed; }
+#page-dashboard .mz-month-btn { height:40px; background:var(--mz-glass); border-color:var(--mz-glass-line); -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px); box-shadow:0 1px 2px rgba(16,24,40,.05); }
+.mz-month-panel { position:fixed; z-index:1200; width:252px; padding:12px; background:var(--mz-raised); border:1px solid var(--mz-line); border-radius:14px; box-shadow:var(--shadow-pop);
+  animation:mz-pop var(--dur-2) var(--ease); transform-origin:top left; }
+@keyframes mz-pop { from { opacity:0; transform:translateY(-4px) scale(.98); } }
+.mz-month-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
+.mz-month-head strong { font:600 14px var(--font-num); color:var(--mz-ink); }
+.mz-month-head button { width:30px; height:30px; border:0; border-radius:8px; background:transparent; color:var(--mz-ink-2); font-size:18px; line-height:1; cursor:pointer; }
+.mz-month-head button:hover { background:var(--mz-sunken); }
+.mz-month-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:4px; }
+.mz-month-grid button, .mz-month-foot button { height:34px; border:0; border-radius:8px; background:transparent; color:var(--mz-ink-2); font:500 13.5px var(--font-sans); cursor:pointer; transition:background-color var(--dur-1) var(--ease), color var(--dur-1); }
+.mz-month-grid button:hover:not(:disabled), .mz-month-foot button:hover { background:var(--mz-accent-tint); color:var(--mz-accent-ink); }
+.mz-month-grid button[aria-pressed="true"] { background:var(--mz-brand); color:var(--mz-on-brand); }
+.mz-month-grid button:disabled { color:var(--mz-ink-faint); cursor:not-allowed; }
+.mz-month-foot { display:flex; justify-content:flex-end; gap:4px; margin-top:8px; padding-top:8px; border-top:1px solid var(--mz-line-faint); }
+.mz-month-foot button { padding:0 12px; height:30px; color:var(--mz-accent-ink); }
+@media (max-width:640px) { .mz-month-btn { min-width:0; } }
+
+/* ---------- 明账 2.0 · 第五步：动效 ---------- */
+/* 页面切换：淡入并上移 6px */
+@keyframes mz-page-in { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:none; } }
+#mainContent > .page.active { animation:mz-page-in var(--dur-3) var(--ease) both; }
+/* 侧栏选中块与标签下划线由 motion.js 移动 */
+.primary-navigation.has-indicator, .module-tabs.has-indicator { position:relative; }
+.mz-nav-pill, .mz-tab-ink { position:absolute; left:0; top:0; z-index:0; pointer-events:none; opacity:0;
+  transition:transform var(--dur-3) var(--ease), width var(--dur-3) var(--ease), height var(--dur-3) var(--ease), opacity var(--dur-2); }
+.mz-nav-pill { border-radius:var(--radius-sm); background:var(--mz-accent-tint); }
+.mz-tab-ink { border-radius:2px; background:var(--mz-brand); }
+.mz-nav-pill.no-anim, .mz-tab-ink.no-anim { transition:none; }
+.primary-navigation.has-indicator .primary-nav { position:relative; z-index:1; }
+.primary-navigation.has-indicator .primary-nav.active { background:transparent; }
+.module-tabs.has-indicator .module-tab.active::after { display:none; }
+.module-tabs.has-indicator .module-tab { position:relative; z-index:1; }
+/* 可点的行与卡片：悬停轻微抬起 */
+.project-row, .result-list li, .case-card, .assess-year-card, .assess-manager-card { transition:background-color var(--dur-2) var(--ease), border-color var(--dur-2) var(--ease), transform var(--dur-2) var(--ease), box-shadow var(--dur-2) var(--ease); }
+.case-card:hover, .assess-year-card:hover, .assess-manager-card:hover { transform:translateY(-2px); box-shadow:0 10px 28px rgba(16,24,40,.08); }
+/* 抽屉与弹层用统一缓动 */
+.record-drawer, .quick-add-menu, .tools-panel, .row-more-panel { transition-timing-function:var(--ease); }
+.quick-add-menu:not([hidden]), .tools-panel:not([hidden]), .row-more-panel:not([hidden]) { animation:mz-pop var(--dur-2) var(--ease); }
+/* 加载中：骨架占位代替文字横幅（横幅仍留给读屏） */
+html[data-data-load="loading"] .data-load-banner { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0; padding:0; margin:0; }
+html[data-data-load="loading"] #page-dashboard .stat-value, html[data-data-load="loading"] #page-dashboard .stat-desc { color:transparent !important; border-radius:8px; width:min(160px,70%);
+  background:linear-gradient(90deg,var(--mz-sunken) 0%,var(--mz-line-faint) 50%,var(--mz-sunken) 100%); background-size:200% 100%; animation:mz-shimmer 1.2s linear infinite; }
+html[data-data-load="loading"] #page-dashboard .stat-desc { width:min(120px,50%); height:14px; margin-top:12px; }
+html[data-data-load="loading"] .mz-spark, html[data-data-load="loading"] .mz-spark-cap { visibility:hidden; }
+@keyframes mz-shimmer { to { background-position:-200% 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important; scroll-behavior:auto !important; }
+}
+
+/* ---------- 明账 2.0 · 第六步：老页面统一页头 ---------- */
+/* 金融百科、案例与手册、测评报告的页头与总览首屏同一套柔光，只是更淡 */
+body .fin-header, body .case-hero, body .assess-hero { position:relative; overflow:hidden; isolation:isolate; padding:28px 32px; margin-bottom:20px; border:1px solid var(--mz-line-faint); border-radius:18px; box-shadow:var(--shadow-card);
+  background:radial-gradient(55% 120% at 0% 0%,color-mix(in srgb,var(--mz-hero-1) 55%,transparent),transparent 70%),radial-gradient(45% 120% at 100% 0%,color-mix(in srgb,var(--mz-hero-3) 50%,transparent),transparent 70%),var(--mz-surface); }
+body .fin-title, body .case-hero-title, body .assess-hero-title { font-size:26px; font-weight:600; letter-spacing:-.01em; line-height:1.3; color:var(--mz-ink); }
+body .fin-subtitle, body .case-hero-desc, body .assess-hero-desc { color:var(--mz-ink-2); font-size:14px; }
+body .case-hero-subtitle { font:500 12px/1.4 var(--font-sans); letter-spacing:.08em; text-transform:uppercase; color:var(--mz-ink-3); margin-top:4px; }
+body .assess-hero-eyebrow { background:var(--mz-glass); box-shadow:inset 0 0 0 1px var(--mz-glass-line); color:var(--mz-done-ink); }
+body .case-section, body .assess-section { border-radius:18px; }
+body .case-card, body .assess-year-card, body .assess-manager-card { border-color:var(--mz-line-faint); border-radius:14px; }
+body .case-card-icon, body .country-flag { border-radius:10px; }
+body .assess-year-card.latest, body .assess-year-card.active { border-color:color-mix(in srgb,var(--mz-brand) 45%,var(--mz-line)); box-shadow:0 0 0 3px color-mix(in srgb,var(--mz-brand) 12%,transparent); }
+@media (max-width:640px) { body .fin-header, body .case-hero, body .assess-hero { padding:20px; border-radius:16px; } body .fin-title, body .case-hero-title, body .assess-hero-title { font-size:22px; } }
+/* 无障碍：小字不低于 4.5:1 */
+body .case-playbook-name-en, body .assess-year-cycle, body .assess-year-card.upcoming .assess-year-cycle, body .assess-year-card.upcoming .assess-info-row { color:var(--mz-ink-3); }
+body .assess-year-card.upcoming { opacity:1; }
+body .case-footer-btn { background:linear-gradient(180deg,var(--mz-brand-top),var(--mz-brand)); color:var(--mz-on-brand); border:0; box-shadow:0 6px 16px var(--mz-brand-glow); }
+
+/* ---------- 明账 2.0 · 第二轮自检修正 ---------- */
+/* 首屏：与上月比的变化 */
+.mz-delta { display:inline-flex; align-items:center; gap:4px; margin-top:6px; padding:2px 8px; border-radius:var(--radius-xs); font:500 12px/1.6 var(--font-num); color:var(--mz-ink-2); background:color-mix(in srgb,var(--mz-surface) 70%,transparent); box-shadow:inset 0 0 0 1px var(--mz-line-faint); width:max-content; max-width:100%; }
+/* 增减不用状态色（绿＝已结项、红＝待核对），只用主色与中性色加箭头；超预算才用警示色 */
+.mz-delta.up { color:var(--mz-accent-ink); background:var(--mz-accent-tint); box-shadow:none; }
+.mz-delta.up::before { content:"↑"; } .mz-delta.down::before { content:"↓"; }
+.mz-delta.down { color:var(--mz-ink-2); background:var(--mz-sunken); }
+.mz-delta.over { color:var(--mz-review-ink); background:var(--mz-review-tint); box-shadow:none; }
+#page-dashboard > .stats-grid .stat-card { display:flex; flex-direction:column; }
+/* 图表卡片标题旁的说明 */
+.card-title .card-note { margin-left:10px; font-size:12.5px; font-weight:400; color:var(--mz-ink-3); }
+/* 表格行操作：常显但淡一档，悬停或聚焦时变实 */
+@media (hover:hover) and (min-width:641px) {
+  table tbody .actions-row { opacity:1; }
+  table tbody .actions-row > .btn { opacity:0; transition:opacity var(--dur-2) var(--ease); }
+  table tbody tr:hover .actions-row > .btn, table tbody tr:focus-within .actions-row > .btn { opacity:1; }
+}
+/* 老页面容器不再铺灰底块 */
+body .assess-container, body .case-container, body .fin-container { background:transparent; }
+#page-assessment .assess-container > div:first-child { display:flex; flex-direction:column; }
+#page-assessment .assess-hero { order:-1; }
+#page-assessment .library-search { align-items:flex-end; }
+#page-assessment .library-search .field-help { padding-bottom:9px; }
+body .assess-tag-latest { letter-spacing:0; background:var(--mz-brand); color:var(--mz-on-brand); border-radius:var(--radius-xs); }
+.compact-metrics small, .compact-metrics span { text-wrap:balance; }
+/* 登录页：中文字标做背景，品牌一眼可辨 */
+.auth-overlay::after { content:"学习发展"; position:absolute; left:max(24px,4vw); bottom:max(8px,2vh); z-index:-1; pointer-events:none;
+  font:700 clamp(72px,13vw,200px)/1 var(--font-sans); letter-spacing:.04em; white-space:nowrap;
+  background:linear-gradient(100deg,var(--mz-brand),var(--mz-hero-2)); -webkit-background-clip:text; background-clip:text; color:transparent; opacity:.14; }
+.auth-overlay { isolation:isolate; overflow:hidden; }
+.auth-title { font-size:26px; }
+@media (max-width:640px) { .auth-overlay::after { left:16px; font-size:22vw; bottom:4vh; } }
+
+/* ---------- 明账 2.0 · 第三轮自检修正 ---------- */
+/* 「明账」专属纹理：账本横线，只在登录页与总览首屏，用柔光遮罩淡出 */
+#page-dashboard::after, .auth-overlay::before { content:""; position:absolute; pointer-events:none; z-index:-1;
+  background:repeating-linear-gradient(180deg,transparent 0 27px,color-mix(in srgb,var(--mz-brand) 9%,transparent) 27px 28px);
+  -webkit-mask:radial-gradient(80% 100% at 30% 0%,#000 30%,transparent 75%); mask:radial-gradient(80% 100% at 30% 0%,#000 30%,transparent 75%); }
+#page-dashboard::after { left:-32px; right:-32px; top:-28px; height:440px; }
+.auth-overlay::before { inset:0; -webkit-mask:radial-gradient(70% 70% at 50% 45%,#000 20%,transparent 80%); mask:radial-gradient(70% 70% at 50% 45%,#000 20%,transparent 80%); }
+:root.is-dark .auth-overlay::after { opacity:.22; }
+@media (max-width:640px) { #page-dashboard::after { left:-12px; right:-12px; top:-16px; height:560px; } }
+/* 次级页头回归素净：柔光只属于登录页与首屏 */
+body .fin-header, body .case-hero, body .assess-hero { background:var(--mz-surface); }
+/* 测评报告：统计块紧凑，去掉介绍下方的空白 */
+#page-assessment .assess-hero-body { align-items:center; gap:24px; }
+#page-assessment .assess-stat-block { padding:14px 16px; }
+#page-assessment .assess-stat-block .num { font-size:26px; }
+/* 表格：操作列表头与按钮同在右侧；数字列右对齐等宽 */
+#page-training th:last-child, #page-budget th:last-child, #page-aiknowledge th:last-child, #page-finance .fin-stats-table th:last-child,
+#page-training td:last-child, #page-budget td:last-child, #page-aiknowledge td:last-child, #page-finance .fin-stats-table td:last-child { text-align:right; }
+#page-finance .fin-stats-table :is(th,td):is(:nth-child(5),:nth-child(6),:nth-child(7),:nth-child(8)) { text-align:right; font-variant-numeric:tabular-nums; }
+#page-finance .fin-stats-table td { letter-spacing:0; }
+/* 筛选栏：控件同高、标签同基线；清除筛选是按钮 */
+.record-filters { align-items:flex-end; }
+.record-filters label { display:flex; flex-direction:column; gap:6px; }
+.record-filters .mz-month-btn { height:38px; }
+.record-filters [data-reset] { height:38px; border:1px solid var(--mz-line-strong) !important; background:var(--mz-surface) !important; color:var(--mz-ink-2) !important; }
+.record-filters [data-reset]:hover { color:var(--mz-ink) !important; border-color:color-mix(in srgb,var(--mz-brand) 35%,var(--mz-line-strong)) !important; }

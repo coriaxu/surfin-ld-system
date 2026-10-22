@@ -235,7 +235,7 @@
     calculateFinanceRates();const existing=state.financeWiki.find(s=>s.id===finId.value);if(existing && financeDraft)existing.workflow=structuredClone(financeDraft.workflow);
   },true);
   financeForm.addEventListener('submit',()=>{const item=state.financeWiki.find(s=>s.id===finId.value);if(item && financeDraft){item.workflow={...financeDraft.workflow,publish:finPublished.checked,data:finPublished.checked&&!!financeDraft.workflow.data};persist();renderFinanceWiki();}});
-  const finbar=document.querySelector('.fin-tab-bar'),finSegment=el('div','fin-segment');finSegment.setAttribute('role','tablist');finbar.prepend(finSegment);finSegment.append($('finView-stats'),$('finView-kanban'));$('finView-stats').lastChild.textContent=' 期次与统计';
+  const finbar=document.querySelector('.fin-tab-bar'),finSegment=el('div','fin-segment');finSegment.setAttribute('role','group');finSegment.setAttribute('aria-label','金融百科视图');finbar.prepend(finSegment);finSegment.append($('finView-stats'),$('finView-kanban'));$('finView-stats').lastChild.textContent=' 期次与统计';
   // Statistics view reads top-down: overall progress, the episode table, then the trend.
   const finStats=$('finStatsView'),finSummary=$('financeTimeline').closest('.card'),finGrid=finStats.querySelector('.stats-dashboard-grid'),finTrend=$('financeTrendChart').closest('.card');
   [finSummary,finSummary.querySelector('.card-body'),finGrid,finTrend,finTrend.querySelector('.card-body')].forEach(n=>n.removeAttribute('style'));
@@ -390,13 +390,13 @@
     if(exporting)return;const pdf=$('exportPdfCheck').checked,xlsx=$('exportExcelCheck').checked;if(!pdf&&!xlsx){showToast('请至少选择一种导出格式','error');return;}
     const d=exportSnapshot||selected(),opts=Object.fromEntries(['includeTraining','includeBudget','includeAI','includeFinance'].map(k=>[k,$(k).checked]));const model=R.model(d,opts);
     exporting=true;closeMonthlyReportModal();showToast('正在生成报告…','info');
-    try{if(pdf)await LDReportExport.pdf(model);if(xlsx)LDReportExport.excel(model);showToast('报告生成成功','success');}catch(err){console.error(err);showToast('报告生成失败：'+err.message,'error');}finally{exporting=false;}
+    try{if(pdf)await LDReportExport.pdf(model);if(xlsx)await LDReportExport.excel(model);showToast('报告生成成功','success');}catch(err){console.error(err);showToast('报告生成失败：'+err.message,'error');}finally{exporting=false;}
   };
   const originalExcel=window.exportExcel;
-  window.exportExcel=()=>{
+  window.exportExcel=async()=>{
     if(loadUnavailable()){showToast(LDDataLoad.FAILURE,'error');return;}
     if(!['dashboard','monthly','annual'].includes(activePage))return originalExcel();
-    try{const d=activePage==='dashboard'?selected():reportSnapshot;LDReportExport.excel(R.model(d));showToast('Excel 已生成','success');}catch(err){console.error(err);showToast('Excel 生成失败：'+err.message,'error');}
+    try{const d=activePage==='dashboard'?selected():reportSnapshot;await LDReportExport.excel(R.model(d));showToast('Excel 已生成','success');}catch(err){console.error(err);showToast('Excel 生成失败：'+err.message,'error');}
   };
   const originalPdf=window.exportPdf;
   window.exportPdf=async()=>{

@@ -5,11 +5,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Surfin 学习发展系统</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%238EC9FF'/%3E%3Cstop offset='.55' stop-color='%23006EDC'/%3E%3Cstop offset='1' stop-color='%23005BC8'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='8' fill='url(%23g)'/%3E%3Cg fill='none' stroke='%23fff' stroke-width='2.6' stroke-linecap='round'%3E%3Cpath d='M6 13.5c3.6 0 3.6-4 7.1-4s3.6 4 7.2 4 3.5-4 6.9-4'/%3E%3Cpath d='M6 21.5c3.6 0 3.6-4 7.1-4s3.6 4 7.2 4 3.5-4 6.9-4' opacity='.62'/%3E%3C/g%3E%3C/svg%3E">
   <script src="assets/appearance.js?v=20261022-mz2"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js"></script>
   <style>
 /* === Surfin L&D · Smartisan OS 6.x === */
 
@@ -6720,7 +6718,7 @@ tr:hover td.empty-cell {
   <link rel="stylesheet" href="assets/workbench.css?v=20261014-mz">
   <link rel="stylesheet" href="assets/tokens.css?v=20261022-mz2">
   <link rel="stylesheet" href="assets/workflow.css?v=20261014-mz">
-  <link rel="stylesheet" href="assets/mingzhang.css?v=20261022-mz2">
+  <link rel="stylesheet" href="assets/mingzhang.css?v=20261022-mz6">
   <script src="assets/ld-domain.js?v=20261014-special"></script>
   <script src="assets/ld-report.js?v=20261022-sort"></script>
   <script src="assets/closeout-reports.js?v=20261014-closeout2"></script>
@@ -6737,14 +6735,14 @@ tr:hover td.empty-cell {
   <div class="auth-overlay" id="authOverlay">
     <div class="auth-container">
       <div class="auth-logo">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-          stroke-linejoin="round">
-          <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
-          <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"
+          stroke-linejoin="round" aria-hidden="true">
+          <path d="M3.5 10c2.9 0 2.9-3.2 5.7-3.2S12.1 10 15 10s2.8-3.2 5.5-3.2" />
+          <path d="M3.5 16.4c2.9 0 2.9-3.2 5.7-3.2s2.9 3.2 5.8 3.2 2.8-3.2 5.5-3.2" opacity=".62" />
         </svg>
       </div>
-      <h1 class="auth-title">Surfin L&D System</h1>
-      <p class="auth-subtitle">请输入密码访问系统</p>
+      <h1 class="auth-title">Surfin 学习发展</h1>
+      <p class="auth-subtitle">培训、内容与费用，一本明账</p>
       <form class="auth-form" id="authForm">
         <div class="auth-error" id="authError">密码错误，请重新输入</div>
         <div class="auth-input-group">
@@ -7801,7 +7799,7 @@ tr:hover td.empty-cell {
           <div class="case-section">
             <div class="case-section-header">
               <span class="case-section-icon">⭐</span>
-              <h2 class="case-section-title">精选案例 Featured Cases</h2>
+              <h2 class="case-section-title">精选案例</h2>
             </div>
             
             <!-- Tab 切换 -->
@@ -7843,7 +7841,7 @@ tr:hover td.empty-cell {
                 </div>
                 <div class="case-card" onclick="openCaseLibrary()">
                   <div class="case-card-icon">🧱</div>
-                  <div class="case-card-title">如何拆掉一堵"隐形的墙"</div>
+                  <div class="case-card-title">如何拆掉一堵“隐形的墙”</div>
                   <div class="case-card-dilemma">
                     <strong>管理者两难：</strong>硬推还是放任？跨文化团队的信任建立
                   </div>
@@ -7856,7 +7854,7 @@ tr:hover td.empty-cell {
                 </div>
                 <div class="case-card" onclick="openCaseLibrary()">
                   <div class="case-card-icon">🎯</div>
-                  <div class="case-card-title">一次"让对方会做"的跨文化任务辅导</div>
+                  <div class="case-card-title">一次“让对方会做”的跨文化任务辅导</div>
                   <div class="case-card-dilemma">
                     <strong>管理者两难：</strong>催促还是代劳？如何让外籍员工真正掌握技能
                   </div>
@@ -7901,7 +7899,7 @@ tr:hover td.empty-cell {
                 </div>
                 <div class="case-card" onclick="openCaseLibrary()">
                   <div class="case-card-icon">🎯</div>
-                  <div class="case-card-title">批评员工：把"避责"变成"对齐"</div>
+                  <div class="case-card-title">批评员工：把“避责”变成“对齐”</div>
                   <div class="case-card-dilemma">
                     <strong>管理者两难：</strong>不查=失控，猛批=堵心，如何建立正向循环
                   </div>
@@ -7914,7 +7912,7 @@ tr:hover td.empty-cell {
                 </div>
                 <div class="case-card" onclick="openCaseLibrary()">
                   <div class="case-card-icon">⭐</div>
-                  <div class="case-card-title">高效批评：从"三明治"到一对一正式反馈</div>
+                  <div class="case-card-title">高效批评：从“三明治”到一对一正式反馈</div>
                   <div class="case-card-dilemma">
                     <strong>管理者两难：</strong>批评太轻没效果，太重伤感情
                   </div>
@@ -7933,10 +7931,10 @@ tr:hover td.empty-cell {
           <div class="case-section">
             <div class="case-section-header">
               <span class="case-section-icon">🗺️</span>
-              <h2 class="case-section-title">国家管理手册 Country Playbooks</h2>
+              <h2 class="case-section-title">国家管理手册</h2>
             </div>
             <p style="color: var(--case-text-sub); margin-bottom: 24px; font-size: 14px;">
-              目标国家跨文化管理使用手册 —— 管理不同市场团队的"说明书"
+              目标国家跨文化管理使用手册 —— 管理不同市场团队的“说明书”
             </p>
             
             <div class="case-playbooks-grid">
@@ -7947,7 +7945,7 @@ tr:hover td.empty-cell {
                 <div class="case-playbook-name">印度尼西亚</div>
                 <div class="case-playbook-name-en">Indonesia</div>
                 <div class="case-playbook-quote">
-                  "经营关系网络和和谐生态"<br>
+                  “经营关系网络和和谐生态”<br>
                   Managing a web of relationships and harmony
                 </div>
                 <div class="case-playbook-cta">
@@ -7964,7 +7962,7 @@ tr:hover td.empty-cell {
                 <div class="case-playbook-name">肯尼亚</div>
                 <div class="case-playbook-name-en">Kenya</div>
                 <div class="case-playbook-quote">
-                  "多元文化中建立信任边界"<br>
+                  “多元文化中建立信任边界”<br>
                   Building trust across diverse cultures
                 </div>
                 <div class="case-playbook-cta">
@@ -7981,7 +7979,7 @@ tr:hover td.empty-cell {
                 <div class="case-playbook-name">尼日利亚</div>
                 <div class="case-playbook-name-en">Nigeria</div>
                 <div class="case-playbook-quote">
-                  "灵活务实，短期激励"<br>
+                  “灵活务实，短期激励”<br>
                   Flexible, pragmatic, and incentive-driven
                 </div>
                 <div class="case-playbook-cta">
@@ -7996,9 +7994,9 @@ tr:hover td.empty-cell {
 
           <!-- 底部 CTA -->
           <div class="case-footer">
-            <p class="case-footer-text">探索更多管理智慧 · Explore More Management Wisdom</p>
+            <p class="case-footer-text">探索更多管理智慧</p>
             <button class="case-footer-btn" onclick="openCaseLibrary()">
-              🚀 进入完整案例库
+              进入完整案例库
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
                 <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
                 <polyline points="15 3 21 3 21 9"/>
@@ -8042,7 +8040,7 @@ tr:hover td.empty-cell {
               <div class="assess-year-layout">
                 <div class="assess-year-grid">
                   <a class="assess-year-card current" onclick="showAssessDetail('2025')">
-                    <span class="assess-tag-latest">Latest</span>
+                    <span class="assess-tag-latest">最新</span>
                     <div class="assess-year-num">2025</div>
                     <div class="assess-year-cycle">2025 年度测评</div>
                     <div class="assess-year-info">
@@ -8279,9 +8277,9 @@ tr:hover td.empty-cell {
           <div class="card-body">
             <!-- Tab 导航 -->
             <div class="budget-tabs">
-              <button class="budget-tab active" data-tab="budget-plan">📊 预算计划</button>
-              <button class="budget-tab" data-tab="expense-list">💳 开销记录</button>
-              <button class="budget-tab" data-tab="budget-compare">📈 预实对比</button>
+              <button class="budget-tab active" data-tab="budget-plan">预算计划</button>
+              <button class="budget-tab" data-tab="expense-list">开销记录</button>
+              <button class="budget-tab" data-tab="budget-compare">预实对比</button>
             </div>
 
             <!-- 预算计划 Tab -->
@@ -8436,7 +8434,7 @@ tr:hover td.empty-cell {
   <!-- Cloud Sync Modal -->
   <div class="modal-overlay" id="syncModal">
     <div class="modal sync-modal">
-      <div class="modal-header">☁️ 云同步设置</div>
+      <div class="modal-header">云同步设置</div>
       <div class="modal-body">
         <div class="sync-status disconnected" id="syncStatusBox">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -8450,7 +8448,7 @@ tr:hover td.empty-cell {
           <label>GitHub Personal Access Token</label>
           <input type="password" id="githubTokenInput" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
           <div class="sync-hint">
-            👉 <a href="https://github.com/settings/tokens/new?scopes=repo&description=Surfin%20LD%20System%20Sync"
+            <a href="https://github.com/settings/tokens/new?scopes=repo&description=Surfin%20LD%20System%20Sync"
               target="_blank">点击这里创建 Token</a>（勾选 repo 权限即可）
           </div>
         </div>
@@ -8483,7 +8481,7 @@ tr:hover td.empty-cell {
   <div class="modal-overlay" id="monthlyReportModal">
     <div class="modal" style="max-width: 480px;">
       <div class="modal-header" style="background: linear-gradient(135deg, #0f172a, #1e3a5f); color: white; border-radius: 12px 12px 0 0;">
-        📊 生成月度总结报告
+        生成月度总结报告
       </div>
       <div class="modal-body" style="padding: 24px;">
         <div style="margin-bottom: 20px;">
@@ -8499,14 +8497,14 @@ tr:hover td.empty-cell {
             <label style="flex: 1; display: flex; align-items: center; gap: 8px; padding: 12px; border-radius: 8px; border: 2px solid #0ea5e9; background: rgba(14, 165, 233, 0.1); cursor: pointer;">
               <input type="checkbox" id="exportPdfCheck" checked style="width: 18px; height: 18px; accent-color: #0ea5e9;">
               <div>
-                <div style="font-weight: 600; color: var(--text);">📄 PDF</div>
+                <div style="font-weight: 600; color: var(--text);">PDF</div>
                 <div style="font-size: 11px; color: var(--text-muted);">咨询报告风格</div>
               </div>
             </label>
             <label style="flex: 1; display: flex; align-items: center; gap: 8px; padding: 12px; border-radius: 8px; border: 2px solid #10b981; background: rgba(16, 185, 129, 0.1); cursor: pointer;">
               <input type="checkbox" id="exportExcelCheck" checked style="width: 18px; height: 18px; accent-color: #10b981;">
               <div>
-                <div style="font-weight: 600; color: var(--text);">📊 Excel</div>
+                <div style="font-weight: 600; color: var(--text);">Excel</div>
                 <div style="font-size: 11px; color: var(--text-muted);">多Sheet数据源</div>
               </div>
             </label>
@@ -8518,19 +8516,19 @@ tr:hover td.empty-cell {
           <div style="display: grid; gap: 8px;">
             <label style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 6px; background: var(--bg); cursor: pointer;">
               <input type="checkbox" id="includeTraining" checked style="width: 16px; height: 16px;">
-              <span style="color: var(--text);">👩‍🏫 培训场次数据</span>
+              <span style="color: var(--text);">培训场次数据</span>
             </label>
             <label style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 6px; background: var(--bg); cursor: pointer;">
               <input type="checkbox" id="includeBudget" checked style="width: 16px; height: 16px;">
-              <span style="color: var(--text);">💰 预算与开销</span>
+              <span style="color: var(--text);">预算与开销</span>
             </label>
             <label style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 6px; background: var(--bg); cursor: pointer;">
               <input type="checkbox" id="includeAI" checked style="width: 16px; height: 16px;">
-              <span style="color: var(--text);">🤖 AI 知识库活动</span>
+              <span style="color: var(--text);">AI 知识库活动</span>
             </label>
             <label style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 6px; background: var(--bg); cursor: pointer;">
               <input type="checkbox" id="includeFinance" checked style="width: 16px; height: 16px;">
-              <span style="color: var(--text);">📚 金融小百科</span>
+              <span style="color: var(--text);">金融小百科</span>
             </label>
           </div>
         </div>
@@ -8572,11 +8570,11 @@ tr:hover td.empty-cell {
     const pageTitles = {
       dashboard: '工作总览',
       training: '培训场次',
-      aiknowledge: 'AI 知识库',
+      aiknowledge: 'AI 内容',
       budget: '预算与开销',
-      finance: '金融小百科',
-      caselib: '管理训练营优秀案例库',
-      assessment: '管理者测评报告库'
+      finance: '金融百科',
+      caselib: '案例与手册',
+      assessment: '测评报告'
     };
 
     /* =========================================
@@ -9315,8 +9313,12 @@ tr:hover td.empty-cell {
         d.color = read('--text-muted', '#6F7672');
         d.borderColor = read('--chart-grid', 'rgba(0, 0, 0, 0.06)');
         Object.assign(d.plugins.legend.labels, { usePointStyle: true, pointStyle: 'circle', boxWidth: 7, boxHeight: 7, padding: 14 });
-        Object.assign(d.plugins.tooltip, { backgroundColor: read('--text-strong', '#1F2421'), padding: 10, cornerRadius: 8, boxPadding: 4, titleFont: { size: 12, weight: '600' }, bodyFont: { size: 12 } });
+        Object.assign(d.plugins.tooltip, { backgroundColor: read('--text-strong', '#1F2421'), titleColor: read('--mz-surface', '#fff'), bodyColor: read('--mz-surface', '#fff'), padding: 10, cornerRadius: 10, boxPadding: 4, caretSize: 5, titleFont: { size: 12, weight: '600' }, bodyFont: { size: 12 } });
         d.scale.ticks.maxRotation = 0;
+        // 明账 2.0：进场时线条描出、柱子升起；系统要求减少动态效果时直接画出结果。
+        Object.assign(d.animation, { duration: matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 700, easing: 'easeOutQuart' });
+        if (d.transitions?.resize?.animation) d.transitions.resize.animation.duration = 0;
+        d.elements.point.hoverRadius = 5; d.elements.point.hoverBorderWidth = 2;
         d.scale.ticks.autoSkipPadding = 14;
       } catch (_) {}
     }
@@ -9328,6 +9330,19 @@ tr:hover td.empty-cell {
       const n = parseInt(hex[1], 16);
       return `rgba(${n >> 16}, ${(n >> 8) & 255}, ${n & 255}, ${alpha})`;
     }
+
+    // Area fill fading from the line colour to nothing, sized to the drawn chart area.
+    function chartGradient(color, top = 0.28) {
+      return ctx => {
+        const { chart } = ctx, area = chart.chartArea;
+        if (!area) return chartTint(color, top / 2);
+        const g = chart.ctx.createLinearGradient(0, area.top, 0, area.bottom);
+        g.addColorStop(0, chartTint(color, top)); g.addColorStop(1, chartTint(color, 0));
+        return g;
+      };
+    }
+    // Only the latest point carries a marker; the rest show on hover.
+    const lastPointOnly = (radius = 4) => ctx => ctx.dataIndex === ctx.dataset.data.length - 1 ? radius : 0;
 
     // "2026-09" → "9月" when every label shares a year, otherwise "25.12".
     function monthTickLabels(months) {
@@ -9352,6 +9367,11 @@ tr:hover td.empty-cell {
         title: read('--text-title', '#1C2B3A')
       };
       colors.muted = chartTint(colors.primary, 0.24);
+      // 与首屏指标点同色：人时＝青绿，支出＝琥珀，费用构成第二类＝主色
+      colors.hours = read('--mz-series-2', colors.primary);
+      colors.spend = read('--mz-series-4', colors.accent);
+      colors.brand = read('--mz-series-1', colors.primary);
+      colors.surface = read('--mz-surface', '#fff');
 
       const byMonth = {};
       chartState.sessions.forEach(s => {
@@ -9369,17 +9389,19 @@ tr:hover td.empty-cell {
           datasets: [{
             label: '总人时',
             data: hoursData,
-            borderColor: colors.primary,
-            backgroundColor: colors.primaryAlpha,
+            borderColor: colors.hours,
+            backgroundColor: chartGradient(colors.hours),
             tension: 0.35,
             cubicInterpolationMode: 'monotone',
             fill: true,
-            pointRadius: 3,
+            pointRadius: ctx => ctx.dataIndex === ctx.dataset.data.length - 1 ? 4 : 2.5,
             pointHoverRadius: 5,
-            pointBackgroundColor: colors.primary,
-            pointBorderColor: '#fff',
+            pointBackgroundColor: colors.surface,
+            pointBorderColor: colors.hours,
+            // 本月还没过完：最后一段画虚线
+            segment: { borderDash: ctx => report?.period.ongoing && ctx.p1DataIndex === monthKeys.length - 1 ? [4, 4] : undefined },
             pointBorderWidth: 2,
-            borderWidth: 2
+            borderWidth: 2.2
           }]
         },
         options: {
@@ -9403,14 +9425,23 @@ tr:hover td.empty-cell {
       // 从 expenses 计算每月实际支出
       const budgetSpent = months.map(m => Math.round(chartState.expenses.filter(e=>e.month===m).reduce((n,e)=>n+Number(e.amount||0),0)*100)/100);
 
+      // 没设预算时在卡片标题旁说明，图里只有实际支出
+      const budgetTitle = document.getElementById('budgetChart')?.closest('.card')?.querySelector('.card-title');
+      if (budgetTitle) {
+        let note = budgetTitle.querySelector('.card-note');
+        if (!note) { note = document.createElement('span'); note.className = 'card-note'; budgetTitle.append(note); }
+        note.innerHTML = chartState.budgets.length ? '' : '尚未设置预算 · <button type="button" class="link-btn" data-action="navigate" data-record="budget">去设置</button>';
+        note.hidden = !!chartState.budgets.length;
+      }
       if (budgetChart) budgetChart.destroy();
       budgetChart = new Chart(document.getElementById('budgetChart'), {
         type: 'bar',
         data: {
           labels: monthTickLabels(months),
           datasets: [
-            ...(chartState.budgets.length ? [{ label: '预算', data: budgetAmount, backgroundColor: colors.muted, borderRadius: 5, maxBarThickness: 28 }] : []),
-            { label: '实际支出', data: budgetSpent, backgroundColor: colors.primary, borderRadius: 5, maxBarThickness: 28 }
+            // 预算是浅色底柱，实际支出叠在它前面；所选月份用实色，其余月份淡一档
+            ...(chartState.budgets.length ? [{ label: '预算', data: budgetAmount, backgroundColor: chartTint(colors.spend, 0.18), borderRadius: 6, maxBarThickness: 30, grouped: false, order: 2 }] : []),
+            { label: '实际支出', data: budgetSpent, backgroundColor: months.map((_, i) => i === months.length - 1 ? colors.spend : chartTint(colors.spend, 0.55)), hoverBackgroundColor: colors.spend, borderRadius: 6, maxBarThickness: chartState.budgets.length ? 18 : 26, grouped: false, order: 1 }
           ]
         },
         options: {
@@ -9473,19 +9504,19 @@ tr:hover td.empty-cell {
           labels: ['常规开销', '特殊开销'],
           datasets: [{
             data: [costRegular, costSpecial],
-            backgroundColor: [colors.primary, colors.accent],
+            backgroundColor: [colors.spend, colors.brand],
             borderWidth: 0,
             hoverOffset: 4,
-            borderRadius: bothKinds ? 4 : 0,
-            spacing: bothKinds ? 3 : 0
+            borderRadius: bothKinds ? 6 : 0,
+            spacing: bothKinds ? 4 : 0
           }]
         },
         options: {
           responsive: true,
           maintainAspectRatio: false,
-          cutout: '74%',
+          cutout: '80%',
           plugins: {
-            legend: { position: 'bottom', labels: { color: colors.text } },
+            legend: { position: 'bottom', labels: { color: colors.text, generateLabels: chart => Chart.overrides.doughnut.plugins.legend.labels.generateLabels(chart).map(l => ({ ...l, text: `${l.text} ¥${Number(chart.data.datasets[0].data[l.index] || 0).toLocaleString('zh-CN')}` })) } },
             tooltip: { callbacks: { label: item => ` ${item.label}：¥${Number(item.raw || 0).toLocaleString('zh-CN')}` } }
           }
         },
@@ -9763,7 +9794,8 @@ tr:hover td.empty-cell {
       backupCodeInput.addEventListener('input', () => updateBackupMeta());
     }
 
-    window.exportExcel = function () {
+    window.exportExcel = async function () {
+      await LDExportLibs.need('xlsx');
       const wb = XLSX.utils.book_new();
 
       // 培训记录表
@@ -9812,6 +9844,7 @@ tr:hover td.empty-cell {
     window.exportPdf = async function () {
       const activePageId = document.querySelector('.page.active').id;
       const element = document.querySelector('.page.active');
+      await LDExportLibs.need('jspdf', 'html2canvas');
       const canvas = await html2canvas(element, { scale: 3, useCORS: true });
       const imgData = canvas.toDataURL('image/png');
       const pdf = new jspdf.jsPDF('p', 'mm', 'a4');
@@ -10207,6 +10240,7 @@ tr:hover td.empty-cell {
         lineFill: read('--dashboard-chart-primary-fill', 'rgba(80, 117, 104, 0.12)'),
         accent: read('--dashboard-chart-accent', '#C08A5B'),
         muted: chartTint(primary, 0.24),
+        surface: read('--mz-surface', '#fff'),
         grid: read('--chart-grid', 'rgba(15, 66, 100, 0.08)')
       };
     }
@@ -10338,12 +10372,12 @@ tr:hover td.empty-cell {
               label: '查看率',
               data: rates,
               borderColor: palette.line,
-              backgroundColor: palette.lineFill,
-              borderWidth: 2,
-              pointRadius: 3,
+              backgroundColor: chartGradient(palette.line, 0.22),
+              borderWidth: 2.2,
+              pointRadius: lastPointOnly(),
               pointHoverRadius: 5,
-              pointBackgroundColor: palette.line,
-              pointBorderColor: '#ffffff',
+              pointBackgroundColor: palette.surface,
+              pointBorderColor: palette.line,
               pointBorderWidth: 2,
               tension: 0.35,
               cubicInterpolationMode: 'monotone',
@@ -11472,7 +11506,7 @@ tr:hover td.empty-cell {
               type: 'line',
               borderColor: palette.line,
               borderWidth: 2,
-              pointBackgroundColor: '#fff',
+              pointBackgroundColor: palette.surface,
               pointBorderColor: palette.line,
               pointBorderWidth: 2,
               pointRadius: 3,
@@ -11781,10 +11815,12 @@ tr:hover td.empty-cell {
 
   </script>
   <script src="assets/workbench.js?v=20261014-mz"></script>
-  <script src="assets/report-export.js?v=20261013-ytd2"></script>
-  <script src="assets/workflow.js?v=20261014-mz"></script>
+  <script src="assets/report-export.js?v=20261022-lazy"></script>
+  <script src="assets/workflow.js?v=20261022-mz3"></script>
   <script src="assets/mingzhang.js?v=20261022-mz2"></script>
-  <script src="assets/hero.js?v=20261022-mz2"></script>
+  <script src="assets/hero.js?v=20261022-mz6"></script>
+  <script src="assets/monthpicker.js?v=20261022-mz3"></script>
+  <script src="assets/motion.js?v=20261022-mz3"></script>
 </body>
 
 </html>
