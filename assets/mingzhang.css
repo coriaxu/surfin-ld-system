@@ -482,3 +482,25 @@ body .fin-subtitle { margin-top:0; }
 /* 汇报页：长说明在分隔符处换行，段落控制行长 */
 .compact-metrics small, .compact-metrics span, .stat-desc { word-break:keep-all; overflow-wrap:anywhere; }
 #monthlySummary > p:not(.field-help), #annualSummary > p:not(.field-help) { max-width:38em; text-wrap:pretty; }
+
+/* ---------- 明账 2.0 · 发布后修正（2026-10-22 徐老师反馈） ---------- */
+/* 首屏柔光铺满主区：内容区最宽 1440px，宽屏时柔光不再只落在中间，两侧不露白底 */
+.main-wrapper { --mz-sb:var(--sidebar-w); overflow-x:clip; }
+.main-wrapper.expanded { --mz-sb:0px; }
+@media (max-width:1024px) { .main-wrapper, .main-wrapper.expanded { --mz-sb:0px; } }
+@media (min-width:641px) {
+  #page-dashboard { --mz-bleed:calc(32px + max(0px, (100vw - var(--mz-sb) - 1440px) / 2)); }
+  #page-dashboard::before, #page-dashboard::after { left:calc(-1 * var(--mz-bleed)); right:calc(-1 * var(--mz-bleed)); }
+  /* 红色页边线跟着柔光左缘走，始终贴在主区左侧 */
+}
+/* 月度／年度累计切换 + 月份：同高 36px、同圆角、同一层玻璃底；“选择月份”文字只给读屏 */
+#page-dashboard .period-controls { gap:8px; }
+#page-dashboard .period-controls label { gap:0; }
+#page-dashboard #cutoffLabel { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
+#page-dashboard .period-switch { box-sizing:border-box; height:36px; padding:3px; gap:2px; border:1px solid var(--mz-glass-line); border-radius:10px; box-shadow:0 1px 2px rgba(16,24,40,.05); }
+#page-dashboard .period-switch button { box-sizing:border-box; height:28px; padding:0 14px; border-radius:7px; font:500 13px/1 var(--font-sans); color:var(--mz-ink-3); transition:background-color var(--dur-2) var(--ease), color var(--dur-2) var(--ease); }
+#page-dashboard .period-switch button:hover:not(.active) { color:var(--mz-ink); }
+#page-dashboard .period-switch button.active { background:var(--mz-surface); color:var(--mz-accent-ink); box-shadow:0 1px 2px rgba(16,24,40,.10); }
+#page-dashboard .mz-month-btn { box-sizing:border-box; height:36px; min-width:0; padding:0 12px 0 14px; gap:12px; border-radius:10px; font:500 13px/1 var(--font-num); }
+#page-dashboard .mz-month-btn svg { width:15px; height:15px; }
+:root.is-dark #page-dashboard .period-switch button.active { background:color-mix(in srgb,var(--mz-ink) 12%,transparent); }
