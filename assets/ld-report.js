@@ -20,10 +20,12 @@
     const within=date=>typeof date==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(date)&&date>=p.start&&date<=p.end;
     // Expenses use the attributed month, including later backfills; future dated records are not actuals yet.
     const attributed=r=>p.months.includes(r.month)&&(!r.date||r.date<=p.asOf);
-    const sessions=(state.sessions||[]).filter(s=>within(s.date));
-    const expenses=(state.expenses||[]).filter(attributed),budgets=(state.budgets||[]).filter(b=>p.months.includes(b.month));
-    const stations=(state.aiStations||[]).filter(s=>within(s.date)),shares=D.shareEvents(state).filter(s=>within(s.date));
-    const finance=(state.financeWiki||[]).filter(s=>within(s.date)&&D.financeStatus(s).key!=='draft');
+    // Report details read newest first, like the ledger; a stable sort keeps same-day records in entry order.
+    const newest=(a,b)=>String(b.date||'').localeCompare(String(a.date||''));
+    const sessions=(state.sessions||[]).filter(s=>within(s.date)).sort(newest);
+    const expenses=(state.expenses||[]).filter(attributed).sort(newest),budgets=(state.budgets||[]).filter(b=>p.months.includes(b.month));
+    const stations=(state.aiStations||[]).filter(s=>within(s.date)).sort(newest),shares=D.shareEvents(state).filter(s=>within(s.date)).sort(newest);
+    const finance=(state.financeWiki||[]).filter(s=>within(s.date)&&D.financeStatus(s).key!=='draft').sort(newest);
     const people=sumKnown(sessions,s=>s.people),trainingHours=sumKnown(sessions,hours),spend=sumKnown(expenses,s=>s.amount),budget=sumKnown(budgets,s=>s.amount);
     const missingBudgetMonths=p.months.filter(m=>!budgets.some(b=>b.month===m&&D.number(b.amount)!==null));
     // Clone records so an edit while a PDF renders cannot alter the subsequent XLSX.

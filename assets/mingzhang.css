@@ -176,3 +176,81 @@ a.record-note { color:var(--mz-accent-ink); }
   tfoot .table-total td { white-space:normal; text-align:left !important; }
 }
 @media print { .bottom-bar, .quick-add-trigger, .quick-add-menu { display:none !important; } .main-wrapper { box-shadow:none; } }
+
+/* ============================================================
+ * 明账 2.0 · 明亮版（2026-10-22）
+ * 主色、柔光、玻璃面板全部来自 tokens.css；这里只定形状和层次。
+ * ============================================================ */
+
+/* ---------- 外壳与材质 ---------- */
+.main-wrapper { box-shadow:-1px 0 0 var(--mz-line-faint); }
+.brand-mark { background:linear-gradient(135deg,var(--mz-hero-1),var(--mz-brand) 55%,var(--mz-brand-hover)); color:#fff; border-radius:10px; box-shadow:0 4px 12px var(--mz-brand-glow); }
+.primary-nav { transition:background-color var(--dur-2) var(--ease), color var(--dur-2) var(--ease); }
+.primary-nav.active { color:var(--mz-accent-ink); font-weight:600; }
+.quick-add-trigger { border-radius:10px; background:linear-gradient(180deg,var(--mz-brand-top),var(--mz-brand));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.22),0 6px 16px var(--mz-brand-glow); transition:transform var(--dur-1) var(--ease), box-shadow var(--dur-2) var(--ease), filter var(--dur-2); }
+.quick-add-trigger:hover { background:linear-gradient(180deg,var(--mz-brand),var(--mz-brand-hover)); box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 8px 22px var(--mz-brand-glow); }
+.quick-add-trigger:active, body .btn-primary:active, .auth-btn:active { transform:scale(.98); }
+body .btn-primary, body .topbar-actions .btn-primary { background:linear-gradient(180deg,var(--mz-brand-top),var(--mz-brand)) !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.2),0 4px 12px color-mix(in srgb,var(--mz-brand) 22%,transparent); transition:transform var(--dur-1) var(--ease), box-shadow var(--dur-2) var(--ease); }
+body .btn-primary:hover { background:linear-gradient(180deg,var(--mz-brand),var(--mz-brand-hover)) !important; }
+.card, .table-wrap, .workflow-fold, .annual-summary { border-color:var(--mz-line-faint); box-shadow:var(--shadow-card); }
+.module-tab.active { color:var(--mz-accent-ink); }
+.link-btn { color:var(--mz-brand); font-weight:500; }
+:root.is-dark .link-btn { color:var(--mz-accent-ink); }
+
+/* ---------- 总览首屏：光感渐变 + 玻璃数字面板 ---------- */
+#page-dashboard { position:relative; isolation:isolate; }
+#page-dashboard::before { content:""; position:absolute; z-index:-1; pointer-events:none; left:-32px; right:-32px; top:-28px; height:440px;
+  background:radial-gradient(60% 90% at 8% 0%,var(--mz-hero-1) 0%,transparent 62%),radial-gradient(50% 80% at 62% 0%,var(--mz-hero-2) 0%,transparent 60%),
+    radial-gradient(45% 85% at 100% 10%,var(--mz-hero-3) 0%,transparent 62%),linear-gradient(180deg,var(--mz-hero-wash),var(--mz-surface));
+  -webkit-mask:linear-gradient(180deg,#000 55%,transparent); mask:linear-gradient(180deg,#000 55%,transparent);
+  background-size:120% 120%; animation:mz-drift 24s var(--ease) infinite alternate; }
+@keyframes mz-drift { from { background-position:0% 0%; } to { background-position:100% 30%; } }
+#page-dashboard .period-heading h2 { font-size:26px; font-weight:600; letter-spacing:-.01em; color:var(--mz-ink); }
+#page-dashboard .period-switch { background:var(--mz-glass); box-shadow:inset 0 0 0 1px var(--mz-glass-line); -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px); }
+#page-dashboard .period-switch button.active { color:var(--mz-accent-ink); box-shadow:0 1px 2px rgba(16,24,40,.08),0 2px 8px color-mix(in srgb,var(--mz-brand) 14%,transparent); }
+#page-dashboard > .stats-grid { background:var(--mz-glass) !important; -webkit-backdrop-filter:blur(18px) saturate(1.4); backdrop-filter:blur(18px) saturate(1.4);
+  border:1px solid var(--mz-glass-line) !important; border-radius:18px !important; padding:26px 6px 22px !important;
+  box-shadow:inset 0 1px 0 var(--mz-glass-line),0 10px 30px color-mix(in srgb,var(--mz-brand) 10%,transparent),0 2px 6px rgba(16,24,40,.04); }
+body #page-dashboard > .stats-grid .stat-card { border-left-color:color-mix(in srgb,var(--mz-ink) 8%,transparent) !important; }
+#page-dashboard > .stats-grid .stat-label { color:var(--mz-ink-2); font-weight:500; display:inline-flex; align-items:center; gap:8px; }
+#page-dashboard > .stats-grid .stat-label::before { content:""; width:8px; height:8px; border-radius:3px; background:var(--series,var(--mz-series-1)); flex:none; }
+#page-dashboard > .stats-grid .stat-card:nth-child(1) { --series:var(--mz-series-1); }
+#page-dashboard > .stats-grid .stat-card:nth-child(2) { --series:var(--mz-series-2); }
+#page-dashboard > .stats-grid .stat-card:nth-child(3) { --series:var(--mz-series-3); }
+#page-dashboard > .stats-grid .stat-card:nth-child(4) { --series:var(--mz-series-4); }
+#page-dashboard > .stats-grid .stat-value { font-size:54px; font-weight:400; letter-spacing:-.035em; line-height:1.08; }
+.mz-spark { display:block; width:100%; height:34px; margin-top:10px; overflow:visible; color:var(--series,var(--mz-series-1)); }
+.mz-spark .area { fill:currentColor; opacity:.12; }
+.mz-spark .line { fill:none; stroke:currentColor; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; vector-effect:non-scaling-stroke; }
+.mz-spark .dot { fill:var(--mz-surface); stroke:currentColor; stroke-width:2; }
+.mz-spark .line.ongoing { stroke-dasharray:3 3; opacity:.8; }
+.mz-spark-cap { display:flex; justify-content:space-between; font:400 11.5px/1.4 var(--font-num); color:var(--mz-ink-faint); margin-top:2px; }
+@media (max-width:1099px) { #page-dashboard::before { height:520px; } }
+@media (max-width:640px) {
+  #page-dashboard::before { left:-12px; right:-12px; top:-16px; height:560px; }
+  #page-dashboard .period-heading h2 { font-size:22px; }
+  #page-dashboard > .stats-grid { padding:16px 0 !important; border-radius:16px !important; }
+  #page-dashboard > .stats-grid .stat-value { font-size:32px; }
+  .mz-spark { height:26px; }
+}
+
+/* ---------- 登录页：品牌入口 ---------- */
+.auth-overlay { background:radial-gradient(55% 70% at 15% 10%,var(--mz-hero-1) 0%,transparent 60%),radial-gradient(50% 60% at 85% 20%,var(--mz-hero-3) 0%,transparent 60%),
+  radial-gradient(60% 70% at 55% 100%,var(--mz-hero-2) 0%,transparent 60%),var(--mz-hero-wash); padding:0 max(16px,env(safe-area-inset-right,0px)) 0 max(16px,env(safe-area-inset-left,0px)); }
+.auth-container { background:var(--mz-glass); -webkit-backdrop-filter:blur(24px) saturate(1.5); backdrop-filter:blur(24px) saturate(1.5);
+  border:1px solid var(--mz-glass-line); border-radius:22px; box-shadow:0 30px 80px color-mix(in srgb,var(--mz-brand) 18%,transparent),0 2px 8px rgba(16,24,40,.06); }
+.auth-logo { width:60px; height:60px; border-radius:16px; color:#fff; background:linear-gradient(135deg,var(--mz-hero-1),var(--mz-brand) 60%,var(--mz-brand-hover)); box-shadow:0 10px 24px var(--mz-brand-glow); }
+.auth-title { font-weight:600; letter-spacing:-.02em; color:var(--mz-ink); }
+.auth-subtitle { color:var(--mz-ink-3); }
+.auth-input-group .auth-input { background-color:var(--mz-surface); }
+body .auth-btn { height:44px; border:0; border-radius:10px; color:var(--mz-on-brand); font-size:15px; background:linear-gradient(180deg,var(--mz-brand-top),var(--mz-brand));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.22),0 8px 20px var(--mz-brand-glow); transition:transform var(--dur-1) var(--ease), filter var(--dur-2); }
+body .auth-btn:hover { background:linear-gradient(180deg,var(--mz-brand),var(--mz-brand-hover)); }
+@media (max-width:480px) { .auth-container { padding:40px 24px 32px; } }
+
+@media (prefers-reduced-motion: reduce) {
+  #page-dashboard::before { animation:none; }
+  .quick-add-trigger, body .btn-primary, body .auth-btn, .primary-nav { transition:none; }
+}

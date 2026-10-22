@@ -7,7 +7,7 @@
 本轮功能迭代覆盖修改清单第 4–20 项。第 4–18、20 项可在现有静态站点运行；第 19 项提供独立私有服务，实现服务器身份核验、编辑/只读权限和逐份个人报告授权，正式启用仍需配置账号、HTTPS 部署位置和报告文件。
 
 - 界面：`index.html`、`assets/workbench.*`、`assets/workflow.*`
-- 设计语言「明账」：颜色、字体、圆角令牌只在 `tools/tokens.py` 里改，运行 `python3 tools/tokens.py` 生成 `assets/tokens.css` 并校验对比度；外观切换 `assets/appearance.js`（浅色／深色／跟随系统 × 晴山蓝、鼠尾草、山梗紫、淡咖啡，偏好只存本浏览器）；改版样式与交互 `assets/mingzhang.*`（记一笔、手机底栏、汇报排版）。Claude Design System「学习发展 · 明账」与这里同源，改令牌后用 `--json` 输出 tokens.json 同步过去。
+- 设计语言「明账」：颜色、字体、圆角令牌只在 `tools/tokens.py` 里改，运行 `python3 tools/tokens.py` 生成 `assets/tokens.css` 并校验对比度；外观切换 `assets/appearance.js`（浅色／深色／跟随系统 × 晴空蓝、湖光青、鸢尾紫，偏好只存本浏览器）；改版样式与交互 `assets/mingzhang.*`（记一笔、手机底栏、汇报排版、明账 2.0 首屏柔光与玻璃数字面板）；首屏迷你趋势与数字滚动 `assets/hero.js`。Claude Design System「学习发展 · 明账」与这里同源，改令牌后用 `--json` 输出 tokens.json 同步过去。
 - 期间汇总与导出：`assets/ld-report.js`、`assets/report-export.js`
 - 数据与同步：`assets/ld-domain.js`、`assets/ld-sync.js`
 - 私有服务：`server/app.mjs`、`assets/secure-client.js`
@@ -33,7 +33,7 @@ python3 -m http.server 8080
 ## 数据口径
 
 - 首页可切换月度和年度累计，保持原有卡片排版；所选月份在首页与总结页间保留。年度累计从所选年份的 1 月 1 日统计至截止月份月底；当月只统计到上海时区当天，不纳入未来培训或发布记录。历史年度可选至 12 月。
-- 月度／年度总结与 PDF、Excel 共用期间汇总。打开导出设置时固定本次数据快照，两种格式共用完整明细；PDF 自动分页。历史报告随补录更新，不是已封存的历史快照。
+- 月度／年度总结与 PDF、Excel 共用期间汇总，明细按日期从晚到早排列（同日保持录入顺序）。打开导出设置时固定本次数据快照，两种格式共用完整明细；PDF 自动分页。历史报告随补录更新，不是已封存的历史快照。
 - 开销按归属月份统计，允许后续补录；未来日期的开销暂不计入实际支出。部分月份缺预算时标注“已录入预算合计”及缺失月份，不推算全年预算或余额。
 - 缺失人数、时长或金额保留“待补”及条数；部分已知时仅合计已知值，全缺失时不显示为零。AI 分享月通过已关联的培训记录计入培训总量，分享活动列表不再叠加一次。
 

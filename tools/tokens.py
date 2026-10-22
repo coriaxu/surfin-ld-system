@@ -44,16 +44,17 @@ def rgba(h, a):
     r, g, b = _rgb(h)
     return f'rgba({r},{g},{b},{a})'
 
-# ---------- 主色：四个方向（色相、彩度取自画布方案，色名取自中国传统色库最近色） ----------
+# ---------- 主色：三个明亮方向（明账 2.0，2026-10-22 徐老师确认晴空蓝为默认） ----------
+# L 为浅色主按钮明度，取白字对比 ≥4.5:1 时能到的最亮一档；hero 是首屏与登录页的三团柔光。
 ACCENTS = {
-    'blue':  {'name': '晴山蓝', 'hue': 245, 'chroma': 0.060},
-    'sage':  {'name': '鼠尾草', 'hue': 172, 'chroma': 0.060},
-    'plum':  {'name': '山梗紫', 'hue': 290, 'chroma': 0.060},
-    'clay':  {'name': '淡咖啡', 'hue': 48,  'chroma': 0.085},
+    'blue':   {'name': '晴空蓝', 'hue': 255, 'chroma': 0.19, 'L': .55, 'hero': ('#8EC9FF', '#93E7DC', '#C9BCFF'), 'wash': '#F4F8FF'},
+    'lagoon': {'name': '湖光青', 'hue': 222, 'chroma': 0.13, 'L': .53, 'hero': ('#86DDF0', '#A8EEDB', '#FFE0A6'), 'wash': '#F2FBFC'},
+    'iris':   {'name': '鸢尾紫', 'hue': 278, 'chroma': 0.20, 'L': .55, 'hero': ('#AEB8FF', '#E5BBFF', '#FFD3C2'), 'wash': '#F7F6FF'},
 }
 DEFAULT_ACCENT = 'blue'
 
-# ---------- 状态色：截图三色，固定不随主色变 ----------
+# ---------- 状态色：截图三色，色相固定不随主色变；明账 2.0 起彩度 ×1.25 跟上明亮主色 ----------
+STATUS_BOOST = 1.25
 STATUS = {
     'done':    {'name': '已核 / 已结项', 'mid': '#7FB3A2', 'hue': 172, 'chroma': 0.060},
     'pending': {'name': '待补 / 待回收', 'mid': '#E2B262', 'hue': 79,  'chroma': 0.113},
@@ -64,29 +65,29 @@ def neutrals(hue, mode):
     """近中性灰，带一丝主色色相，让底色和主色同一个温度。"""
     t = (lambda L, C=0.004: oklch(L, C, hue))
     if mode == 'light':
-        return {'ground': t(.962), 'surface': '#FFFFFF', 'sunken': t(.982, .003), 'raised': '#FFFFFF',
-                'line-faint': t(.94), 'line': t(.905, .006), 'line-strong': t(.835, .008),
-                'ink': t(.20, .012), 'ink-2': t(.38, .012), 'ink-3': t(.50, .012), 'ink-faint': t(.66, .01)}
+        return {'ground': t(.982, .005), 'surface': '#FFFFFF', 'sunken': t(.976, .005), 'raised': '#FFFFFF',
+                'line-faint': t(.948, .006), 'line': t(.918, .008), 'line-strong': t(.855, .010),
+                'ink': t(.21, .02), 'ink-2': t(.39, .018), 'ink-3': t(.51, .016), 'ink-faint': t(.68, .012)}
     return {'ground': t(.165, .006), 'surface': t(.205, .008), 'sunken': t(.185, .007), 'raised': t(.235, .009),
             'line-faint': t(.255, .008), 'line': t(.30, .01), 'line-strong': t(.39, .012),
             'ink': t(.945, .006), 'ink-2': t(.83, .01), 'ink-3': t(.71, .012), 'ink-faint': t(.56, .012)}
 
 def accent_scale(a, mode):
-    H, C = a['hue'], a['chroma']
+    H, C, L = a['hue'], a['chroma'], a['L']
     if mode == 'light':
-        return {'tint': oklch(.965, .018, H), 'soft': oklch(.91, .04, H), 'mid': oklch(.73, C, H),
-                'graphic': oklch(.60, C * 1.05, H), 'brand': oklch(.52, C * 1.05, H),
-                'brand-hover': oklch(.46, C * 1.05, H), 'ink': oklch(.40, C * .95, H), 'on-brand': '#FFFFFF'}
-    return {'tint': oklch(.27, .035, H), 'soft': oklch(.33, .045, H), 'mid': oklch(.73, C, H),
-            'graphic': oklch(.72, C, H), 'brand': oklch(.76, C, H),
-            'brand-hover': oklch(.82, C * .9, H), 'ink': oklch(.84, C * .8, H), 'on-brand': oklch(.18, .01, H)}
+        return {'tint': oklch(.972, .022, H), 'soft': oklch(.925, .055, H), 'mid': oklch(.74, C * .8, H),
+                'graphic': oklch(.62, C, H), 'brand': oklch(L, C, H), 'brand-top': oklch(L + .04, C, H),
+                'brand-hover': oklch(L - .06, C, H), 'ink': oklch(.44, C * .85, H), 'on-brand': '#FFFFFF'}
+    return {'tint': oklch(.27, .045, H), 'soft': oklch(.33, .06, H), 'mid': oklch(.74, C * .8, H),
+            'graphic': oklch(.72, C * .8, H), 'brand': oklch(.75, C * .75, H), 'brand-top': oklch(.79, C * .7, H),
+            'brand-hover': oklch(.82, C * .65, H), 'ink': oklch(.84, C * .55, H), 'on-brand': oklch(.18, .02, H)}
 
 def status_scale(s, mode):
-    H, C = s['hue'], s['chroma']
+    H, C = s['hue'], s['chroma'] * STATUS_BOOST
     if mode == 'light':
         return {'tint': oklch(.965, .018, H), 'soft': oklch(.91, .04, H), 'mid': s['mid'],
                 'graphic': oklch(.62, C, H) if s is not STATUS['done'] else oklch(.64, C, H),
-                'deep': oklch(.52, min(C * 1.05, .12), H), 'ink': oklch(.40, C * .95, H)}
+                'deep': oklch(.52, min(C, .14), H), 'ink': oklch(.41, C * .95, H)}
     return {'tint': oklch(.27, .04, H), 'soft': oklch(.33, .05, H), 'mid': s['mid'],
             'graphic': s['mid'], 'deep': oklch(.76, C, H), 'ink': oklch(.86, C * .7, H)}
 
@@ -94,6 +95,7 @@ def status_scale(s, mode):
 def palette(accent_key, mode):
     a = ACCENTS[accent_key]
     n, x = neutrals(a['hue'], mode), accent_scale(a, mode)
+    x['_accent'] = a
     st = {k: status_scale(v, mode) for k, v in STATUS.items()}
     return n, x, st
 
@@ -120,6 +122,26 @@ def checks(n, x, st, mode, label):
         need(s['graphic'], n['surface'], 3, f'{k}-graphic/surface')
     return bad
 
+SERIES = (None, (190, .13), (300, .17), (75, .15))  # 首屏四个指标与图表系列：主色、青绿、紫、琥珀
+
+def hero_vars(x, mode):
+    a = x['_accent']
+    dark = mode == 'dark'
+    v = {'--mz-series-1': x['graphic']}
+    for i, hc in enumerate(SERIES[1:], 2):
+        v[f'--mz-series-{i}'] = oklch(.72 if dark else .66, hc[1] * (.8 if dark else 1), hc[0])
+    if dark:
+        # 夜空版：同色相、低明度，铺在深色底上不刺眼
+        h1, h2, h3 = (rgba(oklch(.45, .12, H), .55) for H in (a['hue'], 190, 300))
+        v.update({'--mz-hero-1': h1, '--mz-hero-2': h2, '--mz-hero-3': h3, '--mz-hero-wash': oklch(.19, .02, a['hue']),
+                  '--mz-glass': 'rgba(30,36,46,.55)', '--mz-glass-line': 'rgba(255,255,255,.08)'})
+    else:
+        h1, h2, h3 = a['hero']
+        v.update({'--mz-hero-1': rgba(h1, .8), '--mz-hero-2': rgba(h2, .7), '--mz-hero-3': rgba(h3, .7), '--mz-hero-wash': a['wash'],
+                  '--mz-glass': 'rgba(255,255,255,.62)', '--mz-glass-line': 'rgba(255,255,255,.9)'})
+    v['--mz-brand-glow'] = rgba(x['brand'], .30 if dark else .26)
+    return v
+
 def css_vars(n, x, st, mode):
     dark = mode == 'dark'
     v = {
@@ -129,8 +151,9 @@ def css_vars(n, x, st, mode):
         '--mz-ink': n['ink'], '--mz-ink-2': n['ink-2'], '--mz-ink-3': n['ink-3'], '--mz-ink-faint': n['ink-faint'],
         '--mz-accent-tint': x['tint'], '--mz-accent-soft': x['soft'], '--mz-accent-mid': x['mid'],
         '--mz-accent-graphic': x['graphic'], '--mz-accent-ink': x['ink'],
-        '--mz-brand': x['brand'], '--mz-brand-hover': x['brand-hover'], '--mz-on-brand': x['on-brand'],
+        '--mz-brand': x['brand'], '--mz-brand-top': x['brand-top'], '--mz-brand-hover': x['brand-hover'], '--mz-on-brand': x['on-brand'],
     }
+    v.update(hero_vars(x, mode))
     for k, s in st.items():
         for step, val in s.items():
             v[f'--mz-{k}-{step}'] = val
@@ -158,8 +181,9 @@ def css_vars(n, x, st, mode):
         '--btn-danger-hover': st['review']['ink'], '--btn-danger-dark': st['review']['ink'],
         '--status-success': st['done']['deep'], '--status-warning': st['pending']['deep'],
         '--status-danger': st['review']['deep'], '--status-info': x['brand'],
-        '--shadow-xs': '0 1px 2px rgba(0,0,0,.4)' if dark else '0 1px 2px rgba(18,26,23,.05)',
-        '--shadow-sm': '0 1px 2px rgba(0,0,0,.4),0 3px 8px rgba(0,0,0,.25)' if dark else '0 1px 2px rgba(18,26,23,.04),0 3px 8px rgba(18,26,23,.04)',
+        '--shadow-xs': '0 1px 2px rgba(0,0,0,.4)' if dark else '0 1px 2px rgba(16,24,40,.05)',
+        '--shadow-sm': '0 1px 2px rgba(0,0,0,.4),0 3px 8px rgba(0,0,0,.25)' if dark else '0 1px 2px rgba(16,24,40,.04),0 2px 6px rgba(16,24,40,.04)',
+        '--shadow-card': '0 1px 2px rgba(0,0,0,.35)' if dark else '0 1px 2px rgba(16,24,40,.03),0 4px 14px rgba(16,24,40,.035)',
         '--shadow-pop': '0 12px 32px rgba(0,0,0,.5),0 0 0 1px ' + n['line'] if dark else '0 12px 32px rgba(18,26,23,.12),0 2px 6px rgba(18,26,23,.06)',
         '--shadow-sheet': '0 24px 64px rgba(0,0,0,.6),0 0 0 1px ' + n['line'] if dark else '0 24px 64px rgba(18,26,23,.18),0 4px 12px rgba(18,26,23,.06)',
         '--color-scheme': 'dark' if dark else 'light',
@@ -177,14 +201,15 @@ SHARED = """:root {
   --fw-thin:400; --fw-light:400; --fw-regular:400; --fw-medium:500;
   --fs-nano:12px; --fs-micro:12px; --fs-caption:12px; --fs-body-s:13px;
   --sidebar-w:232px; --topbar-h:64px;
-  --radius-xs:4px; --radius-sm:6px; --radius:6px; --radius-lg:10px; --radius-xl:10px; --radius-sheet:14px;
+  --radius-xs:4px; --radius-sm:8px; --radius:8px; --radius-lg:14px; --radius-xl:14px; --radius-sheet:18px;
+  --ease:cubic-bezier(.2,.8,.2,1); --dur-1:.12s; --dur-2:.2s; --dur-3:.32s;
   --space-1:4px; --space-2:8px; --space-3:12px; --space-4:16px; --space-6:24px; --space-8:32px; --space-12:48px;
 }
 """
 
 def build_css():
     out = ['/* 「明账」设计令牌 · 由 tools/tokens.py 生成，请改脚本，勿手改本文件。\n'
-           ' * 主色：html[data-accent] = blue | sage | plum | clay（默认 blue）\n'
+           ' * 主色：html[data-accent] = blue（晴空蓝，默认）| lagoon（湖光青）| iris（鸢尾紫）\n'
            ' * 外观：html[data-mode] = light | dark | auto（auto 跟随系统）\n */\n', SHARED]
     problems = []
     for key in ACCENTS:
@@ -272,10 +297,10 @@ def design_system_tokens():
             {'name': 'space-12', 'value': '48px', 'usage': '汇报页章节间距。'}]},
         'radius': {'tokens': [
             {'name': 'radius-xs', 'value': '4px', 'usage': '状态标签。刻意小于按钮，不做胶囊形。'},
-            {'name': 'radius-sm', 'value': '6px', 'usage': '按钮、输入框、分段切换。'},
-            {'name': 'radius-lg', 'value': '10px', 'usage': '卡片、表格容器。'},
-            {'name': 'radius-sheet', 'value': '14px', 'usage': '内容纸面、抽屉、底部弹层。'}]},
-        'shadow': {'note': '浅色主题靠边框分层，阴影只给浮层；深色主题阴影加深并补一圈描边。', 'tokens': [
+            {'name': 'radius-sm', 'value': '8px', 'usage': '按钮、输入框、分段切换。'},
+            {'name': 'radius-lg', 'value': '14px', 'usage': '卡片、表格容器。'},
+            {'name': 'radius-sheet', 'value': '18px', 'usage': '内容纸面、抽屉、底部弹层。'}]},
+        'shadow': {'note': '浅色主题用细边加柔和投影分层（shadow-card）；深色主题阴影加深并补一圈描边。', 'tokens': [
             {'name': 'shadow-pop', 'value': per_mode('0 12px 32px rgba(18,26,23,0.12), 0 2px 6px rgba(18,26,23,0.06)', '0 12px 32px rgba(0,0,0,0.5)'), 'usage': '菜单、记一笔弹层。'},
             {'name': 'shadow-sheet', 'value': per_mode('0 24px 64px rgba(18,26,23,0.18), 0 4px 12px rgba(18,26,23,0.06)', '0 24px 64px rgba(0,0,0,0.6)'), 'usage': '抽屉、底部弹层。'}]},
     }
@@ -285,7 +310,7 @@ def main():
     if problems:
         print('对比度不达标：\n' + '\n'.join(problems)); sys.exit(1)
     (ROOT / 'assets' / 'tokens.css').write_text(css, encoding='utf-8')
-    print('assets/tokens.css 已生成，四个主色 × 浅深两套全部通过对比度校验')
+    print(f'assets/tokens.css 已生成，{len(ACCENTS)} 个主色 × 浅深两套全部通过对比度校验')
     if '--json' in sys.argv:
         p = pathlib.Path(sys.argv[sys.argv.index('--json') + 1])
         p.parent.mkdir(parents=True, exist_ok=True)

@@ -1,8 +1,9 @@
-/* 外观：浅色／深色／跟随系统 × 四个主色。在 <head> 里同步执行，首屏绘制前就设好 html 属性，避免闪烁。
+/* 外观：浅色／深色／跟随系统 × 三个主色。在 <head> 里同步执行，首屏绘制前就设好 html 属性，避免闪烁。
  * 令牌见 assets/tokens.css（由 tools/tokens.py 生成）。偏好只存在本浏览器，不进云端数据。 */
 (() => {
   const MODES = [['light', '浅色'], ['dark', '深色'], ['auto', '跟随系统']];
-  const ACCENTS = [['blue', '晴山蓝', '#496D8B'], ['sage', '鼠尾草', '#407565'], ['plum', '山梗紫', '#68638B'], ['clay', '淡咖啡', '#925839']];
+  // 明账 2.0：三个明亮主色。旧版鼠尾草、山梗紫、淡咖啡的偏好读不到就回落晴空蓝。
+  const ACCENTS = [['blue', '晴空蓝', '#006EDC'], ['lagoon', '湖光青', '#007AA1'], ['iris', '鸢尾紫', '#5C5BE2']];
   const root = document.documentElement;
   const read = (key, allowed, fallback) => {
     try { const v = localStorage.getItem(key); return allowed.some(([id]) => id === v) ? v : fallback; } catch (_) { return fallback; }
