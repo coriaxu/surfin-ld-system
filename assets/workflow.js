@@ -114,7 +114,7 @@
   function records(key,source) {
     const f=filterState[key];if(!f)return source;
     let result=D.search(source,f.query,f.period,f.fields);
-    if(f.project)result=result.filter(s=>trainingProjectName(s.project)===trainingProjectName(f.project));
+    if(f.project)result=result.filter(s=>matchesTrainingProject(s,f.project));
     if(f.status)result=result.filter(s=>key==='stations'?D.stationMetric(s).status===f.status:(f.status==='collected'?'complete':f.status)===D.financeStatus(s).key);
     const pages=Math.max(1,Math.ceil(result.length/20));f.page=Math.min(f.page,pages);
     f.pager.innerHTML=`<span>共 ${result.length} 条 · 第 ${f.page} / ${pages} 页</span>${btn('上一页','page-prev',key)}${btn('下一页','page-next',key)}`;
@@ -140,12 +140,13 @@
   filterState.stations.bar.querySelector('option[value=draft]').remove();
   renderSessions=function(){
     const options=filterState.sessions.bar.querySelector('select');const selected=options.value;
-    options.innerHTML='<option value="">全部项目</option>'+[...new Set(state.sessions.map(s=>trainingProjectName(s.project)).filter(Boolean))].sort().map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('');options.value=trainingProjectName(selected);
+    const choices=trainingProjectOptions(state);
+    options.innerHTML='<option value="">全部项目</option>'+choices.map(o=>`<option value="${esc(o.value)}">${esc(o.label)}</option>`).join('');options.value=trainingProjectName(filterState.sessions.project||selected);
     rows('sessionTable',records('sessions',[...state.sessions].sort((a,b)=>String(b.date).localeCompare(a.date))),9,s=>`<tr><td>${esc(s.date)}</td><td>${esc(s.course)}${s.source==='ai_share'?'<small class="record-note">来自 AI 分享月</small>':''}</td><td>${esc(s.project)}</td><td>${esc(s.lecturer)}</td><td>${fmt(D.number(s.people))}</td><td>${fmt(D.number(s.duration))} h</td><td>${D.number(s.people)===null || D.number(s.duration)===null?'待补录':fmt(s.people*s.duration)}</td><td>${esc(s.note || '—')}</td><td>${actions('session',s.id,true)}</td></tr>`);
     // 筛选合计：和总览、月度汇报同一口径，人数或时长缺失的场次只计条数、不按 0 计入。
     const f=filterState.sessions,list=f.result||[],known=list.filter(x=>D.number(x.people)!==null&&D.number(x.duration)!==null);
     const people=list.reduce((n,x)=>n+(D.number(x.people)??0),0),hours=known.reduce((n,x)=>n+x.people*x.duration,0),missing=list.length-known.length;
-    const scope=[f.period||'全部月份',f.project||'全部项目',f.query?`含“${f.query}”`:''].filter(Boolean).join(' · ');
+    const scope=[f.period||'全部月份',choices.find(o=>o.value===f.project)?.label||f.project||'全部项目',f.query?`含“${f.query}”`:''].filter(Boolean).join(' · ');
     const table=$('sessionTable').closest('table');let foot=table.querySelector('tfoot');if(!foot){foot=document.createElement('tfoot');table.append(foot);}
     foot.innerHTML=list.length?`<tr class="table-total"><td data-label="筛选合计">筛选合计</td><td colspan="3">${esc(scope)} · ${list.length} 条${missing?` · ${missing} 条待补`:''}</td><td data-label="人次">${fmt(people)}</td><td></td><td data-label="人时">${fmt(Math.round(hours*100)/100)}</td><td colspan="2"></td></tr>`:'';
     for(const [input,field] of [['sessionProject','project'],['sessionLecturer','lecturer']]){
@@ -248,6 +249,8 @@
   const budgetCompare=renderBudgetCompare;renderBudgetCompare=function(){budgetCompare();if(!state.budgets.length){const host=$('budgetCompareContainer');if(host)host.innerHTML='<p class="empty-copy">尚未设置预算。实际开销已正常记录，设置预算后可查看预实比较。</p>';}};
 
   // One selection survives navigation between overview and both report pages.
+  const SPEND_NOTE='系统已录入支出 · 不含项目报销';
+  function spendDescription(pending=0){return SPEND_NOTE+(pending?` · ${pending} 条金额待补`:'');}
   const R=LDReport, selection={mode:'month',month:R.today().slice(0,7)};
   let reportSnapshot=null,exportSnapshot=null,exporting=false;
   const selected=mode=>R.aggregate(state,R.period(mode||selection.mode,selection.month));
@@ -266,9 +269,9 @@
     stat('statSessions',main.sessions.length,prefix+'培训场次',main.sessions.length?'最近：'+[...main.sessions].sort((a,b)=>b.date.localeCompare(a.date))[0].course:'暂无培训记录');
     stat('statHours',R.fmt(main.hours),prefix+'总人时',main.pending.hours?`${main.pending.hours} 条待补 · 已知人时合计`:'人数 × 时长');
     stat('statMonthPeople',R.fmt(main.people),prefix+'参训人次',main.pending.people?`${main.pending.people} 条人数待补`:'参加人次合计');
-    stat('statMonthSpend',R.money(main.spend),prefix+'所有项目支出',main.pending.spend?`${main.pending.spend} 条金额待补`:'按归属月份 · 含常规与专项');
+    stat('statMonthSpend',R.money(main.spend),prefix+'所有项目支出',spendDescription(main.pending.spend));
     const foldPrefix=selection.mode==='ytd'?`${Number(p.month.slice(5))} 月`:`${p.year} 年累计`;
-    for(const [id,value,label,key] of [['statYearSessions',fold.sessions.length,'培训场次',null],['statYearPeople',R.fmt(fold.people),'参训人次','people'],['statYearHours',R.fmt(fold.hours),'总人时','hours'],['statYearSpend',R.money(fold.spend),'项目支出','spend']])stat(id,value,foldPrefix+label,key&&fold.pending[key]?`${fold.pending[key]} 条待补`:fold.period.range);
+    for(const [id,value,label,key] of [['statYearSessions',fold.sessions.length,'培训场次',null],['statYearPeople',R.fmt(fold.people),'参训人次','people'],['statYearHours',R.fmt(fold.hours),'总人时','hours'],['statYearSpend',R.money(fold.spend),'项目支出','spend']])stat(id,value,foldPrefix+label,key==='spend'?spendDescription(fold.pending.spend):key&&fold.pending[key]?`${fold.pending[key]} 条待补`:fold.period.range);
     $('overviewPeriodTitle').textContent=selection.mode==='ytd'?'年度累计':p.ongoing?'本月概览':'月度概览';
     $('overviewRange').textContent=p.range+(p.ongoing?' · 本月进行中':'');$('overviewMonth').value=p.month;$('overviewMonth').max=R.today().slice(0,7);$('cutoffLabel').textContent=selection.mode==='ytd'?'截至月份':'选择月份';
     monthLabel.querySelectorAll('[data-period]').forEach(b=>{b.classList.toggle('active',b.dataset.period===selection.mode);b.setAttribute('aria-pressed',String(b.dataset.period===selection.mode));});
@@ -282,16 +285,49 @@
   function trainingProjectName(name){
     return /^AI赋能(?:训练营)?第四期$/.test(String(name??'').replace(/\s+/g,''))?'AI 赋能训练营第四期':name;
   }
+  // 第三期日期只从结项配置读取；展示分组与台账筛选共用同一判定。
+  function trainingProjectBuckets(){
+    const r=window.LDCloseout?.reports.find(r=>r.id==='ai-s3');
+    if(!r?.start||!r?.end||!r?.project)throw new Error('第三期结项日期配置缺失');
+    return [
+      {key:'ai-s3',name:r.project,label:r.project+' · 第三期',status:'已结项',matches:s=>s.project===r.project&&s.date>=r.start&&s.date<=r.end},
+      {key:'ai-prior',name:r.project,label:r.project+' · 往期辅导（第一、二期）',status:'已结项',note:'第一、二期结项后的零散辅导',matches:s=>s.project===r.project&&!!s.date&&s.date<r.start},
+      {key:'ai-unassigned',name:r.project,label:r.project+'（未分期）',matches:s=>s.project===r.project&&(!s.date||s.date>r.end)}
+    ];
+  }
+  function matchesTrainingProject(record,key){
+    const bucket=trainingProjectBuckets().find(p=>p.key===key);
+    return bucket?bucket.matches(record):trainingProjectName(record.project)===trainingProjectName(key);
+  }
+  function trainingProjectOptions(source=state){
+    const buckets=trainingProjectBuckets(),sessions=source.sessions||[];
+    return [...new Set(sessions.map(s=>trainingProjectName(s.project)).filter(Boolean))].sort().flatMap(name=>name===buckets[0].name
+      ?buckets.filter(p=>sessions.some(p.matches)).map(p=>({value:p.key,label:p.label}))
+      :[{value:name,label:name}]);
+  }
+  function openTrainingProject(key){
+    const f=filterState.sessions;
+    Object.assign(f,{project:key,query:'',period:'',status:'',page:1});
+    f.bar.querySelectorAll('input').forEach(input=>input.value='');
+    renderSessions();
+  }
   function projectSummaries(source=state){
     const sessions=source.sessions||[],shares=D.shareEvents(source),people=list=>list.reduce((n,r)=>n+(D.number(r.people)??0),0);
-    const training=[...new Set(sessions.map(s=>trainingProjectName(s.project)).filter(p=>p&&!D.isShareProject(p)))].map(name=>{const records=sessions.filter(s=>trainingProjectName(s.project)===name).map(s=>({date:s.date,title:s.course,people:s.people}));return {name,page:'training',unit:'场',records,pending:records.filter(r=>D.number(r.people)===null).length,people:people(records)};});
+    const buckets=trainingProjectBuckets();
+    const training=[...new Set(sessions.map(s=>trainingProjectName(s.project)).filter(p=>p&&!D.isShareProject(p)))].flatMap(name=>{
+      const groups=name===buckets[0].name?buckets:[{name,matches:s=>trainingProjectName(s.project)===name}];
+      return groups.flatMap(group=>{const records=sessions.filter(group.matches).map(s=>({date:s.date,title:s.course,people:s.people}));
+        if(!records.length)return [];
+        const {matches,...meta}=group;
+        return [{...meta,page:'training',unit:'场',records,pending:records.filter(r=>D.number(r.people)===null).length,people:people(records)}];});
+    });
     const list=[
       {name:'AI 广播站',page:'aiknowledge',tab:'station',unit:'期',records:source.aiStations,pending:source.aiStations.filter(s=>D.stationMetric(s).status!=='collected').length},
       {name:'AI 分享月',page:'aiknowledge',tab:'share',unit:'场',records:shares,pending:shares.filter(s=>s.people===null).length,people:people(shares)},
       {name:'金融小百科',page:'finance',unit:'期',records:source.financeWiki||[],pending:(source.financeWiki||[]).filter(s=>D.financeStatus(s).key==='pending').length,review:(source.financeWiki||[]).filter(s=>D.financeStatus(s).key==='review').length},
       ...training];
     // 项目状态与显示名由负责人确认；未登记的项目不加标签。筹备中的项目暂无记录。
-    const meta={'AI 赋能训练营':{label:'AI 赋能训练营 · 第三期',status:'已结项'},'海外 HR 分享项目':{status:'已结项'},'新员工入职培训':{status:'阶段性已结项'},'金融小百科':{status:'已结项'},'AI 广播站':{status:'项目持续进行'},'AI 分享月':{status:'项目持续进行'},'2026管理者训练营 1.0':{status:'项目持续进行'}};
+    const meta={'海外 HR 分享项目':{status:'已结项'},'新员工入职培训':{status:'阶段性已结项'},'金融小百科':{status:'已结项'},'AI 广播站':{status:'项目持续进行'},'AI 分享月':{status:'项目持续进行'},'2026管理者训练营 1.0':{status:'项目持续进行'}};
     list.forEach(p=>Object.assign(p,meta[p.name]||{}));
     const fourth=list.find(p=>p.name===trainingProjectName('AI 赋能第四期'));
     if(fourth)fourth.status='项目持续进行';
@@ -305,9 +341,9 @@
     return projectSummaries(source).slice(0,max).map(p=>{
       const last=p.latest,warn=p.pending||p.review,status=p.review?`${p.review} ${p.unit}待核对`:p.pending?`${p.pending} ${p.unit}待补录`:p.people!==undefined?`累计 ${p.people.toLocaleString('zh-CN')} 人次`:'数据已回收';
       const tag=p.status?`<span class="project-status" data-status="${esc(p.status)}">${esc(p.status)}</span>`:'';
-      const main=`<span class="project-main"><span class="project-name">${esc(p.label||p.name)}${tag}</span><span class="project-latest">${last?`${esc(shortDate(last.date))} · ${esc(last.title||last.course)}`:esc(p.note||'暂无记录')}</span></span>`;
+      const main=`<span class="project-main"><span class="project-name">${esc(p.label||p.name)}${tag}</span><span class="project-latest">${last&&p.note?esc(p.note)+' · ':''}${last?`${esc(shortDate(last.date))} · ${esc(last.title||last.course)}`:esc(p.note||'暂无记录')}</span></span>`;
       if(!p.page)return `<div class="project-row is-static">${main}<span class="project-stat"><strong>—</strong><small>暂无数据</small></span><span></span></div>`;
-      return `<button type="button" class="project-row" data-action="project-open" data-record="${esc(p.name)}">${main}<span class="project-stat"><strong>${p.records.length} ${p.unit}</strong><small class="${warn?'is-warn':''}">${status}</small></span>${chevron}</button>`;
+      return `<button type="button" class="project-row" data-action="project-open" data-record="${esc(p.key||p.name)}">${main}<span class="project-stat"><strong>${p.records.length} ${p.unit}</strong><small class="${warn?'is-warn':''}">${status}</small></span>${chevron}</button>`;
     }).join('') || '<p class="empty-copy">暂无项目记录</p>';
   }
   function recentResults(source=state){
@@ -327,11 +363,11 @@
     $('summaryMonth').value=selection.month;$('annualMonth').value=selection.month;
     if(loadUnavailable()){
       reportSnapshot=null;
-      $(ytd?'annualSummary':'monthlySummary').innerHTML=`<p class="field-help">${window.LDLoadInfo.status==='failed'?LDDataLoad.FAILURE:'正在加载数据，请稍候…'}</p><div class="compact-metrics">${['培训场次','培训人时','参训人次','实际支出'].map(label=>`<div><strong>—</strong><span>${label} · 未加载</span></div>`).join('')}</div>`;
+      $(ytd?'annualSummary':'monthlySummary').innerHTML=`<p class="field-help">${window.LDLoadInfo.status==='failed'?LDDataLoad.FAILURE:'正在加载数据，请稍候…'}</p><div class="compact-metrics">${['培训场次','培训人时','参训人次','实际支出'].map(label=>`<div><strong>—</strong><span>${label}${label==='实际支出'?' · '+SPEND_NOTE:''} · 未加载</span></div>`).join('')}</div>`;
       return;
     }
     const list=(rows,empty)=>rows.join('')||`<li>${empty}</li>`;
-    $(ytd?'annualSummary':'monthlySummary').innerHTML=(ytd?'':okrBlock(d.period.month))+`<h3 class="report-month">${esc(d.period.title)} ${ytd?'学习发展工作摘要':'本月数据'}</h3><p class="field-help">${d.period.range}${d.period.ongoing?' · 本月进行中':''} · 按当前已录入记录汇总，后续补录会更新本报告</p><div class="compact-metrics"><div><strong>${d.sessions.length}</strong><span>培训场次</span></div><div><strong>${R.fmt(d.hours)}</strong><span>培训人时${d.pending.hours?' · '+d.pending.hours+' 条待补':''}</span></div><div><strong>${R.fmt(d.people)}</strong><span>参训人次${d.pending.people?' · '+d.pending.people+' 条待补':''}</span></div><div><strong>${R.money(d.spend)}</strong><span>实际支出${d.pending.spend?' · '+d.pending.spend+' 条待补':''}</span></div></div><p class="summary-prose">期间记录 ${d.stations.length} 期 AI 广播站、${d.shares.length} 场 AI 分享月、${d.finance.length} 期已发布金融百科。广播站 ${d.pending.stations} 期待回收或核对；金融百科 ${d.pending.finance} 期待回收、${d.pending.financeReview} 期待核对。${esc(R.budgetNote(d))}。参训人数按人次累加；AI 分享的关联培训只计一次。</p><h3>培训明细</h3><ul class="report-list">${list(d.sessions.map(s=>`<li><span>${esc(s.date)} · ${esc(s.course)}</span><span>${R.fmt(D.number(s.people))} 人次 · ${R.fmt(R.hours(s))} 人时</span></li>`),'期间暂无培训记录')}</ul><h3>内容成果</h3><ul class="report-list">${list([...d.stations.map(s=>({...s,kind:'AI 广播站'})),...d.shares.map(s=>({...s,kind:'AI 分享月'})),...d.finance.map(s=>({...s,kind:'金融小百科'}))].sort((a,b)=>String(b.date).localeCompare(a.date)).map(s=>`<li><span>${esc(s.date)} · ${s.kind}${s.special?' 特别篇':s.episode?`第 ${esc(s.episode)} 期`:""}</span><span>${esc(s.title)}</span></li>`),'期间暂无内容发布记录')}</ul><h3>开销明细</h3><ul class="report-list">${list(d.expenses.map(s=>`<li><span>${esc(s.date)} · ${esc(s.desc)}<small class="record-note">归属月份 ${esc(s.month)}</small></span><span>${R.money(D.number(s.amount))}</span></li>`),'期间暂无开销记录')}</ul>`;
+    $(ytd?'annualSummary':'monthlySummary').innerHTML=(ytd?'':okrBlock(d.period.month))+`<h3 class="report-month">${esc(d.period.title)} ${ytd?'学习发展工作摘要':'本月数据'}</h3><p class="field-help">${d.period.range}${d.period.ongoing?' · 本月进行中':''} · 按当前已录入记录汇总，后续补录会更新本报告</p><div class="compact-metrics"><div><strong>${d.sessions.length}</strong><span>培训场次</span></div><div><strong>${R.fmt(d.hours)}</strong><span>培训人时${d.pending.hours?' · '+d.pending.hours+' 条待补':''}</span></div><div><strong>${R.fmt(d.people)}</strong><span>参训人次${d.pending.people?' · '+d.pending.people+' 条待补':''}</span></div><div><strong>${R.money(d.spend)}</strong><span>实际支出 · ${spendDescription(d.pending.spend)}</span></div></div><p class="summary-prose">期间记录 ${d.stations.length} 期 AI 广播站、${d.shares.length} 场 AI 分享月、${d.finance.length} 期已发布金融百科。广播站 ${d.pending.stations} 期待回收或核对；金融百科 ${d.pending.finance} 期待回收、${d.pending.financeReview} 期待核对。${esc(R.budgetNote(d))}。参训人数按人次累加；AI 分享的关联培训只计一次。</p><h3>培训明细</h3><ul class="report-list">${list(d.sessions.map(s=>`<li><span>${esc(s.date)} · ${esc(s.course)}</span><span>${R.fmt(D.number(s.people))} 人次 · ${R.fmt(R.hours(s))} 人时</span></li>`),'期间暂无培训记录')}</ul><h3>内容成果</h3><ul class="report-list">${list([...d.stations.map(s=>({...s,kind:'AI 广播站'})),...d.shares.map(s=>({...s,kind:'AI 分享月'})),...d.finance.map(s=>({...s,kind:'金融小百科'}))].sort((a,b)=>String(b.date).localeCompare(a.date)).map(s=>`<li><span>${esc(s.date)} · ${s.kind}${s.special?' 特别篇':s.episode?`第 ${esc(s.episode)} 期`:""}</span><span>${esc(s.title)}</span></li>`),'期间暂无内容发布记录')}</ul><h3>开销明细</h3><ul class="report-list">${list(d.expenses.map(s=>`<li><span>${esc(s.date)} · ${esc(s.desc)}<small class="record-note">归属月份 ${esc(s.month)}</small></span><span>${R.money(D.number(s.amount))}</span></li>`),'期间暂无开销记录')}</ul>`;
   }
   // 月度 OKR：上半部分是目标与结果（手写，来自 OKR 文档），下半部分是系统自动汇总的本月数据。
   function okrBlock(month){
@@ -393,7 +429,7 @@
     else if(action==='copy-session')copySession(id);
     else if(action==='page-prev'||action==='page-next'){filterState[id].page+=action==='page-next'?1:-1;refreshTables();}
     else if(action==='monthly-export')openExportSettings();
-    else if(action==='project-open'){const p=projectSummaries().find(p=>p.name===id);if(p){navigate(p.page);if(p.tab)document.querySelector(`.ai-tab[data-tab="${p.tab}"]`).click();if(p.page==='training'){filterState.sessions.project=p.name;filterState.sessions.page=1;filterState.sessions.bar.querySelector('select').value=p.name;renderSessions();}}}
+    else if(action==='project-open'){const p=projectSummaries().find(p=>(p.key||p.name)===id);if(p){navigate(p.page);if(p.tab)document.querySelector(`.ai-tab[data-tab="${p.tab}"]`).click();if(p.page==='training')openTrainingProject(p.key||p.name);}}
     else if(action==='finance-step' && financeDraft){financeDraft.workflow[id]=!financeDraft.workflow[id];if(id==='publish')finPublished.checked=!!financeDraft.workflow.publish;renderFinanceDraft();}
     else if(action.startsWith('edit-'))({session:editSession,expense:editExpense,station:editStation,share:editShare,finance:openFinanceModal}[action.slice(5)])?.(id);
     else if(action.startsWith('delete-'))({session:deleteSession,expense:deleteExpense,station:deleteStation,share:deleteShare,finance:deleteEpisodeFromTable}[action.slice(7)])?.(id);
