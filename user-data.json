@@ -879,6 +879,16 @@
       "people": 1,
       "duration": 1,
       "note": "江国浩"
+    },
+    {
+      "id": "rr1osvdc",
+      "date": "2026-10-23",
+      "course": "1 对 1 辅导答疑",
+      "project": "AI 赋能训练营",
+      "lecturer": "徐浩",
+      "people": 1,
+      "duration": 0.5,
+      "note": "荣萌"
     }
   ],
   "budgets": [],
