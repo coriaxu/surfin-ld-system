@@ -138,16 +138,48 @@
   addFilters('shares','shareTable',['episode','title','note'],{year:true});
   addFilters('finance','financeStatsTable',['episode','title','note'],{year:true,status:true});
   filterState.stations.bar.querySelector('option[value=draft]').remove();
+  // 培训记录：主视图为按周分组的明细，另可切到周历；两种视图共用搜索与项目筛选，不改动原始记录。
+  const TV=window.LDTrainingView,WD=['周日','周一','周二','周三','周四','周五','周六'];
+  const weekday=d=>{const t=Date.parse(String(d)+'T00:00:00Z');return Number.isNaN(t)?'':WD[new Date(t).getUTCDay()];};
+  let tvView='list',tvMonth='',tvPeriod='';
+  (()=>{
+    const table=$('sessionTable').closest('table');
+    [...table.querySelectorAll('thead th')].slice(4,7).forEach(th=>th.classList.add('tv-c'));
+    const seg=el('div','tv-seg','<button type="button" data-tv-view="list" class="is-active" aria-pressed="true">明细</button><button type="button" data-tv-view="week" aria-pressed="false">周历</button>');
+    seg.setAttribute('role','group');seg.setAttribute('aria-label','培训记录视图');filterState.sessions.bar.append(seg);
+    const cal=el('div','tv-cal');cal.id='sessionCalendar';cal.style.display='none';filterState.sessions.pager.after(cal);
+    seg.addEventListener('click',e=>{const b=e.target.closest('[data-tv-view]');if(!b)return;tvView=b.dataset.tvView;seg.querySelectorAll('button').forEach(x=>{x.classList.toggle('is-active',x===b);x.setAttribute('aria-pressed',String(x===b));});renderSessions();});
+    cal.addEventListener('click',e=>{const b=e.target.closest('[data-tv-month]');if(!b)return;const v=b.dataset.tvMonth;tvMonth=v==='today'?currentMonth():TV.shiftMonth(tvMonth,Number(v));renderSessions();});
+  })();
+  function renderSessionCalendar(){
+    const f=filterState.sessions,cal=$('sessionCalendar'),wrap=$('sessionTable').closest('.table-wrap')||$('sessionTable').closest('table').parentElement,week=tvView==='week';
+    wrap.style.display=week?'none':'';f.pager.style.display=week?'none':'';cal.style.display=week?'':'none';
+    if(f.period!==tvPeriod){tvPeriod=f.period;if(f.period)tvMonth=f.period;}
+    if(!week)return;if(!tvMonth)tvMonth=currentMonth();
+    let list=D.search(state.sessions,f.query,'',f.fields);if(f.project)list=list.filter(s=>matchesTrainingProject(s,f.project));
+    const sum=TV.summarize(list.filter(s=>String(s.date||'').startsWith(tvMonth)));
+    cal.innerHTML=`<div class="tv-cal-bar"><strong>${+tvMonth.slice(0,4)} 年 ${+tvMonth.slice(5,7)} 月</strong><button type="button" data-tv-month="-1" aria-label="上个月">‹</button><button type="button" data-tv-month="1" aria-label="下个月">›</button><button type="button" data-tv-month="today">本月</button><span class="tv-cal-total">本月 ${sum.count} 场 · <b>${fmt(sum.hours)}</b> 人时${sum.missing?` · ${sum.missing} 场待补`:''}</span></div>${TV.calendarHTML({month:tvMonth,sessions:list,today:today(),esc,fmt})}<div class="tv-cal-foot">卡片为集体课（人数 × 时长），灰色条为 1 对 1，虚线为尚未到日期的计划场次。搜索和项目筛选同样作用于周历，编辑或删除请切回明细。</div>`;
+  }
   renderSessions=function(){
     const options=filterState.sessions.bar.querySelector('select');const selected=options.value;
     const choices=trainingProjectOptions(state);
     options.innerHTML='<option value="">全部项目</option>'+choices.map(o=>`<option value="${esc(o.value)}">${esc(o.label)}</option>`).join('');options.value=trainingProjectName(filterState.sessions.project||selected);
-    rows('sessionTable',records('sessions',[...state.sessions].sort((a,b)=>String(b.date).localeCompare(a.date))),9,s=>`<tr><td>${esc(s.date)}</td><td>${esc(s.course)}${s.source==='ai_share'?'<small class="record-note">来自 AI 分享月</small>':''}</td><td>${esc(s.project)}</td><td>${esc(s.lecturer)}</td><td>${fmt(D.number(s.people))}</td><td>${fmt(D.number(s.duration))} h</td><td>${D.number(s.people)===null || D.number(s.duration)===null?'待补录':fmt(s.people*s.duration)}</td><td>${esc(s.note || '—')}</td><td>${actions('session',s.id,true)}</td></tr>`);
+    rows('sessionTable',records('sessions',[...state.sessions].sort((a,b)=>String(b.date).localeCompare(a.date))),9,s=>{
+      const split=TV.splitOneOnOne(s.course),plan=!!s.date&&s.date>today(),cls=[split.one?'tv-quiet':'',plan?'tv-plan':''].filter(Boolean).join(' ');
+      return `<tr data-week="${esc(TV.weekStart(s.date))}"${cls?` class="${cls}"`:''}><td class="tv-date">${esc(s.date)}<span class="tv-wd">${weekday(s.date)}</span></td><td>${split.one?`<span class="tv-k1">1v1</span>${esc(split.rest)}`:esc(s.course)}${plan?'<span class="tv-chip">计划</span>':''}${s.source==='ai_share'?'<small class="record-note">来自 AI 分享月</small>':''}</td><td>${s.project?`<span class="tv-tag tone-${TV.tone(s.project)}">${esc(s.project)}</span>`:'—'}</td><td>${esc(s.lecturer)}</td><td class="tv-c">${fmt(D.number(s.people))}</td><td class="tv-c">${fmt(D.number(s.duration))} h</td><td class="tv-c tv-hrs">${D.number(s.people)===null || D.number(s.duration)===null?'待补录':fmt(s.people*s.duration)}</td><td>${esc(s.note || '—')}</td><td>${actions('session',s.id,true)}</td></tr>`;
+    });
+    // 周分组：组头小计按筛选后的全部记录计算，跨页也一致；组头在手机卡片标注之后插入，不带字段标签。
+    const weekMap=TV.groupByWeek(filterState.sessions.result||[]),seenWeeks=new Set(),thisWeek=TV.weekStart(today());
+    $('sessionTable').querySelectorAll('tr[data-week]').forEach(tr=>{
+      const k=tr.dataset.week;if(seenWeeks.has(k))return;seenWeeks.add(k);const sum=TV.summarize(weekMap.get(k)||[]);
+      const g=el('tr','tv-week',`<td colspan="9"><span class="tv-week-title">${k?k.slice(0,4)+' · ':''}${TV.weekLabel(k)}${k&&k===thisWeek?'<em>本周</em>':''}</span><span class="tv-week-sum">${sum.count} 场 · <b>${fmt(sum.hours)}</b> 人时${sum.missing?` · ${sum.missing} 场待补`:''}</span></td>`);tr.before(g);
+    });
     // 筛选合计：和总览、月度汇报同一口径，人数或时长缺失的场次只计条数、不按 0 计入。
     const f=filterState.sessions,list=f.result||[],known=list.filter(x=>D.number(x.people)!==null&&D.number(x.duration)!==null);
     const people=list.reduce((n,x)=>n+(D.number(x.people)??0),0),hours=known.reduce((n,x)=>n+x.people*x.duration,0),missing=list.length-known.length;
     const scope=[f.period||'全部月份',choices.find(o=>o.value===f.project)?.label||f.project||'全部项目',f.query?`含“${f.query}”`:''].filter(Boolean).join(' · ');
     const table=$('sessionTable').closest('table');let foot=table.querySelector('tfoot');if(!foot){foot=document.createElement('tfoot');table.append(foot);}
+    renderSessionCalendar();
     foot.innerHTML=list.length?`<tr class="table-total"><td data-label="筛选合计">筛选合计</td><td colspan="3">${esc(scope)} · ${list.length} 条${missing?` · ${missing} 条待补`:''}</td><td data-label="人次">${fmt(people)}</td><td></td><td data-label="人时">${fmt(Math.round(hours*100)/100)}</td><td colspan="2"></td></tr>`:'';
     for(const [input,field] of [['sessionProject','project'],['sessionLecturer','lecturer']]){
       let list=$(input+'-suggestions');if(!list){list=el('datalist');list.id=input+'-suggestions';document.body.append(list);$(input).setAttribute('list',list.id);}

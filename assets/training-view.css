@@ -1,0 +1,90 @@
+/* 培训明细：按周分组、项目浅色标签、数字居中；周历视图。颜色随浅色/深色外观切换。 */
+:root{ --tv-mgr:#4352C4; --tv-ai4:#0C7A7C; --tv-cafe:#9A5D0A; --tv-past:#5F6672; --tv-t1:#7A4FC4; --tv-t2:#B4405F; --tv-t3:#2F7A4A; --tv-t4:#3D6FB6; }
+:root[data-mode="dark"]{ --tv-mgr:#9AA6FF; --tv-ai4:#5FD0CF; --tv-cafe:#F0B566; --tv-past:#A6ADB7; --tv-t1:#C3A6FF; --tv-t2:#FF9DB4; --tv-t3:#86D6A0; --tv-t4:#8DB8FF; }
+@media (prefers-color-scheme: dark){ :root[data-mode="auto"]{ --tv-mgr:#9AA6FF; --tv-ai4:#5FD0CF; --tv-cafe:#F0B566; --tv-past:#A6ADB7; --tv-t1:#C3A6FF; --tv-t2:#FF9DB4; --tv-t3:#86D6A0; --tv-t4:#8DB8FF; } }
+.tone-mgr{--tone:var(--tv-mgr)} .tone-ai4{--tone:var(--tv-ai4)} .tone-cafe{--tone:var(--tv-cafe)} .tone-past,.tone-none{--tone:var(--tv-past)}
+.tone-t1{--tone:var(--tv-t1)} .tone-t2{--tone:var(--tv-t2)} .tone-t3{--tone:var(--tv-t3)} .tone-t4{--tone:var(--tv-t4)}
+
+/* ---------- 明细表 ---------- */
+#page-training .tv-tag{display:inline-block;font-size:12px;font-weight:500;line-height:20px;border-radius:5px;padding:1px 8px;white-space:nowrap;color:var(--tone);background:color-mix(in srgb,var(--tone) 12%,transparent)}
+#page-training .tv-k1{display:inline-block;font-size:11px;font-weight:500;line-height:18px;border-radius:4px;padding:0 6px;margin-right:8px;color:var(--text-muted);background:var(--bg-card-soft);box-shadow:inset 0 0 0 1px var(--border-faint);vertical-align:1px}
+#page-training tr.tv-quiet td:nth-child(2){color:var(--text-body);font-weight:400}
+#page-training tr.tv-quiet td.tv-c{color:var(--text-muted)}
+#page-training th.tv-c, #page-training td.tv-c{white-space:nowrap}
+/* 桌面表格里人数/时长/总人时居中；系统旧样式对末尾数字列右对齐，这里显式覆盖。手机卡片布局保持原样。 */
+@media (min-width:861px){ #page-training table th.tv-c, #page-training table td.tv-c{text-align:center !important} }
+#page-training td.tv-hrs{font-weight:650;color:var(--text-strong)}
+#page-training td.tv-date{white-space:nowrap;font-variant-numeric:tabular-nums}
+#page-training td.tv-date .tv-wd{margin-left:6px;font-size:12px;color:var(--text-muted)}
+#page-training tr.tv-plan td{color:var(--text-muted)}
+#page-training .tv-chip{display:inline-block;font-size:11px;font-weight:500;line-height:18px;border-radius:4px;padding:0 6px;margin-left:8px;color:var(--text-muted);box-shadow:inset 0 0 0 1px var(--border-light, var(--border-faint));vertical-align:1px}
+#page-training table tr.tv-week td{background:var(--bg-card-soft);padding-top:12px;padding-bottom:8px;font-size:13px;text-align:left !important}
+#page-training tr.tv-week:hover td{background:var(--bg-card-soft)}
+#page-training .tv-week-title{font-weight:600;color:var(--text-strong)}
+#page-training .tv-week-title em{font-style:normal;font-size:11px;font-weight:500;margin-left:8px;padding:1px 6px;border-radius:4px;color:var(--bg-card);background:var(--text-strong);vertical-align:1px}
+#page-training .tv-week-sum{float:right;margin-left:16px;color:var(--text-muted);font-variant-numeric:tabular-nums}
+#page-training .tv-week-sum b{color:var(--text-strong);font-weight:650}
+@media (min-width:861px){ #page-training table tfoot td:nth-child(3), #page-training table tfoot td:nth-child(5){text-align:center !important} }
+
+/* ---------- 视图切换 ---------- */
+.tv-seg{display:inline-flex;align-items:center;gap:2px;padding:3px;margin-left:auto;background:var(--seg-track, var(--bg-card-soft));border-radius:9px;align-self:flex-end}
+.tv-seg button{height:30px;padding:0 16px;border:0;border-radius:7px;background:transparent;color:var(--text-muted);font:500 13px/30px var(--font-sans, inherit);cursor:pointer}
+.tv-seg button.is-active{background:var(--bg-card);color:var(--text-strong);box-shadow:0 1px 2px rgba(22,28,25,.1),0 0 0 .5px rgba(22,28,25,.06)}
+
+/* ---------- 周历 ---------- */
+.tv-cal{border:1px solid var(--border-faint);border-radius:12px;background:var(--bg-card);overflow:hidden}
+.tv-cal-bar{display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:12px 16px;border-bottom:1px solid var(--border-faint)}
+.tv-cal-bar strong, .tv-cal-bar button, .tv-cal-bar .tv-cal-total{white-space:nowrap}
+.tv-cal-bar strong{font-size:15px;color:var(--text-strong);margin-right:6px;font-variant-numeric:tabular-nums}
+.tv-cal-bar .tv-cal-total{margin-left:auto;font-size:12.5px;color:var(--text-muted)}
+.tv-cal-bar .tv-cal-total b{color:var(--text-strong);font-weight:650}
+.tv-cal-bar button{height:28px;min-width:28px;padding:0 10px;border:0;border-radius:7px;background:transparent;color:var(--text-muted);font:500 13px var(--font-sans, inherit);cursor:pointer}
+.tv-cal-bar button:hover{background:var(--bg-hover);color:var(--text-strong)}
+.tv-grid{display:grid;grid-template-columns:168px repeat(5,minmax(0,1fr)) repeat(2,minmax(0,.72fr))}
+.tv-h{font-size:12px;color:var(--text-muted);padding:9px 10px;background:var(--bg-card-soft);border-bottom:1px solid var(--border-faint)}
+.tv-h:first-child{padding-left:16px}
+.tv-wk{padding:14px 14px 14px 16px;border-bottom:1px solid var(--border-faint);display:flex;flex-direction:column;gap:2px}
+.tv-wk.is-now{background:color-mix(in srgb,var(--brand) 4%,transparent)}
+.tv-wn{font-size:12px;color:var(--text-muted);font-variant-numeric:tabular-nums}
+.tv-wn em{font-style:normal;font-size:11px;margin-left:6px;padding:0 6px;border-radius:4px;color:var(--bg-card);background:var(--text-strong)}
+.tv-big{font-size:28px;font-weight:650;line-height:1.15;margin-top:6px;color:var(--text-strong);font-variant-numeric:tabular-nums}
+.tv-big small{font-size:12px;font-weight:500;color:var(--text-muted);margin-left:3px}
+.tv-cnt{font-size:12px;color:var(--text-muted)}
+.tv-meter{display:flex;height:4px;margin-top:10px;border-radius:2px;overflow:hidden;background:var(--border-faint)}
+.tv-meter span{display:block;height:100%;background:var(--tone)}
+.tv-day{min-width:0;min-height:112px;padding:9px 9px 11px;border-left:1px solid var(--border-faint);border-bottom:1px solid var(--border-faint)}
+.tv-day.is-we{background:color-mix(in srgb,var(--bg-card-soft) 55%,transparent)}
+.tv-day.is-today{background:color-mix(in srgb,var(--brand) 6%,transparent)}
+.tv-dn{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-muted);font-variant-numeric:tabular-nums;opacity:.75}
+.tv-dn-wd{display:none}
+.tv-day.has .tv-dn{color:var(--text-strong);font-weight:600;opacity:1}
+.tv-day.is-out .tv-dn{opacity:.45}
+.tv-today{font-size:10.5px;font-weight:500;padding:0 5px;border-radius:4px;color:#fff;background:var(--brand)}
+.tv-card{margin-top:7px;padding:7px 9px 8px;border-radius:8px;border-left:3px solid var(--tone);background:color-mix(in srgb,var(--tone) 9%,transparent)}
+.tv-card.is-plan{background:transparent;border:1px dashed var(--border-light, var(--border-faint));border-left:3px dashed var(--tone)}
+.tv-title{font-size:13px;font-weight:600;line-height:1.35;color:var(--text-strong);overflow-wrap:anywhere}
+.tv-title .tv-chip{display:inline-block;font-size:10.5px;font-weight:500;margin-left:4px;padding:0 5px;border-radius:4px;color:var(--text-muted);box-shadow:inset 0 0 0 1px var(--border-faint);vertical-align:1px}
+.tv-meta{margin-top:3px;font-size:12px;color:var(--text-muted);font-variant-numeric:tabular-nums}
+.tv-meta b{color:var(--text-strong);font-weight:650}
+.tv-note{margin-top:3px;font-size:11.5px;line-height:1.4;color:var(--text-muted);overflow-wrap:anywhere}
+.tv-pill{margin-top:6px;padding:5px 8px;border-radius:7px;background:var(--bg-card-soft);font-size:12.5px;color:var(--text-body)}
+.tv-pill.is-plan{background:transparent;box-shadow:inset 0 0 0 1px var(--border-faint)}
+.tv-pill-row{display:flex;align-items:center;gap:6px}
+.tv-dot{width:7px;height:7px;border-radius:50%;flex:none;background:var(--tone)}
+.tv-who{font-weight:550;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tv-len{margin-left:auto;font-size:12px;color:var(--text-muted);white-space:nowrap;font-variant-numeric:tabular-nums}
+.tv-sub{font-size:10.5px;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tv-cal-foot{padding:10px 16px 12px;font-size:12px;color:var(--text-muted)}
+
+/* 窄屏：周历改为按周纵向列出有课的日子 */
+@media (max-width:860px){
+  .tv-grid{display:block}
+  .tv-h{display:none}
+  .tv-wk{flex-direction:row;flex-wrap:wrap;align-items:baseline;gap:10px;background:var(--bg-card-soft)}
+  .tv-wk .tv-big{font-size:20px;margin:0}
+  .tv-wk .tv-meter{flex-basis:100%;margin-top:4px}
+  .tv-day{min-height:0;border-left:0}
+  .tv-day:not(.has){display:none}
+  .tv-dn-wd{display:inline}
+}
+@media print{ .tv-seg{display:none !important} }
