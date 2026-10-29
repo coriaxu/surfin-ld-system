@@ -53,5 +53,5 @@ test('真实页面渲染函数展示 10 月回顾和 11 月计划，历史月份
 test('两个修改脚本都更新缓存版本号',()=>{
   const html=fs.readFileSync(path.join(__dirname,'../index.html'),'utf8');
   assert.ok(html.includes('assets/okr.js?v=20261029-okr10'));
-  assert.ok(html.includes('assets/workflow.js?v=20261029-tv'));
+  assert.ok(html.includes('assets/workflow.js?v=20261029-tv2'));
 });

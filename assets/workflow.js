@@ -158,7 +158,7 @@
     if(!week)return;if(!tvMonth)tvMonth=currentMonth();
     let list=D.search(state.sessions,f.query,'',f.fields);if(f.project)list=list.filter(s=>matchesTrainingProject(s,f.project));
     const sum=TV.summarize(list.filter(s=>String(s.date||'').startsWith(tvMonth)));
-    cal.innerHTML=`<div class="tv-cal-bar"><strong>${+tvMonth.slice(0,4)} 年 ${+tvMonth.slice(5,7)} 月</strong><button type="button" data-tv-month="-1" aria-label="上个月">‹</button><button type="button" data-tv-month="1" aria-label="下个月">›</button><button type="button" data-tv-month="today">本月</button><span class="tv-cal-total">本月 ${sum.count} 场 · <b>${fmt(sum.hours)}</b> 人时${sum.missing?` · ${sum.missing} 场待补`:''}</span></div>${TV.calendarHTML({month:tvMonth,sessions:list,today:today(),esc,fmt})}<div class="tv-cal-foot">卡片为集体课（人数 × 时长），灰色条为 1 对 1，虚线为尚未到日期的计划场次。搜索和项目筛选同样作用于周历，编辑或删除请切回明细。</div>`;
+    cal.innerHTML=`<div class="tv-cal-bar"><strong>${+tvMonth.slice(0,4)} 年 ${+tvMonth.slice(5,7)} 月</strong><button type="button" data-tv-month="-1" aria-label="上个月">‹</button><button type="button" data-tv-month="1" aria-label="下个月">›</button><button type="button" data-tv-month="today">本月</button><span class="tv-cal-total">本月 ${sum.count} 场 · <b>${fmt(sum.hours)}</b> 人时${sum.missing?` · ${sum.missing} 场待补`:''}</span></div>${TV.calendarHTML({month:tvMonth,sessions:list,today:today(),esc,fmt})}<div class="tv-cal-foot">卡片为集体课（人数 × 时长），灰色条为 1 对 1，标有“计划”的是尚未到日期的场次；斜纹格为周末。搜索和项目筛选同样作用于周历，编辑或删除请切回明细。</div>`;
   }
   renderSessions=function(){
     const options=filterState.sessions.bar.querySelector('select');const selected=options.value;

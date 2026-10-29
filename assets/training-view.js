@@ -73,9 +73,11 @@
         return `<div class="tv-pill${plan ? ' is-plan' : ''}" title="${esc(s.course + ' · ' + (s.project || ''))}"><div class="tv-pill-row"><i class="tv-dot tone-${t}"></i><span class="tv-who">${esc(s.note || split.rest)}</span><span class="tv-len">${d === null ? '待补' : fmt(d) + ' h'}</span></div><div class="tv-sub">1 对 1 · ${esc(s.project || '未填项目')}</div></div>`;
       }
       const hours = p === null || d === null ? '待补' : `<b>${fmt(p * d)}</b> 人时`;
-      return `<div class="tv-card tone-${t}${plan ? ' is-plan' : ''}"><div class="tv-title">${esc(s.course || '未填课程')}${plan ? '<span class="tv-chip">计划</span>' : ''}</div><div class="tv-meta">${p === null ? '待补' : fmt(p)} 人 × ${d === null ? '待补' : fmt(d)} h · ${hours}</div>${s.note ? `<div class="tv-note">${esc(s.note)}</div>` : ''}</div>`;
+      return `<div class="tv-card tone-${t}${plan ? ' is-plan' : ''}"><div class="tv-title">${esc(s.course || '未填课程')}${plan ? '<span class="tv-chip">计划</span>' : ''}</div><div class="tv-meta"><span class="tv-nw">${p === null ? '待补' : fmt(p)} 人 × ${d === null ? '待补' : fmt(d)} h</span> · <span class="tv-nw">${hours}</span></div>${s.note ? `<div class="tv-note">${esc(s.note)}</div>` : ''}</div>`;
     };
-    let html = `<div class="tv-grid"><div class="tv-h">周</div>${WEEKDAYS.map((w, i) => `<div class="tv-h${i > 4 ? ' is-we' : ''}">${w}</div>`).join('')}`;
+    // 三种区域各用一种质感：周小计＝实底账头，工作日＝白底，周末＝斜纹；is-mon / is-sat 用来画分隔线。
+    const zone = i => (i > 4 ? ' is-we' : '') + (i === 0 ? ' is-mon' : '') + (i === 5 ? ' is-sat' : '');
+    let html = `<div class="tv-grid"><div class="tv-h tv-h-wk">周小计</div>${WEEKDAYS.map((w, i) => `<div class="tv-h${zone(i)}">${w}</div>`).join('')}`;
     weeks.forEach((days, wi) => {
       const sum = weekTotals[wi], now = today && days[0] <= today && today <= days[6];
       const mix = new Map();
@@ -86,7 +88,7 @@
         const list = (byDate.get(d) || []).slice().sort((a, b) => splitOneOnOne(a.course).one - splitOneOnOne(b.course).one);
         const out = d.slice(0, 7) !== month, isToday = d === today;
         const label = out ? md(d) : String(+d.slice(8, 10));
-        html += `<div class="tv-day${di > 4 ? ' is-we' : ''}${isToday ? ' is-today' : ''}${out ? ' is-out' : ''}${list.length ? ' has' : ''}"><div class="tv-dn"><span class="tv-dn-wd">${WEEKDAYS[di]}</span>${label}${isToday ? '<span class="tv-today">今天</span>' : ''}</div>${list.map(card).join('')}</div>`;
+        html += `<div class="tv-day${zone(di)}${isToday ? ' is-today' : ''}${out ? ' is-out' : ''}${list.length ? ' has' : ''}"><div class="tv-dn"><span class="tv-dn-wd">${WEEKDAYS[di]}</span>${label}${isToday ? '<span class="tv-today">今天</span>' : ''}</div>${list.map(card).join('')}</div>`;
       });
     });
     return html + '</div>';

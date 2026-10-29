@@ -51,6 +51,17 @@ test('calendar places sessions by date, marks future ones as planned and escapes
  assert.match(html,/10\/26 – 11\/1<em>本周<\/em>/);
  assert.match(html,/<div class="tv-big">16<small>/);
 });
+test('week column, weekdays and weekend are separate zones; planned cards use no dashed lines (2026-10-29)',()=>{
+ const html=TV.calendarHTML({month:'2026-10',today:'2026-10-29',sessions:[{date:'2026-10-30',course:'第三期：用 AI 做一支视频',project:'咖啡开小灶',people:4,duration:1}]});
+ assert.match(html,/tv-h tv-h-wk">周小计</);
+ assert.equal((html.match(/tv-day is-mon/g)||[]).length,5);
+ assert.equal((html.match(/tv-day is-we is-sat/g)||[]).length,5);
+ assert.equal((html.match(/is-we/g)||[]).length,2+5*2);
+ assert.match(html,/<span class="tv-nw"><b>4<\/b> 人时<\/span>/);
+ const css=require('node:fs').readFileSync(require('node:path').join(__dirname,'../assets/training-view.css'),'utf8');
+ assert.doesNotMatch(css,/dashed/);
+ assert.match(css,/\.tv-day\.is-we\{[^}]*background-image:var\(--tv-hatch\)/);
+});
 test('live data: removed duplicates stay removed and the last October week totals 16 person-hours',()=>{
  const data=require('../user-data.json');
  assert.ok(!data.sessions.some(s=>['jg6gouut','0u63sk00'].includes(s.id)));
