@@ -15,6 +15,24 @@ test('report content retains manually entered AI share sessions without duplicat
  const d=R.aggregate(state,p('ytd','2026-09'));assert.equal(d.sessions.length,2);assert.equal(d.shares.length,2);assert.equal(d.people,51);assert.equal(d.hours,51);
  const rows=R.model(d).sections.find(s=>s.name==='AI 分享月').rows;assert.deepEqual(rows.map(r=>r.slice(3)),[[20,60],[31,60]]);
 });
+test('one-page brief groups effort, compares with last month and flags records that distort totals',()=>{
+ const state={sessions:[{date:'2026-10-09',project:'管理者训练营',course:'认可与建设性反馈',people:6,duration:12},{date:'2026-10-09',project:'管理者训练营',course:'认可与建设性反馈',people:6,duration:2},{date:'2026-10-10',project:'：',course:'1对1辅导答疑',people:1,duration:1},{date:'2026-10-11',project:'AI赋能训练营',course:'1对1辅导答疑',people:1,duration:1},{date:'2026-09-20',project:'AI赋能训练营',course:'咖啡交流',people:2,duration:1}],expenses:[{date:'2026-10-02',month:'2026-10',amount:140,desc:'ChatGPT plus'}],aiStations:[{date:'2026-10-08',episode:1,title:'A',views:8,total:10},{date:'2026-10-09',episode:2,title:'B',views:9,total:10}]};
+ const d=R.aggregate(state,p('month','2026-10')),prev=R.aggregate(state,R.period('month',R.previousMonth('2026-10'),asOf));
+ const b=R.model(d,{previous:prev}).brief;
+ assert.equal(R.previousMonth('2026-01'),'2025-12');
+ assert.equal(b.projects[0].name,'管理者训练营');assert.equal(b.projects[0].hours,84);assert.equal(b.projects[0].share,98);
+ assert.ok(b.projects.some(x=>x.name==='未填项目'));
+ assert.equal(b.courses.find(c=>c.name==='1对1辅导答疑').sessions,2);
+ assert.deepEqual(b.kpis.map(k=>[k.label,k.value,k.prev]),[['培训场次',4,1],['参训人次',14,2],['培训人时',86,2],['实际支出',140,0]]);
+ assert.equal(b.stationAvg,85);
+ assert.match(b.checks[0],/单场时长 12 小时.*同日另有 1 条同名课程记录.*72 人时（占本期 84%）/);
+ assert.ok(b.checks.some(t=>/1对1辅导答疑」项目未填/.test(t)));
+ assert.match(b.headline,/本月完成 4 场培训，覆盖 14 人次、86 人时；投入最多的是「管理者训练营」/);
+ assert.match(b.headline,/占人时 84%，核对后总人时可能明显变化/);
+ assert.deepEqual(b.outcomes,['「管理者训练营」：主题课推进 1 门（认可与建设性反馈），覆盖 12 人次。','「AI赋能训练营」：1 场 1对1 辅导跟进。','AI 广播站发布 2 期，平均回收率 85%；表现最好的是「B」（90%）。']);
+ const y=R.model(R.aggregate(state,p('ytd','2026-10')),{includeBudget:false}).brief;
+ assert.ok(y.kpis.every(k=>k.prev===undefined));assert.ok(!y.kpis.some(k=>k.label==='实际支出'));assert.match(y.headline,/^年度累计完成 5 场/);
+});
 test('published finance conflicts remain visible as review counts in reporting and export',()=>{
  const d=R.aggregate({financeWiki:[{date:'2026-09-01',published:true,read:12,downloads:1,total:10}]},p('ytd','2026-09'));assert.equal(d.finance.length,1);assert.equal(d.pending.financeReview,1);assert.equal(Object.fromEntries(R.model(d).overview)['金融百科待核对'],1);
 });
