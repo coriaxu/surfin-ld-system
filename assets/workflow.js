@@ -376,7 +376,9 @@
     const c=LDOkr.count(month);
     const src=LDOkr.sourceNote?LDOkr.sourceNote(month):'';
     const sum=LDOkr.summary?LDOkr.summary(month):'';
-    return `<div class="okr-block"><p class="field-help">${c.objectives} 个目标 · ${c.krs} 项关键结果 · 已完成 ${c.done} 项${src?`　｜　${esc(src)}`:''}</p>${sum?`<p class="summary-prose okr-summary">${esc(sum)}</p>`:''}${os.map((o,i)=>`<section class="okr-objective"><h3>O${i+1}　${esc(o.o)}</h3><ul class="okr-krs">${o.krs.map(([kr,st,res])=>`<li><span class="okr-status okr-${{'完成':'done','进行中':'doing','部分完成':'partial','改期':'moved'}[st]||'doing'}">${esc(st)}</span><div><strong>${esc(kr)}</strong><span>${esc(res)}</span></div></li>`).join('')}</ul></section>`).join('')}</div>`;
+    const plan=LDOkr.nextPlan?LDOkr.nextPlan(month):null;
+    const planHtml=plan?`<div class="okr-next-plan"><h3 class="report-month">${esc(plan.month)} OKR 计划</h3>${plan.objectives.map((o,i)=>`<section class="okr-objective"><h3>O${i+1}　${esc(o.o)}</h3><ul class="okr-krs">${o.krs.map((kr,j)=>`<li><span class="okr-status okr-doing">KR${j+1}</span><div><span>${esc(kr)}</span></div></li>`).join('')}</ul></section>`).join('')}</div>`:'';
+    return `<div class="okr-block"><p class="field-help">${c.objectives} 个目标 · ${c.krs} 项关键结果 · 已完成 ${c.done} 项${src?`　｜　${esc(src)}`:''}</p>${sum?`<p class="summary-prose okr-summary">${esc(sum)}</p>`:''}${os.map((o,i)=>`<section class="okr-objective"><h3>O${i+1}　${esc(o.o)}</h3><ul class="okr-krs">${o.krs.map(([kr,st,res])=>`<li><span class="okr-status okr-${{'完成':'done','进行中':'doing','部分完成':'partial','改期':'moved'}[st]||'doing'}">${esc(st)}</span><div><strong>${esc(kr)}</strong><span>${esc(res)}</span></div></li>`).join('')}</ul></section>`).join('')}${planHtml}</div>`;
   }
   window.openMonthlyReportModal=()=>navigate(selection.mode==='ytd'?'annual':'monthly');
   function openExportSettings(){
