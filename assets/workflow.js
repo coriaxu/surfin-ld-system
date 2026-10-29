@@ -292,7 +292,7 @@
     return [
       {key:'ai-s3',name:r.project,label:r.project+' · 第三期',status:'已结项',matches:s=>s.project===r.project&&s.date>=r.start&&s.date<=r.end},
       {key:'ai-prior',name:r.project,label:r.project+' · 往期辅导（第一、二期）',status:'已结项',note:'第一、二期结项后的零散辅导',matches:s=>s.project===r.project&&!!s.date&&s.date<r.start},
-      {key:'ai-unassigned',name:r.project,label:r.project+'（未分期）',matches:s=>s.project===r.project&&(!s.date||s.date>r.end)}
+      {key:'ai-unassigned',name:r.project,label:r.project+'（往期学员）',matches:s=>s.project===r.project&&(!s.date||s.date>r.end)}
     ];
   }
   function matchesTrainingProject(record,key){

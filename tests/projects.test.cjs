@@ -78,14 +78,17 @@ test('培训筛选下拉去重且仍可选中统一项目',()=>{
 });
 
 const base='AI 赋能训练营';
-test('第三期日期四边界互斥分组，往期备注、状态和未分期标签准确',()=>{
+test('第三期日期四边界互斥分组，往期备注、状态和往期学员标签准确',()=>{
   const a=setup(['2026-04-27','2026-04-28','2026-09-30','2026-10-01'].map((date,i)=>session(i,base,i+1,date)));
   const before=JSON.stringify(a.state),groups=a.projectSummaries(a.state).filter(p=>p.name===base);
   const get=key=>groups.find(p=>p.key===key);
   assert.deepEqual([get('ai-prior').records.length,get('ai-s3').records.length,get('ai-unassigned').records.length],[1,2,1]);
   assert.equal(get('ai-s3').people,5);assert.equal(get('ai-s3').status,'已结项');assert.equal(get('ai-prior').status,'已结项');
   assert.equal(get('ai-prior').note,'第一、二期结项后的零散辅导');
-  assert.equal(get('ai-unassigned').label,'AI 赋能训练营（未分期）');
+  assert.equal(get('ai-unassigned').label,'AI 赋能训练营（往期学员）');
+  assert.match(a.projectRows(100,a.state),/AI 赋能训练营（往期学员）/);
+  assert.doesNotMatch(a.projectRows(100,a.state),/（未分期）/);
+  assert.equal(a.trainingProjectOptions(a.state).find(p=>p.value==='ai-unassigned').label,'AI 赋能训练营（往期学员）');
   for(const [key,ids] of [['ai-prior',[0]],['ai-s3',[1,2]],['ai-unassigned',[3]]]){
     a.filters.sessions.project=key;assert.deepEqual(a.records('sessions',a.state.sessions).map(r=>r.id),ids);
     assert.match(a.projectRows(100,a.state),new RegExp(`data-record="${key}"`));
@@ -106,13 +109,13 @@ test('点击第三期和往期先清除残留月份/搜索/页码，分别筛出
   assert.match(code,/if\(p\.page==='training'\)openTrainingProject\(p\.key\|\|p\.name\)/);
   assert.match(code,/find\(p=>\(p\.key\|\|p\.name\)===id\)/);
 });
-test('台账下拉与项目行共用分组；没有区间后记录时不展示未分期',()=>{
+test('台账下拉与项目行共用分组；没有区间后记录时不展示往期学员卡片',()=>{
   const a=setup([session(1,base,1,'2026-04-27'),session(2,base,1,'2026-04-28')]);
   assert.deepEqual(a.trainingProjectOptions(a.state),[
     {value:'ai-s3',label:'AI 赋能训练营 · 第三期'},
     {value:'ai-prior',label:'AI 赋能训练营 · 往期辅导（第一、二期）'}
   ]);
-  assert.doesNotMatch(a.projectRows(100,a.state),/未分期/);
+  assert.doesNotMatch(a.projectRows(100,a.state),/往期学员/);
   const options={value:'ai-prior',innerHTML:''};a.filters.sessions.project='ai-prior';a.filters.sessions.bar={querySelector:()=>options};
   const stop=Symbol('ready'),render=section('  renderSessions=function(){','  renderExpenses=function()');
   const run=new Function('state','filterState','trainingProjectName','trainingProjectOptions','esc','records','rows',`let renderSessions;${render};renderSessions();`);
