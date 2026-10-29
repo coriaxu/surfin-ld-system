@@ -891,16 +891,6 @@
       "note": "荣萌"
     },
     {
-      "id": "jg6gouut",
-      "date": "2026-10-29",
-      "course": "认可与建设性反馈",
-      "project": "2026管理者训练营 1.0",
-      "lecturer": "徐浩",
-      "people": 6,
-      "duration": 12,
-      "note": ""
-    },
-    {
       "id": "yqduuh8l",
       "date": "2026-10-08",
       "course": "咖啡交流",
@@ -929,16 +919,6 @@
       "people": 4,
       "duration": 1,
       "note": "往期学员：荣萌、王雅平、郭嘉宇、路璐"
-    },
-    {
-      "id": "0u63sk00",
-      "date": "2026-10-30",
-      "course": "第三期：用 AI 做一支视频",
-      "project": "咖啡开小灶",
-      "lecturer": "徐浩",
-      "people": 4,
-      "duration": 1,
-      "note": ""
     }
   ],
   "budgets": [],

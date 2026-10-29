@@ -82,7 +82,8 @@
   wireMenu(tools);
   panel.addEventListener('click', e => { if (e.target.closest('button:not(.appearance-option)')) tools.open = false; });
   const wrapDeleteActions = () => {
-    document.querySelectorAll('.actions-row > .btn-delete, #financeForm .form-footer > .btn-delete').forEach(button => {
+    // 表格行内的“删除”与“编辑 / 复制”并列直接显示；只有金融期次弹窗底部仍收进“更多”。
+    document.querySelectorAll('#financeForm .form-footer > .btn-delete').forEach(button => {
       const details = document.createElement('details'); details.className = 'row-more';
       details.innerHTML = '<summary class="btn btn-secondary btn-sm" aria-label="更多操作">更多 <span aria-hidden="true">⌄</span></summary><div class="row-more-panel"></div>';
       button.before(details); details.lastElementChild.append(button);
