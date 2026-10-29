@@ -1,5 +1,17 @@
 # 💡 Findings: surfin-ld-system
 
+## [2026-10-29] 周历三区分：实现、踩坑与自检方法
+
+- **区域区分的做法**：`training-view.js` 新增 `zone(i)`，按列号输出 `is-we`（周六日）/`is-mon`（周一，2px 深色分隔）/`is-sat`（周六，1px 浅分隔）；表头首列改文案“周小计”。CSS 侧把三种质感写成 `.tv-wk`（实底 `--tv-wk-bg`）、`.tv-day`（`var(--bg-card)` 纯白）、`.tv-day.is-we`（`--tv-hatch` 斜纹），今日格另加 `box-shadow:inset 0 2px 0 var(--brand)` 顶部主色线。
+- **坑 1：半透明卡片在斜纹格上透纹**。原来的卡片底色是 `color-mix(..., transparent)`，斜纹会从卡片里透出来，看着像脏了。凡是盖在纹理上的面，底色必须与不透明底色混：`color-mix(in srgb, var(--tone) 9%, var(--bg-card))`。1 对 1 的小条同理。
+- **坑 2：窄列把数字和单位拆行**。周末列是 `0.72fr`，“2 人时”被折成“1 人 × 2 h · 2 / 人时”。修法是给“人 × 时长”和“人时”各包一层 `.tv-nw{white-space:nowrap}`，只允许在中间的“·”处折行。
+- **坑 3：改 `assets/*.css` 必须同步 bump 版本号，且测试锁了版本号字面值**。`index.html` 三处 `?v=` 与 `tests/okr10.test.cjs` 的 `workflow.js?v=` 断言要一起改，否则测试红。本次统一改为 `20261029-tv2`。
+- **坑 4：无头 Chrome 带查询参数要用 `file://` 绝对路径**。`--screenshot` 传相对路径 + `?probe=1` 打不开（exit 1 且无输出），要写 `file://$(pwd)/x.html?probe=1`。
+- **坑 5：headless 的 `--window-size` 有最小宽度**。传 390 实测 `innerWidth=500`，所以“手机宽度验收”不能假定参数生效，要读页面回传的 `innerWidth`。用 `document.title` 回传 `vw / scrollWidth / 超视口元素`，比只看截图可靠。
+- **自检方法（沉淀下来）**：`.claw-company/.tmp/tv_preview.py <根> <月份> <今天> <light|dark> <accent> <输出html>` 用真实 `user-data.json` + 线上同一套 CSS/JS 生成静态页，再 `shot.sh` 截图；每一轮都看浅色、深色、窄屏三种。这轮改了三处 CSS、一处 JS 文案，总共渲染 3 轮、修掉 2 个视觉缺陷才收。
+- **线上核验**：`curl` 拉 Pages 上的 `index.html` 看 `?v=`，再拉 CSS 检查 `grep -c dashed` 应为 0；只看本地文件不算上线。
+- **推送协作**：另一会话在 20:36 推了 `0c51cac`，我 21:00 推送时被拒（non-fast-forward），`git rebase origin/main` 后重推成功，对方提交只改了 `AI_专属/task_plan.md`，无冲突。当天还发现：本地根目录若被同名分支占用，`git worktree list` 比 `git branch` 更能说明“谁占了 main”。
+
 ## [2026-10-29] 一页纸简报：取舍依据、实现要点与发布教训
 
 - **内容取舍依据**：Stephen Few《Common Pitfalls in Dashboard Design》（Perceptual Edge，2006）：一屏看全、数字必须有对比（本月 vs 上月），否则无法判断好坏；BLUF（先说结论）用于导语。L&D 社区（Reddit r/LearningDevelopment、LinkedIn 相关文章）的共识是参与数据不等于效果，组织复杂时难以归因到培训，所以简报不算 ROI、不写效果，只写可核对的交付事实。X 上未找到可核实的高质量讨论，未引用。Awwwards／Webby／FWA 评的是网站交互与动效，用于静态 PDF 时改用同源的编辑设计标准，自检 6 条：3 秒读懂结论、字号不超过 6 级且间距对齐 8px 网格、颜色只表达含义（晴山蓝＝本系统主色，琥珀＝需核对）、去掉无信息的装饰、异常数据视觉上可区分、最小字号 ≥7.5pt。
