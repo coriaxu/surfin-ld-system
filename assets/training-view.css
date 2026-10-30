@@ -100,3 +100,21 @@
   .tv-dn-wd{display:inline}
 }
 @media print{ .tv-seg{display:none !important} }
+
+/* ---------- AI 广播站、AI 分享月历史记录：沿用培训明细的表格样式 ---------- */
+#page-aiknowledge .tv-tag{display:inline-block;font-size:12px;font-weight:500;line-height:20px;border-radius:5px;padding:1px 8px;white-space:nowrap;color:var(--tone);background:color-mix(in srgb,var(--tone) 12%,transparent)}
+#page-aiknowledge th.tv-c, #page-aiknowledge td.tv-c, #page-aiknowledge td.tv-ep{white-space:nowrap}
+@media (min-width:861px){ #page-aiknowledge table th.tv-c, #page-aiknowledge table td.tv-c{text-align:center !important} }
+#page-aiknowledge td.tv-hrs{font-weight:650;color:var(--text-strong)}
+/* 覆盖旧样式里日期列的等宽细字体，与培训明细一致。 */
+#page-aiknowledge table td.tv-date{white-space:nowrap;font-family:inherit;font-weight:inherit;font-variant-numeric:tabular-nums;color:var(--text-body)}
+#page-aiknowledge td.tv-date .tv-wd{margin-left:6px;font-size:12px;color:var(--text-muted)}
+#page-aiknowledge tr.tv-plan td{color:var(--text-muted)}
+#page-aiknowledge .tv-chip{display:inline-block;font-size:11px;font-weight:500;line-height:18px;border-radius:4px;padding:0 6px;margin-left:8px;color:var(--text-muted);box-shadow:inset 0 0 0 1px var(--border-light, var(--border-faint));vertical-align:1px}
+#page-aiknowledge table tr.tv-week td{background:var(--bg-card-soft);padding-top:12px;padding-bottom:8px;font-size:13px;text-align:left !important;font-family:inherit;font-weight:inherit}
+#page-aiknowledge tr.tv-week:hover td{background:var(--bg-card-soft)}
+#page-aiknowledge .tv-week-title{font-weight:600;color:var(--text-strong)}
+#page-aiknowledge .tv-week-title em{font-style:normal;font-size:11px;font-weight:500;margin-left:8px;padding:1px 6px;border-radius:4px;color:var(--bg-card);background:var(--text-strong);vertical-align:1px}
+#page-aiknowledge .tv-week-sum{float:right;margin-left:16px;color:var(--text-muted);font-variant-numeric:tabular-nums}
+#page-aiknowledge .tv-week-sum b{color:var(--text-strong);font-weight:650}
+@media (min-width:861px){ #page-aiknowledge #shareTable ~ tfoot td:nth-child(3), #page-aiknowledge #shareTable ~ tfoot td:nth-child(5){text-align:center !important} }

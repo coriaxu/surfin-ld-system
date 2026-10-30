@@ -60,13 +60,19 @@
     const events = shares.map(share => {
       const session = shareSession(sessions, share);
       if (session) claimed.add(session.id);
-      return {kind:'share',id:share.id,episode:share.episode,date:share.date || '',title:share.title,people:number(share.attendees) ?? number(session?.people),total:number(share.total),minutes:number(share.duration) ?? minutes(session),note:share.note || '',materialUrl:share.materialUrl || ''};
+      return {kind:'share',id:share.id,storedEpisode:number(share.episode),date:share.date || '',title:share.title,lecturer:session?.lecturer || '',people:number(share.attendees) ?? number(session?.people),total:number(share.total),minutes:number(share.duration) ?? minutes(session),note:share.note || '',materialUrl:share.materialUrl || ''};
     });
     for (const s of sessions) {
       if (claimed.has(s.id) || !(isShareProject(s.project) || s.source === 'ai_share')) continue;
-      events.push({kind:'session',id:s.id,episode:null,date:s.date || '',title:s.course,people:number(s.people),total:null,minutes:minutes(s),note:s.note || '',materialUrl:''});
+      events.push({kind:'session',id:s.id,storedEpisode:null,date:s.date || '',title:s.course,lecturer:s.lecturer || '',people:number(s.people),total:null,minutes:minutes(s),note:s.note || '',materialUrl:''});
     }
-    return events.sort((a,b) => b.date.localeCompare(a.date) || (b.episode ?? 0) - (a.episode ?? 0));
+    events.sort((a,b) => b.date.localeCompare(a.date) || (b.storedEpisode ?? 0) - (a.storedEpisode ?? 0));
+    // 期数按日期从早到晚连续编号（第 1 期是最早一场），分享月记录和培训记录里的分享一起排，不再出现“—”。
+    // 未填日期的场次没有期数。原先手填的期号保留在 storedEpisode。
+    const dated = events.filter(e => e.date);
+    dated.forEach((e, i) => { e.episode = dated.length - i; });
+    events.forEach(e => { if (!e.date) e.episode = null; });
+    return events;
   }
   function upsertShare(state, payload, makeId) {
     const existing = state.aiShares.find(s => s.id === payload.id);
