@@ -9,6 +9,7 @@
 - 界面：`index.html`、`assets/workbench.*`、`assets/workflow.*`
 - 设计语言「明账」：颜色、字体、圆角令牌只在 `tools/tokens.py` 里改，运行 `python3 tools/tokens.py` 生成 `assets/tokens.css` 并校验对比度；外观切换 `assets/appearance.js`（浅色／深色／跟随系统 × 晴空蓝、湖光青、鸢尾紫，偏好只存本浏览器）；改版样式与交互 `assets/mingzhang.*`（记一笔、手机底栏、汇报排版、明账 2.0 首屏柔光与玻璃数字面板）；首屏迷你趋势与数字滚动 `assets/hero.js`。Claude Design System「学习发展 · 明账」与这里同源，改令牌后用 `--json` 输出 tokens.json 同步过去。
 - 期间汇总与导出：`assets/ld-report.js`、`assets/report-export.js`
+- 看得见的口径：`assets/ld-insight.js`（纯计算，复用期间汇总）、`assets/insight-ui.js`、`assets/insight.css`。录入培训时实时显示“保存后会这样计入”，并提醒同日同名、项目名写法不一致、单场过长和分享月合并；首页每张指标卡都有“怎么算”；录入抽屉写明改动保存在哪里，未开启同步时顶部显示“仅本浏览器 · 未同步”。
 - 数据与同步：`assets/ld-domain.js`、`assets/ld-sync.js`
 - 私有服务：`server/app.mjs`、`assets/secure-client.js`
 - 验收清单：`ProjectDocs/功能迭代验收.md`
