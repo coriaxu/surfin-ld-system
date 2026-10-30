@@ -1,5 +1,17 @@
 # 💡 Findings: surfin-ld-system
 
+## [2026-10-30] 「看得见的口径」与 AI 内容两张表：实现与踩坑
+
+- **单一算法源**：录入预览与「怎么算」弹窗全部走 `LDReport.aggregate`（对草稿复制状态再算），绝不另写一套口径。否则出现“预览说 15 场、首页显示 14 场”，比没有功能更糟。预览不写数据，用 `state.sessions.length` 前后不变作断言。
+- **坑 1（这次的真问题）：样式限定作用域导致“改了没变化”**。培训明细改版全写在 `#page-training` 下，AI 内容页完全不生效。用户说“怎么没有变化”，先查选择器覆盖范围，别急着怀疑没发布。修法是 `training-view.css` 末尾以 `#page-aiknowledge` 复用同一套规则。
+- **坑 2**：站点全局 dialog 样式清零 margin，新 `<dialog>` 会贴在左上角；需显式 `body .why-dialog[open]{position:fixed;inset:0;margin:auto;height:fit-content}`。
+- **坑 3**：深色验收要 `add_init_script` 写 `localStorage.ld_mode='dark'`。`appearance.js` 默认浅色、不跟随系统，只传 `color_scheme` 无效。
+- **坑 4**：Playwright 自带浏览器未安装（缺 `chromium_headless_shell`），本机验收用 `launch(channel='chrome')`。
+- **坑 5**：Drive 同步有延迟，脚本刚写完立即执行会 ENOENT 或端口占用；重跑一次或先 sleep 几秒，别当成路径写错。
+- **坑 6**：`node --test tests/` 把目录当单个文件，报 1 failure 是假失败；要展开成文件列表传给 node。
+- **验收方法**：本地静态服务 + 拦截 `api.github.com` 并计数，证明写请求 0；再从页面抓取表头/前几行文本与弹窗数值，和首页数值对照，不只看截图。
+- **期数编号的实现**：`ld-domain.js` 的 `shareEvents` 排序后对“有日期”的场次统一赋 `episode`（`dated.length - i`），未填日期的不给期号；原手填期号改名 `storedEpisode` 保留追溯。表格、概览、月度总结、Excel 全部跟着同一函数走，一次改动四处一致。
+
 ## [2026-10-29] 周历三区分：实现、踩坑与自检方法
 
 - **区域区分的做法**：`training-view.js` 新增 `zone(i)`，按列号输出 `is-we`（周六日）/`is-mon`（周一，2px 深色分隔）/`is-sat`（周六，1px 浅分隔）；表头首列改文案“周小计”。CSS 侧把三种质感写成 `.tv-wk`（实底 `--tv-wk-bg`）、`.tv-day`（`var(--bg-card)` 纯白）、`.tv-day.is-we`（`--tv-hatch` 斜纹），今日格另加 `box-shadow:inset 0 2px 0 var(--brand)` 顶部主色线。
