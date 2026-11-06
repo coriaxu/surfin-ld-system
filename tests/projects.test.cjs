@@ -15,7 +15,7 @@ function section(start,end){
 // Execute the production functions, not a second implementation of the grouping rule.
 const summaries=section('  const byDateDesc=', '  function recentResults(');
 const filtering=section('  function records(key,source)', '  const actions=');
-const api=new Function('D','filterState','esc','shortDate','chevron','btn','window','renderSessions',summaries+filtering+'\nreturn {projectSummaries,projectRows,records,trainingProjectName,trainingProjectOptions,openTrainingProject};');
+const api=new Function('D','filterState','esc','shortDate','chevron','btn','window','renderSessions','today=()=>"2026-11-06"',summaries+filtering+'\nreturn {projectSummaries,projectRows,records,trainingProjectName,trainingProjectOptions,openTrainingProject};');
 function setup(sessions=[]){
   const state={sessions,aiStations:[],aiShares:[],financeWiki:[]};
   const filters={sessions:{query:'',period:'',project:'',page:1,fields:['course','project'],pager:{innerHTML:'',querySelector:()=>({})}}};
@@ -137,4 +137,40 @@ test('缺失日期落未分期，缺失结项配置明确报错而非误计第�
   const a=setup([session(1,base,1,'')]);assert.equal(a.projectSummaries(a.state).find(p=>p.name===base).key,'ai-unassigned');
   const bad=api(D,a.filters,String,String,'',()=>'',{LDCloseout:{reports:[]}},()=>{});
   assert.throws(()=>bad.projectSummaries(a.state),/第三期结项日期配置缺失/);
+});
+
+test('已结束的开小灶退出首页，项目历史与培训筛选保留原记录',()=>{
+  const a=setup([{...session('cafe-3','咖啡开小灶',4,'2026-10-30'),course:'第三期：用 AI 做一支视频'}]);
+  const before=JSON.stringify(a.state),p=a.projectSummaries(a.state).find(p=>p.name==='咖啡开小灶');
+  assert.equal(p.status,'本期已结束');assert.equal(p.records.length,1);assert.equal(p.people,4);
+  assert.doesNotMatch(a.projectRows(4,a.state,{overview:true}),/咖啡开小灶|第三期：用 AI 做一支视频/);
+  assert.match(a.projectRows(100,a.state),/咖啡开小灶.*本期已结束/);
+  assert.match(a.projectRows(100,a.state),/10-30|第三期：用 AI 做一支视频/);
+  a.filters.sessions.project='咖啡开小灶';
+  assert.deepEqual(a.records('sessions',a.state.sessions).map(s=>s.id),['cafe-3']);
+  assert.equal(JSON.stringify(a.state),before);
+});
+test('新一期在当天或未来时显示，日期过去后自动退出首页',()=>{
+  const old=session('cafe-3','咖啡开小灶',4,'2026-10-30');
+  for(const date of ['2026-11-06','2026-11-13']){
+    const a=setup([old,session('cafe-4','咖啡开小灶',4,date)]);
+    assert.match(a.projectRows(4,a.state,{overview:true}),/咖啡开小灶/);
+    assert.notEqual(a.projectSummaries(a.state).find(p=>p.name==='咖啡开小灶').status,'本期已结束');
+    assert.equal(a.projectSummaries(a.state,'2026-11-14').find(p=>p.name==='咖啡开小灶').status,'本期已结束');
+  }
+});
+test('开小灶日期待补时保留首页卡片，不自动判为结束',()=>{
+  const a=setup([session('cafe-3','咖啡开小灶',4,'2026-10-30'),session('unknown','咖啡开小灶',null,'')]);
+  assert.match(a.projectRows(4,a.state,{overview:true}),/咖啡开小灶/);
+  assert.notEqual(a.projectSummaries(a.state).find(p=>p.name==='咖啡开小灶').status,'本期已结束');
+});
+test('真实首页渲染撤下已结束本期，切到年度累计仍可查看历史',()=>{
+  const a=setup([session('cafe-3','咖啡开小灶',4,'2026-10-30')]);
+  const overview=section('  const linkBtn=','  function renderProjects(');
+  const render=new Function('state','selection','selected','projectRows','recentResults','overviewExtra','esc',overview+'\nrenderOverview();');
+  const host={innerHTML:''},selected=()=>({sessions:a.state.sessions,stations:[],finance:[],period:{start:'2026-01-01',end:'2026-11-06'}});
+  render(a.state,{mode:'month'},selected,a.projectRows,()=>'',host,String);
+  assert.doesNotMatch(host.innerHTML,/咖啡开小灶/);assert.match(host.innerHTML,/全部项目/);
+  render(a.state,{mode:'ytd'},selected,a.projectRows,()=>'',host,String);
+  assert.match(host.innerHTML,/年度项目进展/);assert.match(host.innerHTML,/咖啡开小灶.*本期已结束/);
 });

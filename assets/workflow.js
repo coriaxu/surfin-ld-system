@@ -354,7 +354,7 @@
     f.bar.querySelectorAll('input').forEach(input=>input.value='');
     renderSessions();
   }
-  function projectSummaries(source=state){
+  function projectSummaries(source=state,asOf){
     const sessions=source.sessions||[],shares=D.shareEvents(source),people=list=>list.reduce((n,r)=>n+(D.number(r.people)??0),0);
     const buckets=trainingProjectBuckets();
     const training=[...new Set(sessions.map(s=>trainingProjectName(s.project)).filter(p=>p&&!D.isShareProject(p)))].flatMap(name=>{
@@ -376,12 +376,19 @@
     if(fourth)fourth.status='项目持续进行';
     else list.push({name:trainingProjectName('AI 赋能第四期'),unit:'场',records:[],status:'筹备中',note:'尚无培训记录'});
     list.forEach(p=>{p.latest=[...p.records].filter(r=>r.date).sort(byDateDesc)[0];});
+    // 开小灶按期开展：已过日期的本期退出首页，历史记录仍可在项目与台账中查看。
+    const cafe=list.find(p=>p.name==='咖啡开小灶');
+    if(cafe?.latest){
+      const cutoff=asOf||today();
+      cafe.hideFromOverview=cafe.records.every(r=>r.date&&r.date<cutoff);
+      if(cafe.hideFromOverview)cafe.status='本期已结束';
+    }
     // 按状态分组：筹备中 → 持续进行 → 阶段性已结项 → 已结项；组内按最近更新排序。
-    const order={'筹备中':0,'项目持续进行':1,'阶段性已结项':2,'已结项':3},rank=p=>order[p.status]??1;
+    const order={'筹备中':0,'项目持续进行':1,'阶段性已结项':2,'本期已结束':2,'已结项':3},rank=p=>order[p.status]??1;
     return list.sort((a,b)=>rank(a)-rank(b)||byDateDesc(a.latest||{},b.latest||{}));
   }
-  function projectRows(max,source=state){
-    return projectSummaries(source).slice(0,max).map(p=>{
+  function projectRows(max,source=state,{overview=false}={}){
+    return projectSummaries(source).filter(p=>!overview||!p.hideFromOverview).slice(0,max).map(p=>{
       const last=p.latest,warn=p.pending||p.review,status=p.review?`${p.review} ${p.unit}待核对`:p.pending?`${p.pending} ${p.unit}待补录`:p.people!==undefined?`累计 ${p.people.toLocaleString('zh-CN')} 人次`:'数据已回收';
       const tag=p.status?`<span class="project-status" data-status="${esc(p.status)}">${esc(p.status)}</span>`:'';
       const main=`<span class="project-main"><span class="project-name">${esc(p.label||p.name)}${tag}</span><span class="project-latest">${last&&p.note?esc(p.note)+' · ':''}${last?`${esc(shortDate(last.date))} · ${esc(last.title||last.course)}`:esc(p.note||'暂无记录')}</span></span>`;
@@ -395,7 +402,7 @@
   }
   const linkBtn=(label,action,id)=>`<button type="button" class="link-btn" data-action="${action}" data-record="${esc(id)}">${esc(label)}</button>`;
   function overviewSource(){if(selection.mode!=='ytd')return state;const d=selected();return {sessions:d.sessions,aiStations:d.stations,aiShares:(state.aiShares||[]).filter(s=>s.date>=d.period.start&&s.date<=d.period.end),financeWiki:d.finance};}
-  function renderOverview(){const ytd=selection.mode==='ytd',source=overviewSource();overviewExtra.innerHTML=`<section class="card"><div class="card-header"><h2 class="card-title">${ytd?'年度项目进展':'项目最近更新'}</h2>${linkBtn('全部项目','navigate','projects')}</div><div class="card-body list-body">${projectRows(4,source)}</div></section><section class="card"><div class="card-header"><h2 class="card-title">${ytd?'年度最新成果':'近期成果'}</h2>${linkBtn(ytd?'年度总结':'月度 OKR','navigate',ytd?'annual':'monthly')}</div><div class="card-body list-body"><ul class="result-list">${recentResults(source)}</ul></div></section>`;}
+  function renderOverview(){const ytd=selection.mode==='ytd',source=overviewSource();overviewExtra.innerHTML=`<section class="card"><div class="card-header"><h2 class="card-title">${ytd?'年度项目进展':'项目最近更新'}</h2>${linkBtn('全部项目','navigate','projects')}</div><div class="card-body list-body">${projectRows(4,source,{overview:!ytd})}</div></section><section class="card"><div class="card-header"><h2 class="card-title">${ytd?'年度最新成果':'近期成果'}</h2>${linkBtn(ytd?'年度总结':'月度 OKR','navigate',ytd?'annual':'monthly')}</div><div class="card-body list-body"><ul class="result-list">${recentResults(source)}</ul></div></section>`;}
   function renderProjects(){projectPage.innerHTML='<div class="section-heading"><h2>项目进展</h2><span>从培训、发布和回收记录自动汇集，按筹备、进行、结项分组</span></div>'+`<section class="card"><div class="card-body list-body">${projectRows(100)}</div></section>`;}
   for(const [page,id,label] of [[monthlyPage,'summaryMonth','选择月份'],[annualPage,'annualMonth','截至月份']]){
     page.append(card(page===annualPage?'年度总结':'月度 OKR',`<div class="report-controls"><label for="${id}">${label}</label><input type="month" id="${id}" max="${R.today().slice(0,7)}" value="${selection.month}">${btn('导出设置','monthly-export')}</div><div id="${page===annualPage?'annualSummary':'monthlySummary'}"></div>`));
