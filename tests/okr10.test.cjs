@@ -47,6 +47,12 @@ test('真实页面渲染函数展示 10 月回顾和 11 月计划，历史月份
   assert.doesNotMatch(html,/本月 OKR 未整理/);
   const old=render(O,'2026-09');assert.match(old,/11 场、91 人次/);assert.doesNotMatch(old,/okr-next-plan/);
   assert.match(render(O,'2026-02'),/本月 OKR 未整理/);
+  // 2026-11-10：当月回顾未写时，显示上月回顾里定下的本月计划，不留空页。
+  const current=render(O,'2026-11');
+  assert.match(current,/本月回顾尚未整理，先显示上月定下的本月计划/);
+  assert.equal((current.match(/class="okr-objective"/g)||[]).length,3);
+  assert.doesNotMatch(current,/本月 OKR 未整理/);
+  assert.match(render(O,'2026-01'),/本月 OKR 未整理|个目标/);
   const unsafe={...O,nextPlan:()=>({month:'<script>',objectives:[{o:'<b>',krs:['<img onerror=x>']}]})};
   const safe=render(unsafe,'2026-10');assert.match(safe,/&lt;script&gt;/);assert.doesNotMatch(safe,/<img onerror/);
 });

@@ -38,17 +38,42 @@ test('read labels do not hide pending writes, sync errors or a newer successful 
  for(const status of ['local','syncing','error','save-error'])assert.equal(L.presentation(snapshot,{status}).status,status);
  assert.equal(L.presentation({status:'failed'},{status:'ready'}).status,'failed');
 });
-function bootContext({result={source:'failed',payload:null},pending=false}={}){
- const accepted=[],writes=[],scheduled=[];const context={PRIVATE_MODE:false,window:{LDLoadInfo:{}},LDDataLoad:{...L,load:async()=>result},document:{documentElement:{dataset:{}},dispatchEvent:()=>{}},Event:class{},dataStorage:{getItem:()=>JSON.stringify(payload()),setItem:(...a)=>writes.push(a)},STORAGE_KEY:'test',DATA_VERSION:3,applyImportedState:()=>{},state:{},syncController:{getStatus:()=>({lastCloud:null}),acceptRemote:p=>accepted.push(p),hasPending:()=>pending,emit:()=>{},schedule:()=>scheduled.push(true)}};
+function bootContext({result={source:'failed',payload:null},pending=false,cached=true,configured=false,extra={}}={}){
+ const accepted=[],writes=[],scheduled=[];const context={PRIVATE_MODE:false,window:{LDLoadInfo:{}},LDDataLoad:{...L,load:async()=>result},document:{documentElement:{dataset:{}},dispatchEvent:()=>{}},Event:class{},dataStorage:{getItem:()=>cached?JSON.stringify(payload()):null,setItem:(...a)=>writes.push(a)},STORAGE_KEY:'test',DATA_VERSION:3,applyImportedState:()=>{},state:{},syncSettings:{enabled:configured,token:configured?'t':''},pullFromCloudAPI:async()=>{throw Error('offline');},showToast:()=>{},structuredClone,...extra,syncController:{getStatus:()=>({lastCloud:null}),acceptRemote:p=>accepted.push(p),hasPending:()=>pending,emit:()=>{},schedule:()=>scheduled.push(true)}};
  const source=html.slice(html.indexOf('    function setDataLoadState('),html.indexOf('    const SYNC_SETTINGS_KEY'));
  vm.createContext(context);vm.runInContext(source,context);return {context,accepted,writes,scheduled};
 }
 test('failed initial load neither accepts defaults nor overwrites the existing browser cache',async()=>{
- const {context,accepted,writes}=bootContext();await context.initData();assert.equal(context.window.LDLoadInfo.status,'failed');assert.equal(accepted.length,0);assert.equal(writes.length,0);
+ // 2026-11-10：读不到云端时，有本机缓存就显示缓存（状态 cache），没有缓存才是 failed；两种情况都不写入。
+ const {context,accepted,writes}=bootContext();await context.initData();assert.equal(context.window.LDLoadInfo.status,'cache');assert.equal(accepted.length,0);assert.equal(writes.length,0);
+ const empty=bootContext({cached:false});await empty.context.initData();assert.equal(empty.context.window.LDLoadInfo.status,'failed');assert.equal(empty.accepted.length,0);assert.equal(empty.writes.length,0);
+ assert.equal(L.presentation({status:'cache'},{status:'ready'}).status,'cache');
+});
+test('saving is refused while data is loading or failed, so an empty table can never be merged to the cloud',()=>{
+ const line=html.split('\n').findIndex(l=>l.includes('function persist() {'));assert.ok(line>0);
+ const source=html.split('\n').slice(line,line+4).join('\n');
+ for(const status of ['loading','failed']){
+  let saved=0;const toasts=[];const ctx={PRIVATE_MODE:false,window:{LDLoadInfo:{status}},showToast:m=>toasts.push(m),syncController:{save:()=>saved++},document:{dispatchEvent:()=>{}},Event:class{}};
+  vm.createContext(ctx);vm.runInContext(source,ctx);assert.throws(()=>ctx.persist());assert.equal(saved,0);assert.equal(toasts.length,1);
+ }
+ let saved=0;const ctx={PRIVATE_MODE:false,window:{LDLoadInfo:{status:'cloud'}},showToast:()=>{},syncController:{save:()=>saved++},document:{dispatchEvent:()=>{}},Event:class{}};
+ vm.createContext(ctx);vm.runInContext(source,ctx);ctx.persist();assert.equal(saved,1);
+});
+test('a browser without sync set up still reads the cloud and re-applies its own unsynced edits',async()=>{
+ const D=require('../assets/ld-domain.js');const remote=payload();remote.sessions.push({id:'cloud-new',date:'2026-11-01',people:1,duration:1});
+ const applied=[];let persisted=0;
+ const c=bootContext({result:{source:'cloud',payload:remote},pending:true,extra:{LDDomain:D,persist:()=>persisted++}});
+ const local=payload();local.sessions.push({id:'mine',date:'2026-11-02',people:3,duration:1});
+ c.context.dataStorage.getItem=k=>JSON.stringify(k.endsWith('_sync_base')?payload():local);
+ c.context.applyImportedState=p=>{applied.push(p);c.context.state=p;};
+ c.context.syncController.acceptRemote=p=>{c.accepted.push(p);c.context.state=structuredClone(p);};
+ await c.context.initData();
+ assert.equal(c.accepted.length,1);assert.equal(persisted,1);
+ assert.deepEqual(applied.at(-1).sessions.map(s=>s.id).sort(),['cloud-new','fixture','mine']);
 });
 test('site snapshot uses existing acceptRemote and version path; pending edits keep original priority',async()=>{
  const p=payload();const a=bootContext({result:{source:'snapshot',payload:p}});await a.context.initData();assert.deepEqual(a.accepted,[p]);assert.deepEqual(a.writes,[['test_version','3']]);assert.equal(a.context.window.LDLoadInfo.status,'snapshot');
- const b=bootContext({pending:true});await b.context.initData();assert.equal(b.accepted.length,0);assert.equal(b.scheduled.length,1);assert.equal(b.context.window.LDLoadInfo.status,'local');
+ const b=bootContext({pending:true,configured:true});await b.context.initData();assert.equal(b.accepted.length,0);assert.equal(b.scheduled.length,1);assert.equal(b.context.window.LDLoadInfo.status,'local');
 });
 test('actual dashboard stat renderer replaces 0 and currency zero with unloaded placeholders',()=>{
  const source=workflow.split('\n').find(line=>line.startsWith('  function stat('));assert.ok(source);

@@ -2097,20 +2097,6 @@ tr:hover td.empty-cell {
 }
 
 /* --- 趋势标签（如有 .trend.up / .trend.down / .trend.flat）--- */
-.stat-trend {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--sp-1);
-  font-family: var(--font-en);
-  font-size: var(--fs-micro);
-  font-weight: var(--fw-regular);
-  letter-spacing: var(--ls-medium);
-  text-transform: uppercase;
-  color: var(--text-muted);
-}
-.stat-trend.up   { color: var(--stage-sync); }
-.stat-trend.down { color: var(--c-crimson); }
-.stat-trend.flat { color: var(--text-muted); }
 
 
 /* ============================================================
@@ -2432,13 +2418,6 @@ tr:hover td.empty-cell {
 }
 
 /* --- 趋势数字（dashboard 下 .stat-trend.big 模式）--- */
-.stat-trend.big {
-  font-family: var(--font-en);
-  font-weight: var(--fw-thin);
-  font-size: var(--fs-h2);
-  letter-spacing: -0.01em;
-  text-transform: none;
-}
 #panel-budget-plan table td:nth-child(3) {
   color: var(--text-strong);
   font-weight: var(--fw-regular);
@@ -3389,65 +3368,6 @@ tr:hover td.empty-cell {
    t4 var(--brand) #5C7CC8（品牌满色）
    ============================================================ */
 /* heatmap-wrap：包整个图（月份条 + 星期列 + 网格） */
-.heatmap-wrap {
-  display: flex;
-  flex-direction: column;
-  gap: var(--sp-2);
-  overflow-x: auto;
-  padding-bottom: var(--sp-1);
-}
-
-/* 月份标签条 (在网格上方) */
-.heatmap-months {
-  display: grid;
-  gap: 3px;
-  padding-left: 28px; /* 给星期标签留位 */
-  font-family: var(--font-sans);
-  font-size: var(--fs-micro);
-  font-weight: var(--fw-light);
-  color: var(--text-muted);
-  letter-spacing: var(--ls-tight);
-  min-width: max-content;
-}
-
-.heatmap-months span {
-  text-align: left;
-  padding-left: 2px;
-}
-
-/* 星期标签 + 网格 横向并列 */
-.heatmap-grid-area {
-  display: flex;
-  gap: var(--sp-2);
-  min-width: max-content;
-}
-
-/* 星期标签列 (左侧) */
-.heatmap-weekdays {
-  display: grid;
-  grid-template-rows: repeat(7, 14px);
-  gap: 3px;
-  font-family: var(--font-sans);
-  font-size: var(--fs-micro);
-  font-weight: var(--fw-light);
-  color: var(--text-muted);
-  letter-spacing: var(--ls-tight);
-  width: 20px;
-  align-items: center;
-}
-
-.heatmap-weekdays span {
-  text-align: right;
-  line-height: 1;
-}
-
-/* 网格容器：横向排列所有周 */
-.heatmap-container {
-  display: flex;
-  flex-wrap: nowrap;
-  gap: 3px;
-  min-width: max-content;
-}
 
 .heatmap-week {
   display: grid;
@@ -3526,49 +3446,6 @@ tr:hover td.empty-cell {
 
 
 /* Legend：5 档色卡 */
-.heatmap-legend {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: var(--sp-1);
-  margin-top: var(--sp-3);
-  padding-top: var(--sp-3);
-  border-top: 1px solid var(--border-faint);
-  font-family: var(--font-sans);
-  font-size: var(--fs-micro);
-  font-weight: var(--fw-light);
-  letter-spacing: var(--ls-tight);
-  color: var(--text-muted);
-}
-
-.heatmap-legend-item {
-  width: 14px;
-  height: 14px;
-  border-radius: var(--r-xs);
-  flex: 0 0 14px;
-}
-
-.heatmap-legend-item[data-level="0"] { background: var(--border-faint); }
-.heatmap-legend-item[data-level="1"] { background: var(--c-warm-gray); }
-.heatmap-legend-item[data-level="2"] { background: rgba(156, 124, 184, 0.40); }
-.heatmap-legend-item[data-level="3"] { background: rgba(92, 124, 200, 0.60); }
-.heatmap-legend-item[data-level="4"] { background: var(--brand); }
-
-/* 兼容默认顺序（HTML 没有 data-level 时按子序号上色） */
-.heatmap-legend-item:nth-of-type(1) { background: var(--border-faint); }
-.heatmap-legend-item:nth-of-type(2) { background: var(--c-warm-gray); }
-.heatmap-legend-item:nth-of-type(3) { background: rgba(156, 124, 184, 0.40); }
-.heatmap-legend-item:nth-of-type(4) { background: rgba(92, 124, 200, 0.60); }
-.heatmap-legend-item:nth-of-type(5) { background: var(--brand); }
-
-.heatmap-legend-label {
-  margin: 0 var(--sp-1);
-  font-family: var(--font-sans);
-  font-size: var(--fs-micro);
-  font-weight: var(--fw-light);
-  color: var(--text-muted);
-  letter-spacing: var(--ls-tight);
-}
 
 
 /* ============================================================
@@ -3673,75 +3550,6 @@ tr:hover td.empty-cell {
 }
 
 
-/* ============================================================
-   15. kanban-tasks（任务清单替代视图：兼容某些场景）
-   ============================================================ */
-.kanban-tasks {
-  display: flex;
-  flex-direction: column;
-  gap: var(--sp-2);
-}
-
-.kanban-task {
-  display: flex;
-  align-items: center;
-  gap: var(--sp-3);
-  padding: var(--sp-3) var(--sp-4);
-  background: var(--bg-card);
-  border: 1px solid var(--border-faint);
-  border-radius: var(--r-sm);
-  font-family: var(--font-sans);
-  font-size: var(--fs-body-s);
-  font-weight: var(--fw-light);
-  color: var(--text-body);
-  cursor: pointer;
-  transition: border-color var(--t-fast), background var(--t-fast);
-}
-
-.kanban-task:hover {
-  border-color: var(--brand-alpha-25);
-  background: var(--bg-hover);
-}
-
-.kanban-task.done {
-  background: var(--bg-card-soft);
-  color: var(--text-muted);
-  text-decoration: line-through;
-  text-decoration-color: var(--text-faint);
-  text-decoration-thickness: 1px;
-}
-
-.kanban-task .task-checkbox {
-  flex-shrink: 0;
-  width: 16px;
-  height: 16px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid var(--border-light);
-  border-radius: var(--r-xs);
-  background: var(--bg-card);
-  color: transparent;
-  transition: border-color var(--t-fast), background var(--t-fast), color var(--t-fast);
-}
-
-.kanban-task.done .task-checkbox {
-  background: var(--brand);
-  border-color: var(--brand);
-  color: #FFFFFF;
-}
-
-.kanban-task .task-checkbox svg {
-  width: 10px;
-  height: 10px;
-  stroke: currentColor;
-  fill: none;
-  stroke-width: 2;
-}
-
-.kanban-task.done .task-checkbox svg {
-  stroke: #FFFFFF;
-}
 
 
 /* ============================================================
@@ -4687,44 +4495,6 @@ tr:hover td.empty-cell {
   font-size: var(--fs-body-s);
 }
 
-#financeTimeline .timeline-item {
-  display: flex;
-  align-items: center;
-  gap: var(--sp-3);
-  padding: var(--sp-2) 0;
-  border-bottom: 1px solid var(--border-faint);
-}
-
-#financeTimeline .timeline-item:last-child {
-  border-bottom: none;
-}
-
-#financeTimeline .timeline-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--brand);
-  flex: 0 0 6px;
-}
-
-#financeTimeline .timeline-date {
-  font-family: var(--font-mono);
-  font-size: var(--fs-caption);
-  color: var(--text-muted);
-  font-variant-numeric: tabular-nums;
-  letter-spacing: 0.02em;
-  min-width: 80px;
-}
-
-#financeTimeline .timeline-title {
-  color: var(--text-strong);
-  font-weight: var(--fw-light);
-  flex: 1;
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
 
 /* ============================================================
  * 14. 弹窗 · .modal-content.fin-modal
@@ -4973,50 +4743,6 @@ tr:hover td.empty-cell {
   color: #fff;
 }
 
-/* ============================================================
- * 18. 老的 fin-step / fin-card 时间轴样式 · 标记为禁用
- *     （HTML 还保留了类名，新设计里不渲染这条轴；这里彻底中和）
- * ============================================================ */
-
-.fin-timeline-wrap {
-  display: none;
-}
-
-.fin-step,
-.fin-card {
-  background: transparent;
-  border: none;
-  box-shadow: none;
-  transform: none;
-  transition: none;
-  padding: 0;
-  height: auto;
-}
-
-.fin-card::after {
-  content: none;
-}
-
-.fin-step:hover,
-.fin-step.active,
-.fin-step.done,
-.fin-step:hover .fin-card,
-.fin-step.active .fin-card,
-.fin-step.done .fin-card {
-  transform: none;
-  background: transparent;
-  border: none;
-  box-shadow: none;
-}
-
-.fin-icon,
-.fin-label,
-.fin-meta {
-  color: var(--text-muted);
-  font-family: var(--font-sans);
-  font-weight: var(--fw-light);
-  text-shadow: none;
-}
 
 /* ============================================================
  * 19. 响应式 · 窄屏 fallback
@@ -6069,52 +5795,6 @@ tr:hover td.empty-cell {
 }
 
 /* 2.13 评测分数大字（评测分数详情场景，备用） */
-.assess-score-num,
-.assess-score-large {
-  font-family: var(--font-sans);
-  font-weight: var(--fw-thin);
-  font-size: var(--fs-display-m);
-  color: var(--text-strong);
-  letter-spacing: 0.01em;
-  line-height: 1;
-  font-variant-numeric: tabular-nums;
-}
-
-/* 2.14 评测 Footer（备用） */
-.assess-footer {
-  background: var(--bg-card);
-  border: 1px solid var(--border-faint);
-  border-radius: var(--r-lg);
-  padding: var(--sp-8);
-  text-align: center;
-  margin-top: var(--sp-10);
-  box-shadow: var(--shadow-card);
-}
-.assess-footer-text {
-  font-family: var(--font-sans);
-  font-weight: var(--fw-light);
-  font-size: var(--fs-body-l);
-  color: var(--text-body);
-  letter-spacing: var(--ls-tight);
-  margin: 0 0 var(--sp-5);
-}
-.assess-footer-btn {
-  background: var(--brand);
-  color: #fff;
-  border: 1px solid var(--brand);
-  border-radius: var(--r-md);
-  font-family: var(--font-sans);
-  font-weight: var(--fw-regular);
-  font-size: var(--fs-body);
-  padding: var(--sp-3) var(--sp-6);
-  cursor: pointer;
-  box-shadow: var(--shadow-brand);
-  transition: background var(--t-fast), box-shadow var(--t-fast);
-}
-.assess-footer-btn:hover {
-  background: var(--brand-dark);
-  box-shadow: var(--shadow-brand-strong);
-}
 
 
 /* =====================================================================
@@ -6478,44 +6158,6 @@ tr:hover td.empty-cell {
   padding: var(--sp-20) var(--sp-10);
 }
 
-.empty-state-icon {
-  width: 56px;
-  height: 56px;
-  margin: 0 auto var(--sp-5);
-  background: var(--bg-card-soft);
-  border: 1px solid var(--border-faint);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--text-muted);
-}
-
-.empty-state-icon svg {
-  width: 24px;
-  height: 24px;
-  stroke-width: 1.5;
-}
-
-.empty-state-title {
-  font-family: var(--font-sans);
-  font-size: var(--fs-h3);
-  font-weight: var(--fw-light);
-  color: var(--text-strong);
-  letter-spacing: var(--ls-tight);
-  margin-bottom: var(--sp-2);
-}
-
-.empty-state-desc {
-  font-family: var(--font-sans);
-  font-size: var(--fs-body-s);
-  font-weight: var(--fw-light);
-  color: var(--text-muted);
-  letter-spacing: var(--ls-tight);
-  max-width: 320px;
-  margin: 0 auto;
-  line-height: 1.6;
-}
 
 
 /* ============================================================
@@ -6535,24 +6177,6 @@ tr:hover td.empty-cell {
 /* ============================================================
  * 4. 金融小百科加号按钮（Fin Add Btn）
  * ============================================================ */
-.fin-add-btn {
-  background: var(--brand);
-  color: #FFFFFF;
-  font-family: var(--font-sans);
-  font-weight: var(--fw-regular);
-  font-size: var(--fs-body-s);
-  letter-spacing: var(--ls-tight);
-  border: none;
-  padding: var(--sp-2) var(--sp-4);
-  border-radius: var(--r-pill);
-  cursor: pointer;
-  transition: background var(--t-fast), box-shadow var(--t-fast);
-}
-
-.fin-add-btn:hover {
-  background: var(--brand-dark);
-  box-shadow: var(--shadow-brand);
-}
 
 
 /* ============================================================
@@ -6721,13 +6345,13 @@ tr:hover td.empty-cell {
   <link rel="stylesheet" href="assets/training-view.css?v=20261030-ai">
   <link rel="stylesheet" href="assets/mingzhang.css?v=20261022-mz9">
   <link rel="stylesheet" href="assets/insight.css?v=20261030-insight2">
-  <script src="assets/ld-domain.js?v=20261030-ai"></script>
+  <script src="assets/ld-domain.js?v=20261030-ai-1110"></script>
   <script src="assets/ld-report.js?v=20261029-brief"></script>
   <script src="assets/ld-insight.js?v=20261030-insight"></script>
   <script src="assets/closeout-reports.js?v=20261014-closeout2"></script>
   <script src="assets/okr.js?v=20261029-okr10"></script>
   <script src="assets/ld-sync.js"></script>
-  <script src="assets/ld-data-load.js?v=20261021-fallback"></script>
+  <script src="assets/ld-data-load.js?v=20261021-fallback-1110"></script>
   <link rel="stylesheet" href="assets/ld-data-load.css?v=20261021-fallback">
 </head>
 
@@ -7131,11 +6755,11 @@ tr:hover td.empty-cell {
                 </div>
                 <div class="form-group">
                   <label class="form-label">课程名称</label>
-                  <input type="text" id="sessionCourse" placeholder="如：新员工入职培训" required />
+                  <input type="text" id="sessionCourse" placeholder="如：L1 AI 领导力" required />
                 </div>
                 <div class="form-group">
                   <label class="form-label">所属项目</label>
-                  <input type="text" id="sessionProject" placeholder="如：项目 A" required />
+                  <input type="text" id="sessionProject" placeholder="选已有项目，或输入新项目名" required />
                 </div>
                 <div class="form-group">
                   <label class="form-label">讲师</label>
@@ -7143,11 +6767,11 @@ tr:hover td.empty-cell {
                 </div>
                 <div class="form-group">
                   <label class="form-label">参加人数</label>
-                  <input type="number" min="1" id="sessionPeople" required />
+                  <input type="number" min="1" id="sessionPeople" placeholder="人" inputmode="numeric" required />
                 </div>
                 <div class="form-group">
                   <label class="form-label">培训时长（小时）</label>
-                  <input type="number" step="0.5" min="0.5" id="sessionDuration" required />
+                  <input type="number" step="0.5" min="0.5" id="sessionDuration" placeholder="如 1 或 1.5" inputmode="decimal" required />
                 </div>
                 <div class="form-group span-full">
                   <label class="form-label">备注</label>
@@ -8629,35 +8253,8 @@ tr:hover td.empty-cell {
        3. 数据初始化 & 逻辑
        ========================================= */
 
-    // 数据版本号：每次更新 data.json 时递增此版本号
-    // 数据版本号：每次更新 data.json 时递增此版本号
+    // 本机缓存格式版本号
     const DATA_VERSION = 3;
-    const DEFAULT_DATA = {
-      sessions: [],
-      budgets: [],
-      aiStations: [],
-      aiShares: [],
-      financeWiki: [
-        { id: "fin01", episode: 1, season: "stablecoin", title: "为什么会有稳定币：全球结算的老问题", date: "2025-10-01", unread: 26, read: 317, viewRate: 92.4, downloads: 12, downloadRate: 3.5, workflow: { topic: true, draft: true, ppt: true, video: true, review: true, publish: true, data: true } },
-        { id: "fin02", episode: 2, season: "stablecoin", title: "区块链：稳定币的'硬核地基'", date: "2025-10-15", unread: 16, read: 327, viewRate: 95.3, downloads: 0, downloadRate: 0, workflow: { topic: true, draft: true, ppt: true, video: true, review: true, publish: true, data: true } },
-        { id: "fin03", episode: 3, season: "stablecoin", title: "稳定币怎么'稳'：美元霸权的数字延伸", date: "2025-11-01", unread: 33, read: 310, viewRate: 90.4, downloads: 8, downloadRate: 2.3, workflow: { topic: true, draft: true, ppt: true, video: true, review: true, publish: true, data: true } },
-        { id: "fin04", episode: 4, season: "stablecoin", title: "两场真实崩盘：为什么'稳定'币也会暴雷", date: "2025-11-15", unread: 40, read: 303, viewRate: 88.3, downloads: 13, downloadRate: 3.8, workflow: { topic: true, draft: true, ppt: true, video: true, review: true, publish: true, data: true } },
-        { id: "fin05", episode: 5, season: "stablecoin", title: "美国联邦框架_GENIUS_Act讲了什么", date: "2025-12-01", unread: 26, read: 317, viewRate: 92.4, downloads: 21, downloadRate: 6.1, workflow: { topic: true, draft: true, ppt: true, video: true, review: true, publish: true, data: true } },
-        { id: "fin06", episode: 6, season: "stablecoin", title: "香港路径-牌照、审慎与节奏管理", date: "2025-12-15", unread: 44, read: 299, viewRate: 87.2, downloads: 15, downloadRate: 4.4, workflow: { topic: true, draft: true, ppt: true, video: true, review: true, publish: true, data: true } },
-        { id: "fin07", episode: 7, season: "stablecoin", title: "全球合规共性：FATF旅行规则与风控基线", date: "", unread: null, read: null, viewRate: null, downloads: null, downloadRate: null, workflow: { topic: true, draft: true, ppt: false, video: false, review: false, publish: false, data: false } },
-        { id: "fin08", episode: 8, season: "stablecoin", title: "跨境支付与清算", date: "", unread: null, read: null, viewRate: null, downloads: null, downloadRate: null, workflow: { topic: true, draft: true, ppt: false, video: false, review: false, publish: false, data: false } }
-      ],
-      aiShares: [],
-      aiStationTitles: {},
-      aiShareTitles: {},
-      financeTitles: {},
-      aiStationTasks: [],
-      aiShareTasks: [],
-      financeTasks: [],
-      currentStationEpisode: null,
-      currentShareEpisode: null,
-      currentFinanceEpisode: null
-    };
 
     window.LDLoadInfo={status:PRIVATE_MODE?'cloud':'loading',cloudTimestamp:null};
     function setDataLoadState(status){
@@ -8673,8 +8270,17 @@ tr:hover td.empty-cell {
         return true;
       }
       setDataLoadState('loading');
-      const result=await LDDataLoad.load();
-      if(!result.payload){setDataLoadState('failed');return false;}
+      let result=null;
+      if(syncSettings.enabled&&syncSettings.token){
+        // 编辑者的浏览器直接读仓库接口：刚同步完就刷新，也不会读到 CDN 上的旧文件。
+        try{result={source:'cloud',payload:await pullFromCloudAPI()};}catch(_){result=null;}
+      }
+      if(!result)result=await LDDataLoad.load();
+      if(!result.payload){
+        // 两个来源都读不到：有本机缓存就显示缓存（基线仍在，联网后照常合并），没有才报失败。
+        try{const cached=JSON.parse(dataStorage.getItem(STORAGE_KEY)||'null');if(cached&&Array.isArray(cached.sessions)){applyImportedState(cached);setDataLoadState('cache');return false;}}catch(_){}
+        setDataLoadState('failed');return false;
+      }
       try{
         // 沿用原有基线建立和版本记录，不改任何写入/合并路径。
         syncController.acceptRemote(result.payload);
@@ -8684,16 +8290,23 @@ tr:hover td.empty-cell {
       }catch(error){setDataLoadState('failed');return false;}
     }
 
-    function seedDefaultData() {
-      applyImportedState(DEFAULT_DATA);
-      originalPersist();
-      dataStorage.setItem(STORAGE_KEY + '_version', String(DATA_VERSION));
-    }
-
     async function initData() {
       const raw = dataStorage.getItem(STORAGE_KEY);
-      if (syncController.hasPending() && raw) {
+      const canPush = PRIVATE_MODE || !!(syncSettings.enabled && syncSettings.token);
+      if (syncController.hasPending() && raw && canPush) {
         try { applyImportedState(JSON.parse(raw)); setDataLoadState('local'); syncController.emit(); syncController.schedule(); return; } catch (_) {}
+      }
+      if (syncController.hasPending() && raw) {
+        // 没配置同步的浏览器，本机改动永远推不上去。仍以云端为准，再把本机改动叠上去，
+        // 否则这台浏览器会一直停在旧数据上。
+        let local = null, base = null;
+        try { local = JSON.parse(raw); base = JSON.parse(dataStorage.getItem(STORAGE_KEY + '_sync_base') || 'null'); } catch (_) {}
+        const loaded = await loadRemoteData();
+        if (loaded && local && base) {
+          try { applyImportedState(LDDomain.mergeThreeWay(base, local, structuredClone(state))); persist(); }
+          catch (_) { showToast('本机未同步的改动与云端有冲突，已显示云端数据', 'info'); }
+        }
+        return;
       }
       // Load cloud unless this browser has unsynced edits.
       // This ensures every browser sees the latest synced data by default.
@@ -8712,11 +8325,11 @@ tr:hover td.empty-cell {
       getSettings:()=>PRIVATE_MODE?{server:true,enabled:window.LD_SERVER.role==='editor'}:syncSettings,
       onChange:detail=>document.dispatchEvent(new CustomEvent('ld-sync-state',{detail}))
     });
-    function persist() { if(PRIVATE_MODE&&window.LD_SERVER.role!=='editor')throw Error('当前账号为只读权限');try{syncController.save();}catch(error){showToast(error.message,'error');throw error;} document.dispatchEvent(new Event('ld-data-updated')); }
-    function originalPersist() { dataStorage.setItem(STORAGE_KEY,JSON.stringify(state)); }
-    function debouncedCloudSync() { syncController.schedule(); }
+    function persist() { if(PRIVATE_MODE&&window.LD_SERVER.role!=='editor')throw Error('当前账号为只读权限');
+      // 数据还没读到（或没读成）时，页面上是空表；此时保存会把空表当成“全部删除”合并上云。
+      if(!PRIVATE_MODE&&['loading','failed'].includes(window.LDLoadInfo.status)){const message=window.LDLoadInfo.status==='loading'?'数据还在加载，稍等一下再保存':'数据没有加载成功，请刷新页面后再保存';showToast(message,'error');throw Error(message);}
+      try{syncController.save();}catch(error){showToast(error.message,'error');throw error;} document.dispatchEvent(new Event('ld-data-updated')); }
     async function pushToCloud() { return syncController.push(); }
-    window.persistWithSync = persist;
 
     // Pull data from GitHub
     async function pullFromCloudAPI() {
@@ -8731,7 +8344,9 @@ tr:hover td.empty-cell {
           headers: {
             'Authorization': `token ${syncSettings.token}`,
             'Accept': 'application/vnd.github.v3+json'
-          }
+          },
+          cache: 'no-store',
+          signal: AbortSignal.timeout(6000)
         }
       );
 
@@ -8879,15 +8494,6 @@ tr:hover td.empty-cell {
         if (i === 0) option.selected = true;
         select.appendChild(option);
       }
-    }
-
-    // Compatibility adapters use the shared reporting model.
-    function getMonthlyData(month) { return LDReport.aggregate(state, LDReport.period('month', month)); }
-    async function generateMonthlyExcel(data, opts) { return LDReportExport.excel(LDReport.model(data, opts)); }
-    async function generateMonthlyPdf(data, opts) {
-      // One-page brief compares a month with the previous month; YTD has no comparison.
-      const previous = data.period.mode === 'month' ? LDReport.aggregate(state, LDReport.period('month', LDReport.previousMonth(data.period.month), data.period.asOf)) : null;
-      return LDReportExport.pdf(LDReport.model(data, { ...opts, previous }));
     }
 
     window.testSyncConnection = async function () {
@@ -9121,12 +8727,6 @@ tr:hover td.empty-cell {
     }
 
     // 辅助函数：计算指定月份的总支出
-    function getSpentByMonth(month) {
-      if (!state.expenses || !Array.isArray(state.expenses)) return 0;
-      return state.expenses
-        .filter(e => e.month === month)
-        .reduce((sum, e) => sum + (Number(e.amount) || 0), 0);
-    }
 
     // 渲染开销记录表格
     function renderExpenses() {
@@ -9210,15 +8810,23 @@ tr:hover td.empty-cell {
       container.innerHTML = html;
     }
 
-    function resetSessionForm() { document.getElementById('sessionForm').reset(); document.getElementById('sessionId').value = ''; }
+    function resetSessionForm() {
+      document.getElementById('sessionForm').reset(); document.getElementById('sessionId').value = '';
+      // 新增默认今天；讲师默认填最常出现的那位，绝大多数场次不用再打一遍。
+      document.getElementById('sessionDate').value = LDReport.today();
+      const counts = new Map();
+      state.sessions.forEach(item => { const name = String(item.lecturer || '').trim(); if (name) counts.set(name, (counts.get(name) || 0) + 1); });
+      const usual = [...counts].sort((a, b) => b[1] - a[1])[0];
+      if (usual && usual[1] >= 5) document.getElementById('sessionLecturer').value = usual[0];
+    }
     function resetBudgetForm() { document.getElementById('budgetForm').reset(); document.getElementById('budgetId').value = ''; }
     function resetExpenseForm() { 
       document.getElementById('expenseForm').reset(); 
       document.getElementById('expenseId').value = ''; 
       // 默认设置日期为今天，归属月份为当月
-      const today = new Date();
-      document.getElementById('expenseDate').value = today.toISOString().split('T')[0];
-      document.getElementById('expenseMonth').value = today.toISOString().slice(0, 7);
+      const today = LDReport.today();
+      document.getElementById('expenseDate').value = today;
+      document.getElementById('expenseMonth').value = today.slice(0, 7);
     }
 
     window.editSession = function (id) {
@@ -9678,9 +9286,16 @@ tr:hover td.empty-cell {
       const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
-      a.href = url; a.download = 'surfin-ld-data.json'; a.click();
+      a.href = url; a.download = `surfin-ld-data-${LDReport.today()}.json`; a.click();
       URL.revokeObjectURL(url);
     };
+
+    // 导入是整库替换，先让人看清楚要换成什么。
+    function confirmImport(payload, apply) {
+      const rows = [['培训', 'sessions'], ['开销', 'expenses'], ['广播站', 'aiStations'], ['分享月', 'aiShares'], ['金融百科', 'financeWiki']]
+        .map(([label, key]) => `${label} ${state[key].length} → ${Array.isArray(payload[key]) ? payload[key].length : 0} 条`).join('\n');
+      showConfirm('导入会用文件里的数据替换当前全部记录' + ((PRIVATE_MODE || (syncSettings.enabled && syncSettings.token)) ? '，并同步到云端' : '') + '。\n\n' + rows + '\n\n确认替换吗？', apply);
+    }
 
     window.importJson = function () {
       document.getElementById('filePicker').click();
@@ -9698,12 +9313,14 @@ tr:hover td.empty-cell {
           const hasPayload = ['sessions', 'budgets', 'aiStations', 'aiShares', 'aiStationTasks', 'aiShareTasks']
             .some(key => Array.isArray(payload[key]));
           if (!hasPayload) throw new Error('缺少关键字段');
-          applyImportedState(payload);
-          normalizeImportedEpisodes();
-          dataStorage.setItem(STORAGE_KEY + '_version', String(DATA_VERSION));
-          renderAll();
-          renderAIKnowledge();
-          showToast('数据导入成功', 'success');
+          confirmImport(payload, () => {
+            applyImportedState(payload);
+            normalizeImportedEpisodes();
+            persist();
+            renderAll();
+            renderAIKnowledge();
+            showToast('数据导入成功', 'success');
+          });
         } catch (err) { showToast('导入失败：' + err.message, 'error'); }
       };
       reader.readAsText(file);
@@ -9778,21 +9395,24 @@ tr:hover td.empty-cell {
         const hasPayload = ['sessions', 'budgets', 'aiStations', 'aiShares', 'aiStationTasks', 'aiShareTasks']
           .some(key => Array.isArray(payload[key]));
         if (!hasPayload) throw new Error('缺少关键字段');
-        applyImportedState(payload);
-        normalizeImportedEpisodes();
-        dataStorage.setItem(STORAGE_KEY + '_version', String(DATA_VERSION));
-        renderAll();
-        renderAIKnowledge();
-        updateBackupMeta('已导入');
-        showToast('备份码已导入', 'success');
+        confirmImport(payload, () => {
+          applyImportedState(payload);
+          normalizeImportedEpisodes();
+          persist();
+          renderAll();
+          renderAIKnowledge();
+          updateBackupMeta('已导入');
+          showToast('备份码已导入', 'success');
+        });
       } catch (err) {
         showToast('导入失败：' + err.message, 'error');
       }
     };
 
     window.forceClearCache = function () {
-      showConfirm('确定要强制刷新吗？\n警告：这将清空本地所有缓存数据（包括您未导出的新记录），并强制重新拉取 GitHub 上的 data.json。\n\n建议操作前先点击「生成备份码」备份当前数据！', () => {
-        localStorage.clear();
+      const pending = syncController.hasPending() ? '\n\n注意：这台浏览器还有未同步的改动，继续会丢掉它们。' : '';
+      showConfirm('重新从云端读取数据？本机缓存的数据会被云端版本替换，同步设置和外观偏好保留。' + pending, () => {
+        [STORAGE_KEY, STORAGE_KEY + '_sync_meta', STORAGE_KEY + '_sync_base', STORAGE_KEY + '_version'].forEach(key => dataStorage.removeItem(key));
         location.reload();
       });
     };
@@ -9877,14 +9497,31 @@ tr:hover td.empty-cell {
       document.dispatchEvent(new Event('ld-data-updated'));
     }
 
+    // 开销日期改了，归属月份跟着走（新增时）；要跨月归属再单独改月份。
+    document.getElementById('expenseDate').addEventListener('change', e => {
+      if (!document.getElementById('expenseId').value && e.target.value) document.getElementById('expenseMonth').value = e.target.value.slice(0, 7);
+    });
+    document.addEventListener('keydown', e => {
+      // Esc 关掉最上层的旧式弹窗；原生 dialog 自带 Esc。
+      if (e.key === 'Escape' && !document.querySelector('dialog[open]')) {
+        const overlay = [...document.querySelectorAll('.modal-overlay.active')].pop();
+        if (overlay && overlay.id !== 'confirmModal') { e.preventDefault(); overlay.classList.remove('active'); }
+      }
+      // ⌘/Ctrl + Enter 在任何录入表单里直接保存。
+      if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
+        const form = e.target.closest && e.target.closest('form');
+        if (form && form.id !== 'authForm') { e.preventDefault(); form.requestSubmit(); }
+      }
+    });
+
     document.getElementById('sessionForm').addEventListener('submit', e => {
       e.preventDefault();
       const payload = {
         id: document.getElementById('sessionId').value || uid(),
         date: document.getElementById('sessionDate').value,
-        course: document.getElementById('sessionCourse').value,
-        project: document.getElementById('sessionProject').value,
-        lecturer: document.getElementById('sessionLecturer').value,
+        course: document.getElementById('sessionCourse').value.trim(),
+        project: document.getElementById('sessionProject').value.trim(),
+        lecturer: document.getElementById('sessionLecturer').value.trim(),
         people: Number(document.getElementById('sessionPeople').value),
         duration: Number(document.getElementById('sessionDuration').value),
         note: document.getElementById('sessionNote').value
@@ -10068,17 +9705,9 @@ tr:hover td.empty-cell {
       const title = String(value || '').trim();
       if (title) titleMap[key] = title;
       else delete titleMap[key];
+      // 台账里的标题只在填了内容时才跟着改；空标题不清掉已登记的主题。
       const item = list.find(entry => entry.episode === episode);
-      if (item) item.title = title;
-    }
-
-    function focusEpisodePicker(inputId, episode) {
-      const picker = document.getElementById(inputId);
-      if (!picker) return false;
-      picker.value = episode;
-      picker.focus();
-      picker.select();
-      return true;
+      if (item && title) item.title = title;
     }
 
     function ensureEpisodeTasks(taskList, episode, template, aliasMap) {
@@ -10163,8 +9792,9 @@ tr:hover td.empty-cell {
         return;
       }
       const titleInput = document.getElementById('stationTitlePicker');
-      updateEpisodeTitle(state.aiStations, state.aiStationTitles, episode, titleInput ? titleInput.value : '');
       const previousEpisode = state.currentStationEpisode;
+      // 标题框预填的是当前期的标题。期数改成了别的期，就只切换、不带标题过去。
+      if (episode === previousEpisode) updateEpisodeTitle(state.aiStations, state.aiStationTitles, episode, titleInput ? titleInput.value : '');
       applyStationEpisode(episode);
       const sameEpisode = previousEpisode === episode;
       showToast(`已切换到第 ${episode} 期`, sameEpisode ? 'info' : 'success');
@@ -10180,8 +9810,9 @@ tr:hover td.empty-cell {
         return;
       }
       const titleInput = document.getElementById('shareTitlePicker');
-      updateEpisodeTitle(state.aiShares, state.aiShareTitles, episode, titleInput ? titleInput.value : '');
       const previousEpisode = state.currentShareEpisode;
+      // 标题框预填的是当前期的标题。期数改成了别的期，就只切换、不带标题过去。
+      if (episode === previousEpisode) updateEpisodeTitle(state.aiShares, state.aiShareTitles, episode, titleInput ? titleInput.value : '');
       applyShareEpisode(episode);
       const sameEpisode = previousEpisode === episode;
       showToast(`已切换到第 ${episode} 期`, sameEpisode ? 'info' : 'success');
@@ -10532,17 +10163,6 @@ tr:hover td.empty-cell {
     }
 
     // 图表缩放
-    window.zoomStationChart = function (action) {
-      if (action === 'in') {
-        applyStationChartZoom(-3);
-      } else if (action === 'out') {
-        applyStationChartZoom(3);
-      } else {
-        stationChartRange = { start: 0, count: 12 };
-        normalizeStationChartRange();
-        renderStationChart();
-      }
-    };
 
     // 高亮图表某期
     function highlightStationChart(episode) {
@@ -10555,97 +10175,6 @@ tr:hover td.empty-cell {
     }
 
     // 渲染热力图
-    function renderStationHeatmap() {
-      const container = document.getElementById('stationHeatmap');
-      const monthsBar = document.getElementById('stationHeatmapMonths');
-      const yearSelect = document.getElementById('stationHeatmapYear');
-      if (!container || !yearSelect) return;
-
-      // 初始化年份选择器
-      const years = [...new Set(state.aiStations.map(s => new Date(s.date).getFullYear()))].sort((a, b) => b - a);
-      if (years.length === 0) years.push(new Date().getFullYear());
-      if (yearSelect.options.length === 0) {
-        years.forEach(y => {
-          const opt = document.createElement('option');
-          opt.value = y;
-          opt.textContent = y + ' 年';
-          yearSelect.appendChild(opt);
-        });
-      }
-
-      const year = parseInt(yearSelect.value) || years[0];
-      const startDate = new Date(year, 0, 1);
-      const endDate = new Date(year, 11, 31);
-
-      // 按日期索引数据
-      const dataMap = {};
-      state.aiStations.forEach(s => {
-        const d = new Date(s.date);
-        if (d.getFullYear() === year) {
-          dataMap[s.date] = { rate: (s.views / s.total) * 100, title: s.title, episode: s.episode, special: !!s.special };
-        }
-      });
-
-      container.innerHTML = '';
-      if (monthsBar) monthsBar.innerHTML = '';
-
-      // 生成周列，并记录每个月第一次出现的周索引用于月份标签
-      const monthNames = ['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'];
-      const monthLabels = []; // { month: 0-11, weekIdx: n }
-      let currentDate = new Date(startDate);
-      currentDate.setDate(currentDate.getDate() - currentDate.getDay()); // 从周日开始
-      let weekIdx = 0;
-      let lastMonth = -1;
-
-      while (currentDate <= endDate || currentDate.getDay() !== 0) {
-        const weekDiv = document.createElement('div');
-        weekDiv.className = 'heatmap-week';
-
-        for (let i = 0; i < 7; i++) {
-          const dayDiv = document.createElement('div');
-          dayDiv.className = 'heatmap-day';
-
-          const dateStr = currentDate.toISOString().split('T')[0];
-          const data = dataMap[dateStr];
-
-          if (currentDate >= startDate && currentDate <= endDate) {
-            // 记录月份第一次出现
-            if (i === 0 && currentDate.getMonth() !== lastMonth) {
-              monthLabels.push({ month: currentDate.getMonth(), weekIdx });
-              lastMonth = currentDate.getMonth();
-            }
-            if (data) {
-              const level = data.rate >= 95 ? 4 : data.rate >= 90 ? 3 : data.rate >= 85 ? 2 : 1;
-              dayDiv.dataset.level = level;
-              dayDiv.innerHTML = `<div class="heatmap-tooltip">${data.special ? '特别篇' : `第${data.episode}期`}: ${data.title}<br>${data.rate.toFixed(1)}%</div>`;
-            }
-          } else {
-            dayDiv.style.visibility = 'hidden';
-          }
-
-          weekDiv.appendChild(dayDiv);
-          currentDate.setDate(currentDate.getDate() + 1);
-        }
-
-        container.appendChild(weekDiv);
-        weekIdx++;
-      }
-
-      // 渲染月份标签条 (CSS grid，每列对应一周)
-      if (monthsBar) {
-        monthsBar.style.gridTemplateColumns = `repeat(${weekIdx}, 1fr)`;
-        monthLabels.forEach((m, i) => {
-          const nextStart = i + 1 < monthLabels.length ? monthLabels[i + 1].weekIdx : weekIdx;
-          const span = nextStart - m.weekIdx;
-          if (span >= 3) {
-            const lab = document.createElement('span');
-            lab.textContent = monthNames[m.month];
-            lab.style.gridColumn = `${m.weekIdx + 1} / span ${span}`;
-            monthsBar.appendChild(lab);
-          }
-        });
-      }
-    }
 
     // 看板渲染
     function resolveTaskTemplate(task, templateMap, aliasMap, stageIds, defaultStage) {
@@ -11122,7 +10651,6 @@ tr:hover td.empty-cell {
       renderShares();
       renderStationChart();
       renderShareChart();
-      renderStationHeatmap();
       renderStationKanban();
       renderShareKanban();
     }
@@ -11694,9 +11222,7 @@ tr:hover td.empty-cell {
     // 密码保护功能
     // =========================================
     (function () {
-      // 使用 SHA-256 哈希保护密码（surfin 的哈希值）
-      // 注意：这是前端验证，提供基础保护但非银行级安全
-      const CORRECT_PASSWORD_HASH = 'a3c647c2c62a3b1dde5a5b1a7c6b2c8e9f0a1b2c3d4e5f6789012345678901ab';
+      // 注意：这只是一道门帘。口令写在公开源码里，数据文件也可匿名读取，挡不住有心人。
       if(window.LD_SERVER){document.getElementById('authOverlay').classList.add('hidden');return;}
       const AUTH_STORAGE_KEY = 'surfin_ld_auth_token';
       const AUTH_EXPIRY_KEY = 'surfin_ld_auth_expiry';
@@ -11822,10 +11348,10 @@ tr:hover td.empty-cell {
     })();
 
   </script>
-  <script src="assets/workbench.js?v=20261029-del"></script>
+  <script src="assets/workbench.js?v=20261029-del-1110"></script>
   <script src="assets/report-export.js?v=20261029-brief"></script>
   <script src="assets/training-view.js?v=20261029-tv2"></script>
-  <script src="assets/workflow.js?v=20261030-ai-20261106-cafe"></script>
+  <script src="assets/workflow.js?v=20261030-ai-20261106-cafe-1110"></script>
   <script src="assets/insight-ui.js?v=20261030-insight"></script>
   <script src="assets/mingzhang.js?v=20261022-mz2"></script>
   <script src="assets/hero.js?v=20261022-mz8"></script>

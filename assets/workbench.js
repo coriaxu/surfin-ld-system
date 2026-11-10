@@ -145,6 +145,9 @@
     form.querySelector('.form-footer').prepend(cancel);
     add.addEventListener('click', () => {
       window[resetName](); heading.textContent = '新增' + label; drawer.showModal();
+      // 打开就能打字：落在第一个还空着的必填项上，而不是关闭按钮。
+      const first = [...form.querySelectorAll('input[required],select[required],textarea[required]')].find(field => !field.value && field.type !== 'hidden');
+      (first || form.querySelector('input,select,textarea'))?.focus();
     });
     // 侧栏「记一笔」从这里打开同一个抽屉。
     (window.LDNew ||= {})[id] = () => add.click();

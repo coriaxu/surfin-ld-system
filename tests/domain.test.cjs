@@ -90,3 +90,15 @@ test('a finance count above its recorded total is flagged for review instead of 
  assert.equal(D.financeStatus(item).key,'review');assert.equal(D.financeMetric(item,'read'),null);assert.ok(D.financeConflict(item));
  assert.equal(D.financeStatus({...item,total:343}).key,'complete');assert.equal(D.financeMetric({...item,total:343},'read'),92.4);
 });
+
+test('kanban cursors never block sync and title maps merge key by key (2026-11-10)',()=>{
+  const D=require('../assets/ld-domain.js');
+  const base={currentStationEpisode:118,aiStationTitles:{'118':'旧'},sessions:[]};
+  const local={currentStationEpisode:120,aiStationTitles:{'118':'旧','120':'本机新标题'},sessions:[]};
+  const remote={currentStationEpisode:127,aiStationTitles:{'118':'旧','127':'云端新标题'},sessions:[]};
+  const merged=D.mergeThreeWay(base,local,remote);
+  assert.equal(merged.currentStationEpisode,120);
+  assert.deepEqual(merged.aiStationTitles,{'118':'旧','120':'本机新标题','127':'云端新标题'});
+  const clash={...remote,aiStationTitles:{'118':'云端改'}};
+  assert.throws(()=>D.mergeThreeWay(base,{...local,aiStationTitles:{'118':'本机改'}},clash),e=>e.code==='CONFLICT'&&e.conflicts.includes('aiStationTitles:118'));
+});

@@ -121,6 +121,22 @@
     for (const key of Object.keys(local)) {
       if (equal(local[key],base[key])) continue;
       if (equal(remote[key],base[key]) || equal(local[key],remote[key])) { output[key] = structuredClone(local[key]); continue; }
+      // 看板游标只是“我正在看哪一期”，各浏览器各自为准，不参与冲突判定。
+      if (/^current[A-Z]/.test(key)) { output[key] = structuredClone(local[key]); continue; }
+      // 标题字典按键逐条合并，只有同一个键两边改得不一样才算冲突。
+      const plain = v => v && typeof v === 'object' && !Array.isArray(v);
+      if (plain(local[key]) && plain(remote[key]) && (base[key] === undefined || plain(base[key]))) {
+        const b = base[key] || {}, merged = {};
+        for (const k of new Set([...Object.keys(b),...Object.keys(local[key]),...Object.keys(remote[key])])) {
+          const bv=b[k], lv=local[key][k], rv=remote[key][k];
+          let selected;
+          if (equal(lv,bv)) selected=rv;
+          else if (equal(rv,bv) || equal(lv,rv)) selected=lv;
+          else { conflicts.push(key+':'+k); continue; }
+          if (selected !== undefined) merged[k]=structuredClone(selected);
+        }
+        output[key]=merged; continue;
+      }
       const arrays = [base[key],local[key],remote[key]];
       if (arrays.every(a => Array.isArray(a) && a.every(v=>v && typeof v === 'object' && v.id))) {
         const maps = arrays.map(a=>new Map(a.map(v=>[v.id,v]))), merged=[];

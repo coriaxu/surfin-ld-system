@@ -422,7 +422,13 @@
   // 月度 OKR：上半部分是目标与结果（手写，来自 OKR 文档），下半部分是系统自动汇总的本月数据。
   function okrBlock(month){
     const os=window.LDOkr&&LDOkr.forMonth(month);
-    if(!os)return `<div class="okr-empty">本月 OKR 未整理，下方为系统自动汇总的本月数据。</div>`;
+    if(!os){
+      // 当月回顾还没写时，先把上月回顾里定下的本月计划摆出来，不让这一页空着。
+      const [py,pm]=month.split('-').map(Number),previous=pm===1?`${py-1}-12`:`${py}-${String(pm-1).padStart(2,'0')}`;
+      const prior=LDOkr.nextPlan?LDOkr.nextPlan(previous):null;
+      if(prior&&prior.month===month)return `<div class="okr-block"><p class="field-help">本月回顾尚未整理，先显示上月定下的本月计划；下方为系统自动汇总的本月数据。</p>${prior.objectives.map((o,i)=>`<section class="okr-objective"><h3>O${i+1}　${esc(o.o)}</h3><ul class="okr-krs">${o.krs.map((kr,j)=>`<li><span class="okr-status okr-doing">KR${j+1}</span><div><span>${esc(kr)}</span></div></li>`).join('')}</ul></section>`).join('')}</div>`;
+      return `<div class="okr-empty">本月 OKR 未整理，下方为系统自动汇总的本月数据。</div>`;
+    }
     const c=LDOkr.count(month);
     const src=LDOkr.sourceNote?LDOkr.sourceNote(month):'';
     const sum=LDOkr.summary?LDOkr.summary(month):'';
@@ -431,6 +437,8 @@
     return `<div class="okr-block"><p class="field-help">${c.objectives} 个目标 · ${c.krs} 项关键结果 · 已完成 ${c.done} 项${src?`　｜　${esc(src)}`:''}</p>${sum?`<p class="summary-prose okr-summary">${esc(sum)}</p>`:''}${os.map((o,i)=>`<section class="okr-objective"><h3>O${i+1}　${esc(o.o)}</h3><ul class="okr-krs">${o.krs.map(([kr,st,res])=>`<li><span class="okr-status okr-${{'完成':'done','进行中':'doing','部分完成':'partial','改期':'moved'}[st]||'doing'}">${esc(st)}</span><div><strong>${esc(kr)}</strong><span>${esc(res)}</span></div></li>`).join('')}</ul></section>`).join('')}${planHtml}</div>`;
   }
   window.openMonthlyReportModal=()=>navigate(selection.mode==='ytd'?'annual':'monthly');
+  // 一页纸简报的“上月”一行：月度报告带上月数据，年度累计没有对比。
+  const withPrevious=d=>d.period.mode==='month'?{previous:R.aggregate(state,R.period('month',R.previousMonth(d.period.month),d.period.asOf))}:{};
   function openExportSettings(){
     if(loadUnavailable()){showToast(LDDataLoad.FAILURE,'error');return;}
     exportSnapshot=structuredClone(reportSnapshot||selected());const d=exportSnapshot;
@@ -440,7 +448,7 @@
   window.generateMonthlyReport=async()=>{
     if(loadUnavailable()){showToast(LDDataLoad.FAILURE,'error');return;}
     if(exporting)return;const pdf=$('exportPdfCheck').checked,xlsx=$('exportExcelCheck').checked;if(!pdf&&!xlsx){showToast('请至少选择一种导出格式','error');return;}
-    const d=exportSnapshot||selected(),opts=Object.fromEntries(['includeTraining','includeBudget','includeAI','includeFinance'].map(k=>[k,$(k).checked]));const model=R.model(d,opts);
+    const d=exportSnapshot||selected(),opts=Object.fromEntries(['includeTraining','includeBudget','includeAI','includeFinance'].map(k=>[k,$(k).checked]));const model=R.model(d,{...opts,...withPrevious(d)});
     exporting=true;closeMonthlyReportModal();showToast('正在生成报告…','info');
     try{if(pdf)await LDReportExport.pdf(model);if(xlsx)await LDReportExport.excel(model);showToast('报告生成成功','success');}catch(err){console.error(err);showToast('报告生成失败：'+err.message,'error');}finally{exporting=false;}
   };
@@ -454,7 +462,7 @@
   window.exportPdf=async()=>{
     if(loadUnavailable()){showToast(LDDataLoad.FAILURE,'error');return;}
     if(!['dashboard','monthly','annual'].includes(activePage))return originalPdf();if(exporting)return;exporting=true;
-    try{const d=activePage==='dashboard'?selected():reportSnapshot;showToast('正在生成完整报告…','info');await LDReportExport.pdf(R.model(d));showToast('PDF 已生成','success');}catch(err){console.error(err);showToast('PDF 生成失败：'+err.message,'error');}finally{exporting=false;}
+    try{const d=activePage==='dashboard'?selected():reportSnapshot;showToast('正在生成完整报告…','info');await LDReportExport.pdf(R.model(d,withPrevious(d)));showToast('PDF 已生成','success');}catch(err){console.error(err);showToast('PDF 生成失败：'+err.message,'error');}finally{exporting=false;}
   };
   renderStats();renderCharts();
 

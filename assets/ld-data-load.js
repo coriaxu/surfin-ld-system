@@ -4,7 +4,7 @@
   if(typeof module==='object'&&module.exports)module.exports=api;else root.LDDataLoad=api;
 })(globalThis,()=>{
   const FAILURE='数据未能加载，当前数字不完整，请刷新';
-  const LABELS={loading:'正在加载数据…',cloud:'云端已同步',snapshot:'站点快照 · 可能延迟几分钟',failed:'加载失败'};
+  const LABELS={loading:'正在加载数据…',cloud:'云端已同步',snapshot:'站点快照 · 可能延迟几分钟',failed:'加载失败',cache:'离线 · 显示本机上次数据'};
   const SNAPSHOT_TITLE='已从站点快照载入（可能延迟几分钟）';
   const unavailable=status=>status==='loading'||status==='failed';
   const metric=(value,status)=>unavailable(status)?'—':value;
@@ -37,7 +37,7 @@
     // 本机待同步、写入失败、同步中的原有状态不被启动来源提示遮盖。
     if(!['ready','synced'].includes(info.status))return info;
     if(loadInfo.status==='snapshot'&&info.lastCloud!==loadInfo.cloudTimestamp)return info;
-    if(!['loading','snapshot','failed'].includes(loadInfo.status))return info;
+    if(!['loading','snapshot','failed','cache'].includes(loadInfo.status))return info;
     return {...info,status:loadInfo.status,lastCloud:null,error:loadInfo.status==='failed'?FAILURE:''};
   }
   return {load,FAILURE,LABELS,SNAPSHOT_TITLE,unavailable,metric,presentation};
