@@ -504,3 +504,10 @@ body .fin-subtitle { margin-top:0; }
 #page-dashboard .mz-month-btn { box-sizing:border-box; height:36px; min-width:0; padding:0 12px 0 14px; gap:12px; border-radius:10px; font:500 13px/1 var(--font-num); }
 #page-dashboard .mz-month-btn svg { width:15px; height:15px; }
 :root.is-dark #page-dashboard .period-switch button.active { background:color-mix(in srgb,var(--mz-ink) 12%,transparent); }
+
+/* 2026-11-10：没有预算记录时收起预算入口，只留开销 */
+html:not(.has-budget) .budget-tabs { display:none; }
+html:not(.has-budget) #panel-budget-plan, html:not(.has-budget) #panel-budget-compare { display:none !important; }
+/* 顶栏的「月度 OKR」「PDF」只在有报告可导出的总览和汇报页出现 */
+body:not([data-page="dashboard"]):not([data-page="monthly"]):not([data-page="annual"]) .topbar-actions > [onclick*="openMonthlyReportModal"],
+body:not([data-page="dashboard"]):not([data-page="monthly"]):not([data-page="annual"]) .topbar-actions > [onclick*="exportPdf"] { display:none !important; }

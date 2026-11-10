@@ -109,7 +109,7 @@
       records:ranked.slice(0,5).map(x=>({date:x.date,text:x.course||'未填课程',value:`${fmt(D.number(x.people))} 人 × ${fmt(D.number(x.duration))} 时 = ${fmt(sessionHours(x))}`}))};}
     if(key==='spend'){const e=agg.expenses;return {...base,title:'项目支出',value:agg.spend===null?'待补':`¥${fmt(agg.spend)}`,
       rules:[`按开销的「归属月份」统计（${p.months.length>1?`${p.months[0]} 至 ${p.months.at(-1)}`:p.month}），之后补录的也算进对应月份。`,'日期在今天之后的开销暂不算实际支出。','只含系统里录入的支出，不含项目报销。'],
-      facts:[`本期 ${e.length} 笔${agg.pending.spend?`，${agg.pending.spend} 笔金额待补`:''}。${R.budgetNote(agg)}。`],
+      facts:[`本期 ${e.length} 笔${agg.pending.spend?`，${agg.pending.spend} 笔金额待补`:''}。${agg.budget===null?'':R.budgetNote(agg)+'。'}`],
       records:[...e].sort((a,b)=>(D.number(b.amount)??-1)-(D.number(a.amount)??-1)).slice(0,5).map(x=>({date:x.date||x.month,text:x.desc||x.note||'未填事项',value:D.number(x.amount)===null?'待补':`¥${fmt(D.number(x.amount))}`}))};}
     throw new Error('未知指标：'+key);
   }

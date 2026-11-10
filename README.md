@@ -4,14 +4,13 @@
 
 ## 当前版本
 
-本轮功能迭代覆盖修改清单第 4–20 项。第 4–18、20 项可在现有静态站点运行；第 19 项提供独立私有服务，实现服务器身份核验、编辑/只读权限和逐份个人报告授权，正式启用仍需配置账号、HTTPS 部署位置和报告文件。
+纯静态站点，部署在 GitHub Pages。**数据是公开的**：仓库公开，`user-data.json` 可以匿名下载；登录页口令写在源码里，只是一道门帘。2026-11-10 徐老师确认接受数据公开，删除了从未部署的私有服务（`server/`、`assets/secure-client.js`，需要时从 git 历史找回）。备注里不写不宜公开的内容。
 
 - 界面：`index.html`、`assets/workbench.*`、`assets/workflow.*`
 - 设计语言「明账」：颜色、字体、圆角令牌只在 `tools/tokens.py` 里改，运行 `python3 tools/tokens.py` 生成 `assets/tokens.css` 并校验对比度；外观切换 `assets/appearance.js`（浅色／深色／跟随系统 × 晴空蓝、湖光青、鸢尾紫，偏好只存本浏览器）；改版样式与交互 `assets/mingzhang.*`（记一笔、手机底栏、汇报排版、明账 2.0 首屏柔光与玻璃数字面板）；首屏迷你趋势与数字滚动 `assets/hero.js`。Claude Design System「学习发展 · 明账」与这里同源，改令牌后用 `--json` 输出 tokens.json 同步过去。
 - 期间汇总与导出：`assets/ld-report.js`、`assets/report-export.js`
 - 看得见的口径：`assets/ld-insight.js`（纯计算，复用期间汇总）、`assets/insight-ui.js`、`assets/insight.css`。录入培训时实时显示“保存后会这样计入”，并提醒同日同名、项目名写法不一致、单场过长和分享月合并；首页每张指标卡都有“怎么算”；录入抽屉写明改动保存在哪里，未开启同步时顶部显示“仅本浏览器 · 未同步”。
 - 数据与同步：`assets/ld-domain.js`、`assets/ld-sync.js`
-- 私有服务：`server/app.mjs`、`assets/secure-client.js`
 - 验收清单：`ProjectDocs/功能迭代验收.md`
 
 ## 本地验证
@@ -50,19 +49,8 @@ python3 -m http.server 8080
 - 在分享月模块保存一场已在培训记录里手工登记过的分享时，会关联那条培训记录而不再新建；分享月的人数或时长未填齐时，不改动那条培训记录。
 - 金融期次的已读或下载人数大于本期总人数时，状态显示“已发布 · 待核对”，比率显示“待核对”：说明总人数需要复核，不是数据未回收。
 
-## 私有服务的启用边界
+## 功能开关
 
-GitHub Pages 上的共享口令无法保护公开仓库中的 JSON、HTML 和报告。当前公开站点及其他仓库里的旧报告不会因为新增此服务器代码而自动变成私有。
-
-正式切换需依次完成：
-
-1. 确认账号邮箱及权限。支持 `editor` 和 `reader`；个人报告另外要求账号 `canViewPersonal: true` 且报告 `allowedEmails` 明确包含该邮箱。无账号配置时拒绝启动。
-2. 确认受控的 HTTPS 服务器/托管服务。服务默认仅监听本机，前方使用 HTTPS 反向代理；代理必须保留浏览器 Origin，不绕开应用直接托管业务文件。当前版本为单进程服务，不能多副本共享一个数据文件。
-3. 将业务数据、账号配置和报告复制到网站目录之外的私有路径；先备份并验证迁移。`server/config.example.json` 只说明字段，不能直接上线。账号密码只存 scrypt 哈希，可在私有配置流程中调用 `hashPassword` 生成；不把明文密码放进命令参数、仓库或日志。
-4. 根据配置设置 `LD_CONFIG` 后运行 `node server/app.mjs`。会话使用 HttpOnly / SameSite Cookie，HTTPS 下同时使用 Secure；8 小时到期、30 分钟空闲到期。服务重启会使现有会话失效。
-5. 为每份报告建立明确文件映射；授权判断在服务器执行。未经映射或未获准的报告返回 404。HTML 报告在隔离环境中展示，外部脚本和网络访问关闭，需核对既有报告的图表和字体兼容性。
-6. 使用正式账号验收后，再按确认的迁移范围处理旧公共入口、公开数据和外部报告源。仅更改本仓库页面链接不能收回其他仓库中的公开报告。
-
-私有服务不向浏览器提供 GitHub Token，读写使用同源 `/api/data`，页面数据在当前登录标签页的会话存储中保存；退出会清除这一副本。需要跨浏览器长期留存的修改应先同步成功或导出。
-
-密码与会话实现参考 [Node.js crypto 文档](https://nodejs.org/api/crypto.html) 和 [OWASP 会话管理指南](https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html)。上线前需完成上述环境与权限验收；已有公开文件不在本轮自动迁移范围内。
+- 预算：没有任何预算记录时，预算计划、预实对比和首页的预算提示都收起，只显示开销。要启用，把 `index.html` 里的 `SHOW_BUDGET` 改成 `true`，或在工具里导入含预算的数据。
+- 金融小百科第一季已结项，「记一笔」菜单不再提供新一期；台账里的历史 12 期照常查看并计入报告。
+- 顶栏的「月度 OKR」「PDF」只在工作总览、月度 OKR、年度总结三页显示。

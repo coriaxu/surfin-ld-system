@@ -10,7 +10,6 @@
     ['session', '培训场次', '一场培训、辅导或分享', () => window.LDNew?.sessionForm?.()],
     ['station', 'AI 广播站', '新一期，回收数据可稍后补', () => window.newStationEpisode?.()],
     ['share', 'AI 分享月', '新一场分享', () => window.newShareEpisode?.()],
-    ['finance', '金融小百科', '新一期', () => window.newFinanceEpisode?.()],
     ['expense', '开销', '按归属月份记一笔支出', () => window.LDNew?.expenseForm?.()],
   ];
   // 触发按钮在侧栏；菜单挂在 body 上，手机侧栏是位移出去的，菜单放在里面会跟着跑。
