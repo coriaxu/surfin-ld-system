@@ -969,6 +969,16 @@
       "people": 1,
       "duration": 1,
       "note": "秦园春"
+    },
+    {
+      "id": "anutz0xw",
+      "date": "2026-11-12",
+      "course": "L5 向上汇报",
+      "project": "2026管理者训练营 1.0",
+      "lecturer": "徐浩",
+      "people": 6,
+      "duration": 2,
+      "note": ""
     }
   ],
   "budgets": [],
