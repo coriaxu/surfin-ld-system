@@ -6347,7 +6347,7 @@ tr:hover td.empty-cell {
   <link rel="stylesheet" href="assets/insight.css?v=20261030-insight2">
   <script src="assets/ld-domain.js?v=20261030-ai-1110"></script>
   <script src="assets/ld-report.js?v=20261029-brief"></script>
-  <script src="assets/ld-insight.js?v=20261030-insight"></script>
+  <script src="assets/ld-insight.js?v=20261030-insight-1110b"></script>
   <script src="assets/closeout-reports.js?v=20261014-closeout2"></script>
   <script src="assets/okr.js?v=20261029-okr10"></script>
   <script src="assets/ld-sync.js"></script>
@@ -6389,7 +6389,7 @@ tr:hover td.empty-cell {
         </label>
         <button type="submit" class="auth-btn">进入系统</button>
       </form>
-      <p class="auth-footer">共享访问口令；账号权限需使用私有服务版</p>
+      <p class="auth-footer">共享访问口令</p>
     </div>
   </div>
 
@@ -6708,7 +6708,7 @@ tr:hover td.empty-cell {
                     <line x1="18" y1="20" x2="18" y2="4" />
                     <line x1="6" y1="20" x2="6" y2="16" />
                   </svg></span>
-                月度支出与预算
+                月度支出
               </h2>
             </div>
             <div class="card-body">
@@ -8176,9 +8176,8 @@ tr:hover td.empty-cell {
 
   <script>
     const uid = () => Math.random().toString(36).slice(2, 10);
-    const PRIVATE_MODE=!!window.LD_SERVER;
-    const dataStorage=PRIVATE_MODE?sessionStorage:localStorage;
-    const STORAGE_KEY = 'surfin_ld_system_v2'+(PRIVATE_MODE?'_'+window.LD_SERVER.email:'');
+    const dataStorage=localStorage;
+    const STORAGE_KEY = 'surfin_ld_system_v2';
 
     const state = {
       sessions: [],
@@ -8198,7 +8197,7 @@ tr:hover td.empty-cell {
       dashboard: '工作总览',
       training: '培训场次',
       aiknowledge: 'AI 内容',
-      budget: '预算与开销',
+      budget: '开销',
       finance: '金融百科',
       caselib: '案例与手册',
       assessment: '测评报告'
@@ -8256,7 +8255,7 @@ tr:hover td.empty-cell {
     // 本机缓存格式版本号
     const DATA_VERSION = 3;
 
-    window.LDLoadInfo={status:PRIVATE_MODE?'cloud':'loading',cloudTimestamp:null};
+    window.LDLoadInfo={status:'loading',cloudTimestamp:null};
     function setDataLoadState(status){
       window.LDLoadInfo={status,cloudTimestamp:syncController.getStatus().lastCloud};
       document.documentElement.dataset.dataLoad=status;
@@ -8264,11 +8263,6 @@ tr:hover td.empty-cell {
     }
 
     async function loadRemoteData() {
-      if(PRIVATE_MODE){
-        try{const response=await fetch('/api/data',{cache:'no-store'});if(!response.ok)throw Error('读取失败，请重新登录后重试');syncController.acceptRemote(await response.json());dataStorage.setItem(STORAGE_KEY+'_version',String(DATA_VERSION));}
-        catch(error){showToast(error.message,'error');}
-        return true;
-      }
       setDataLoadState('loading');
       let result=null;
       if(syncSettings.enabled&&syncSettings.token){
@@ -8292,7 +8286,7 @@ tr:hover td.empty-cell {
 
     async function initData() {
       const raw = dataStorage.getItem(STORAGE_KEY);
-      const canPush = PRIVATE_MODE || !!(syncSettings.enabled && syncSettings.token);
+      const canPush = !!(syncSettings.enabled && syncSettings.token);
       if (syncController.hasPending() && raw && canPush) {
         try { applyImportedState(JSON.parse(raw)); setDataLoadState('local'); syncController.emit(); syncController.schedule(); return; } catch (_) {}
       }
@@ -8322,18 +8316,17 @@ tr:hover td.empty-cell {
     const syncController = createLDSync({
       storage:dataStorage,key:STORAGE_KEY,getState:()=>state,
       applyState:payload=>{applyImportedState(payload);document.dispatchEvent(new Event('ld-data-updated'));},
-      getSettings:()=>PRIVATE_MODE?{server:true,enabled:window.LD_SERVER.role==='editor'}:syncSettings,
+      getSettings:()=>syncSettings,
       onChange:detail=>document.dispatchEvent(new CustomEvent('ld-sync-state',{detail}))
     });
-    function persist() { if(PRIVATE_MODE&&window.LD_SERVER.role!=='editor')throw Error('当前账号为只读权限');
+    function persist() {
       // 数据还没读到（或没读成）时，页面上是空表；此时保存会把空表当成“全部删除”合并上云。
-      if(!PRIVATE_MODE&&['loading','failed'].includes(window.LDLoadInfo.status)){const message=window.LDLoadInfo.status==='loading'?'数据还在加载，稍等一下再保存':'数据没有加载成功，请刷新页面后再保存';showToast(message,'error');throw Error(message);}
+      if(['loading','failed'].includes(window.LDLoadInfo.status)){const message=window.LDLoadInfo.status==='loading'?'数据还在加载，稍等一下再保存':'数据没有加载成功，请刷新页面后再保存';showToast(message,'error');throw Error(message);}
       try{syncController.save();}catch(error){showToast(error.message,'error');throw error;} document.dispatchEvent(new Event('ld-data-updated')); }
     async function pushToCloud() { return syncController.push(); }
 
     // Pull data from GitHub
     async function pullFromCloudAPI() {
-      if(PRIVATE_MODE){const response=await fetch('/api/data',{cache:'no-store'});if(!response.ok)throw Error('请重新登录');return response.json();}
       if (!syncSettings.token || !syncSettings.repo || !syncSettings.path) {
         throw new Error('云同步未配置');
       }
@@ -8897,6 +8890,11 @@ tr:hover td.empty-cell {
     };
 
     // 预算模块Tab切换函数
+    // 预算功能默认收起：一条预算都没有时，只显示开销。要用预算，把下面改成 true，或录入第一条预算。
+    const SHOW_BUDGET = false;
+    function syncBudgetVisibility() { document.documentElement.classList.toggle('has-budget', SHOW_BUDGET || state.budgets.length > 0); }
+    document.addEventListener('ld-data-updated', syncBudgetVisibility);
+
     function switchBudgetTab(tabId) {
       document.querySelectorAll('.budget-tab').forEach(t => t.classList.remove('active'));
       document.querySelectorAll('.budget-panel').forEach(p => p.classList.remove('active'));
@@ -9045,7 +9043,7 @@ tr:hover td.empty-cell {
       if (budgetTitle) {
         let note = budgetTitle.querySelector('.card-note');
         if (!note) { note = document.createElement('span'); note.className = 'card-note'; budgetTitle.append(note); }
-        note.innerHTML = chartState.budgets.length ? '' : '尚未设置预算 · <button type="button" class="link-btn" data-action="navigate" data-record="budget">去设置</button>';
+        note.innerHTML = '';
         note.hidden = !!chartState.budgets.length;
       }
       if (budgetChart) budgetChart.destroy();
@@ -9304,7 +9302,7 @@ tr:hover td.empty-cell {
     function confirmImport(payload, apply) {
       const rows = [['培训', 'sessions'], ['开销', 'expenses'], ['广播站', 'aiStations'], ['分享月', 'aiShares'], ['金融百科', 'financeWiki']]
         .map(([label, key]) => `${label} ${state[key].length} → ${Array.isArray(payload[key]) ? payload[key].length : 0} 条`).join('\n');
-      showConfirm('导入会用文件里的数据替换当前全部记录' + ((PRIVATE_MODE || (syncSettings.enabled && syncSettings.token)) ? '，并同步到云端' : '') + '。\n\n' + rows + '\n\n确认替换吗？', apply);
+      showConfirm('导入会用文件里的数据替换当前全部记录' + ((syncSettings.enabled && syncSettings.token) ? '，并同步到云端' : '') + '。\n\n' + rows + '\n\n确认替换吗？', apply);
     }
 
     window.importJson = function () {
@@ -10480,7 +10478,6 @@ tr:hover td.empty-cell {
 
     // 切换任务状态
     window.toggleStationTask = function (id) {
-      if(PRIVATE_MODE&&window.LD_SERVER.role!=='editor')return;
       let task = state.aiStationTasks.find(t => t.id === id);
       if(!task){task=LDDomain.taskPreview(state.aiStationTasks,state.currentStationEpisode,stationTaskTemplate,stationTaskAliases,'station').find(t=>t.id===id);if(task)state.aiStationTasks.push(task);}
       if (task) {
@@ -10491,7 +10488,6 @@ tr:hover td.empty-cell {
     };
 
     window.toggleShareTask = function (id) {
-      if(PRIVATE_MODE&&window.LD_SERVER.role!=='editor')return;
       let task = state.aiShareTasks.find(t => t.id === id);
       if(!task){task=LDDomain.taskPreview(state.aiShareTasks,state.currentShareEpisode,shareTaskTemplate,shareTaskAliases,'share').find(t=>t.id===id);if(task)state.aiShareTasks.push(task);}
       if (task) {
@@ -10807,7 +10803,6 @@ tr:hover td.empty-cell {
 
       if (!col || !draggedFinanceItemId) return;
 
-      if(PRIVATE_MODE&&window.LD_SERVER.role!=='editor')return;
       const targetStage = col.dataset.stage;
       const item = state.financeWiki.find(i => i.id === draggedFinanceItemId);
       if (!item) return;
@@ -11233,7 +11228,6 @@ tr:hover td.empty-cell {
     // =========================================
     (function () {
       // 注意：这只是一道门帘。口令写在公开源码里，数据文件也可匿名读取，挡不住有心人。
-      if(window.LD_SERVER){document.getElementById('authOverlay').classList.add('hidden');return;}
       const AUTH_STORAGE_KEY = 'surfin_ld_auth_token';
       const AUTH_EXPIRY_KEY = 'surfin_ld_auth_expiry';
 
@@ -11363,8 +11357,8 @@ tr:hover td.empty-cell {
   <script src="assets/training-view.js?v=20261029-tv2"></script>
   <script src="assets/workflow.js?v=20261030-ai-20261106-cafe-1114"></script>
   <script src="assets/insight-ui.js?v=20261030-insight"></script>
-  <script src="assets/mingzhang.js?v=20261022-mz2"></script>
-  <script src="assets/hero.js?v=20261022-mz8"></script>
+  <script src="assets/mingzhang.js?v=20261022-mz2-1110b"></script>
+  <script src="assets/hero.js?v=20261022-mz8-1110b"></script>
   <script src="assets/monthpicker.js?v=20261022-mz3"></script>
   <script src="assets/motion.js?v=20261022-mz3"></script>
 </body>

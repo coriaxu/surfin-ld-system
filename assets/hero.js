@@ -83,7 +83,7 @@
     }
     // 四张卡同一结构：支出看预算使用率，没设预算也占位说明
     if (cur.budget && cur.spend !== null) chip('statMonthSpend', `预算已用 ${Math.round(cur.spend / cur.budget * 100)}%`, cur.spend > cur.budget ? 'over' : 'flat', `本月预算 ¥${num(cur.budget)}`);
-    else chip('statMonthSpend', '本月未设预算', 'flat', '在「预算与开销」里设置预算后显示使用率');
+    else chip('statMonthSpend', `本月 ${(cur.expenses || []).length} 笔开销`, 'flat', '开销按归属月份统计');
   }
 
   // 数字滚动：只处理纯数值（可带 ¥ 与千分位），待补、未加载等文字原样显示。

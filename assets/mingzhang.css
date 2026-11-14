@@ -505,6 +505,13 @@ body .fin-subtitle { margin-top:0; }
 #page-dashboard .mz-month-btn svg { width:15px; height:15px; }
 :root.is-dark #page-dashboard .period-switch button.active { background:color-mix(in srgb,var(--mz-ink) 12%,transparent); }
 
+/* 2026-11-10：没有预算记录时收起预算入口，只留开销 */
+html:not(.has-budget) .budget-tabs { display:none; }
+html:not(.has-budget) #panel-budget-plan, html:not(.has-budget) #panel-budget-compare { display:none !important; }
+/* 顶栏的「月度 OKR」「PDF」只在有报告可导出的总览和汇报页出现 */
+body:not([data-page="dashboard"]):not([data-page="monthly"]):not([data-page="annual"]) .topbar-actions > [onclick*="openMonthlyReportModal"],
+body:not([data-page="dashboard"]):not([data-page="monthly"]):not([data-page="annual"]) .topbar-actions > [onclick*="exportPdf"] { display:none !important; }
+
 /* ---------- 明账 2.1 · 整站审查修正（2026-11-14） ---------- */
 /* 字号下限 12px：令牌最小一级就是 12px，以下几处此前为 10.5–11.5px */
 body #page-dashboard .stat-card .metric-why, .mz-spark-cap, body .project-status, body .kind-tag, body .assess-tag-latest, .quick-add-trigger kbd,
@@ -547,3 +554,5 @@ body .fin-header .fin-subtitle { font-size:17px; font-weight:600; letter-spacing
 .charts-grid > .card.is-empty .chart-area { display:none; }
 #mainContent .charts-grid > .card.is-empty > .card-header, #mainContent .charts-grid > .card.is-empty > .card-body { padding:0; border:0; min-height:0; }
 @media (min-width:1281px) { .charts-grid.cost-empty { grid-template-columns:1fr 1fr; } }
+/* 开销页：预算收起后汇总只剩一个数字，按内容宽度显示，不撑满整行 */
+@media (min-width:641px) { html:not(.has-budget) .expense-summary .compact-metrics { grid-template-columns:minmax(240px,max-content); } }
