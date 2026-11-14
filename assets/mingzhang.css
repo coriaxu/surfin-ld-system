@@ -504,3 +504,46 @@ body .fin-subtitle { margin-top:0; }
 #page-dashboard .mz-month-btn { box-sizing:border-box; height:36px; min-width:0; padding:0 12px 0 14px; gap:12px; border-radius:10px; font:500 13px/1 var(--font-num); }
 #page-dashboard .mz-month-btn svg { width:15px; height:15px; }
 :root.is-dark #page-dashboard .period-switch button.active { background:color-mix(in srgb,var(--mz-ink) 12%,transparent); }
+
+/* ---------- 明账 2.1 · 整站审查修正（2026-11-14） ---------- */
+/* 字号下限 12px：令牌最小一级就是 12px，以下几处此前为 10.5–11.5px */
+body #page-dashboard .stat-card .metric-why, .mz-spark-cap, body .project-status, body .kind-tag, body .assess-tag-latest, .quick-add-trigger kbd,
+#page-training .tv-k1, #page-aiknowledge .tv-k1, #page-training .tv-week-title em, #page-aiknowledge .tv-week-title em { font-size:12px; }
+/* ink-faint 只给占位符与禁用态：「怎么算」是可点的入口，迷你趋势的起止月份是信息，都改用说明文字色（≥4.5:1） */
+body #page-dashboard .stat-card .metric-why { color:var(--mz-ink-3); opacity:1; }
+.mz-spark-cap { color:var(--mz-ink-3); }
+/* 标签圆角统一为 4，不做胶囊 */
+body .assess-hero-eyebrow, #page-training .tv-tag, #page-aiknowledge .tv-tag { border-radius:var(--radius-xs); }
+/* 月度 OKR 的计划条目：KR 序号只是编号，不是「待补」状态，改用中性色，琥珀色留给真正需要处理的状态 */
+.okr-krs li:not(:has(strong)) .okr-status { background:var(--mz-sunken); color:var(--mz-ink-2); box-shadow:inset 0 0 0 1px var(--mz-line-faint); font-family:var(--font-num); font-weight:500; }
+/* 案例卡片：4 张一行排满，不再 3+1 落单 */
+body .case-cards-grid { grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); }
+/* 汇报页四个指标：支出一格说明最长，给它多一点宽度，避免换行后行首是「·」 */
+@media (min-width:1360px) { #monthlySummary .compact-metrics, #annualSummary .compact-metrics { grid-template-columns:1fr 1fr 1fr 1.3fr; } }
+/* 台账页卡片标题下的说明与表头重复，去掉后筛选栏直接跟在标题下 */
+#page-training .card-intro, #page-budget .card-intro { display:none; }
+@media (max-width:640px) {
+  /* 手机：周／月分组行是小节标题，不是一张记录卡 */
+  :is(#page-training,#page-aiknowledge) table.card-table tr.tv-week { display:block !important; background:transparent; border:0; border-radius:0; padding:14px 2px 6px; margin:0; }
+  :is(#page-training,#page-aiknowledge) table.card-table tr.tv-week td { display:flex; justify-content:space-between; align-items:baseline; gap:12px; background:transparent; padding:0 !important; }
+  :is(#page-training,#page-aiknowledge) table.card-table tr.tv-week .tv-week-sum { float:none; margin-left:auto; }
+  table.card-table td[data-label]::before, .bottom-bar button { font-size:12px; }
+}
+
+/* ---------- 明账 2.1 · 第二批（2026-11-14 徐老师确认） ---------- */
+/* 标题不重复三遍：顶栏和标签页已经写明所在页面，页内不再重复同一个词 */
+#page-training > .card.is-headless > .card-header, #page-budget > .card > .card-header { display:none; }
+#page-projects > .section-heading h2, #page-closeout > .section-heading h2 { display:none; }
+/* 金融百科：页头只留当季名称，写成小节标题，不再单独占一张卡片 */
+body .fin-header { padding:0; margin-bottom:14px; border:0; border-radius:0; box-shadow:none; background:transparent; overflow:visible; }
+body .fin-header .fin-title { display:none; }
+body .fin-header .fin-subtitle { font-size:17px; font-weight:600; letter-spacing:-.005em; color:var(--mz-ink); }
+/* 首页：去掉左侧红色页边线，只留账本横线（登录页的页边线保留） */
+#page-dashboard::after { background:repeating-linear-gradient(180deg,transparent 0 31px,color-mix(in srgb,var(--mz-brand) 13%,transparent) 31px 32px); }
+/* 费用构成：所选期间没有支出时收成一行，另外两张图各占一半 */
+.cost-empty-note { margin:0; font-size:13px; color:var(--mz-ink-3); }
+.cost-empty-note:empty { display:none; }
+.charts-grid > .card.is-empty { grid-column:1 / -1; display:flex; align-items:center; flex-wrap:wrap; gap:4px 14px; min-height:52px; padding:10px 22px; }
+.charts-grid > .card.is-empty .chart-area { display:none; }
+#mainContent .charts-grid > .card.is-empty > .card-header, #mainContent .charts-grid > .card.is-empty > .card-body { padding:0; border:0; min-height:0; }
+@media (min-width:1281px) { .charts-grid.cost-empty { grid-template-columns:1fr 1fr; } }

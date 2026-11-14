@@ -147,6 +147,9 @@
     [...table.querySelectorAll('thead th')].slice(4,7).forEach(th=>th.classList.add('tv-c'));
     const seg=el('div','tv-seg','<button type="button" data-tv-view="list" class="is-active" aria-pressed="true">明细</button><button type="button" data-tv-view="week" aria-pressed="false">周历</button>');
     seg.setAttribute('role','group');seg.setAttribute('aria-label','培训记录视图');filterState.sessions.bar.append(seg);
+    // 卡片标题与顶栏、标签页同名，不再重复：新增按钮收进筛选行（与开销记录一致），样式层据 is-headless 隐藏标题栏。
+    const sessionCard=table.closest('.card'),sessionAdd=sessionCard?.querySelector(':scope > .card-header > .btn-primary');
+    if(sessionAdd){filterState.sessions.bar.append(sessionAdd);sessionCard.classList.add('is-headless');}
     const cal=el('div','tv-cal');cal.id='sessionCalendar';cal.style.display='none';filterState.sessions.pager.after(cal);
     seg.addEventListener('click',e=>{const b=e.target.closest('[data-tv-view]');if(!b)return;tvView=b.dataset.tvView;seg.querySelectorAll('button').forEach(x=>{x.classList.toggle('is-active',x===b);x.setAttribute('aria-pressed',String(x===b));});renderSessions();});
     cal.addEventListener('click',e=>{const b=e.target.closest('[data-tv-month]');if(!b)return;const v=b.dataset.tvMonth;tvMonth=v==='today'?currentMonth():TV.shiftMonth(tvMonth,Number(v));renderSessions();});

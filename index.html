@@ -6343,7 +6343,7 @@ tr:hover td.empty-cell {
   <link rel="stylesheet" href="assets/tokens.css?v=20261022-mz2">
   <link rel="stylesheet" href="assets/workflow.css?v=20261014-mz">
   <link rel="stylesheet" href="assets/training-view.css?v=20261030-ai">
-  <link rel="stylesheet" href="assets/mingzhang.css?v=20261022-mz9">
+  <link rel="stylesheet" href="assets/mingzhang.css?v=20261114-mz11">
   <link rel="stylesheet" href="assets/insight.css?v=20261030-insight2">
   <script src="assets/ld-domain.js?v=20261030-ai-1110"></script>
   <script src="assets/ld-report.js?v=20261029-brief"></script>
@@ -9114,6 +9114,16 @@ tr:hover td.empty-cell {
       // A zero share would otherwise render as a stray gap in the ring.
       const bothKinds = costRegular > 0 && costSpecial > 0;
       if (costPie) costPie.destroy();
+      // 所选期间没有支出时不画空环：卡片收成一行说明，另外两张图各占一半（样式见 mingzhang.css）。
+      const pieCard = document.getElementById('costPie').closest('.card');
+      const noSpend = totalSpent <= 0;
+      pieCard.classList.toggle('is-empty', noSpend);
+      pieCard.parentElement.classList.toggle('cost-empty', noSpend);
+      let pieNote = pieCard.querySelector('.cost-empty-note');
+      if (!pieNote) { pieNote = document.createElement('p'); pieNote.className = 'cost-empty-note'; pieCard.querySelector('.card-body').append(pieNote); }
+      const pieCount = (costState.expenses || []).length, pieTitle = costState.period?.title || '所选期间';
+      pieNote.textContent = !noSpend ? '' : pieCount ? `${pieTitle}有 ${pieCount} 笔支出金额待补，暂无构成可显示` : `${pieTitle}暂无支出记录`;
+      if (noSpend) { costPie = null; return; }
       costPie = new Chart(document.getElementById('costPie'), {
         type: 'doughnut',
         data: {
@@ -11351,7 +11361,7 @@ tr:hover td.empty-cell {
   <script src="assets/workbench.js?v=20261029-del-1110"></script>
   <script src="assets/report-export.js?v=20261029-brief"></script>
   <script src="assets/training-view.js?v=20261029-tv2"></script>
-  <script src="assets/workflow.js?v=20261030-ai-20261106-cafe-1110"></script>
+  <script src="assets/workflow.js?v=20261030-ai-20261106-cafe-1114"></script>
   <script src="assets/insight-ui.js?v=20261030-insight"></script>
   <script src="assets/mingzhang.js?v=20261022-mz2"></script>
   <script src="assets/hero.js?v=20261022-mz8"></script>
