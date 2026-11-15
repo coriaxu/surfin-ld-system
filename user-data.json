@@ -1118,6 +1118,14 @@
       "type": "regular",
       "amount": 150,
       "desc": "Gemini 订阅费用"
+    },
+    {
+      "id": "m9c9vxyw",
+      "date": "2026-11-15",
+      "month": "2026-11",
+      "type": "regular",
+      "amount": 711,
+      "desc": "ChatGPT 11 月 pro 100 刀"
     }
   ],
   "aiStations": [
