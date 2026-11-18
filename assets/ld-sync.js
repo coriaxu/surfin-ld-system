@@ -6,10 +6,11 @@
     let timer=null, running=null, lastSnapshot=storage.getItem(key), status=meta.dirty ? 'local' : 'ready', error='';
     const emit=()=>onChange?.({status,error,...meta,configured:!!(getSettings().enabled && (getSettings().token || getSettings().server))});
     const persistMeta=()=>storage.setItem(metaKey,JSON.stringify(meta));
-    function acceptRemote(payload) {
-      applyState(payload); lastSnapshot=JSON.stringify(getState()); storage.setItem(key,lastSnapshot);
+    function acceptRemote(payload, view=payload) {
+      const dirty=view!==payload && JSON.stringify(view)!==JSON.stringify(payload);
+      applyState(view); lastSnapshot=JSON.stringify(getState()); storage.setItem(key,lastSnapshot);
       base=structuredClone(payload); storage.setItem(baseKey,JSON.stringify(base));
-      meta={dirty:false,lastLocal:meta.lastLocal,lastCloud:new Date().toISOString()}; persistMeta(); status='synced'; error=''; emit();
+      meta={dirty,lastLocal:meta.lastLocal,lastCloud:new Date().toISOString()}; persistMeta(); status=dirty?'local':'synced'; error=''; emit();
     }
     function save() {
       const snapshot=JSON.stringify(getState());

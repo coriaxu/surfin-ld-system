@@ -59,17 +59,30 @@ test('saving is refused while data is loading or failed, so an empty table can n
  let saved=0;const ctx={PRIVATE_MODE:false,window:{LDLoadInfo:{status:'cloud'}},showToast:()=>{},syncController:{save:()=>saved++},document:{dispatchEvent:()=>{}},Event:class{}};
  vm.createContext(ctx);vm.runInContext(source,ctx);ctx.persist();assert.equal(saved,1);
 });
-test('a browser without sync set up still reads the cloud and re-applies its own unsynced edits',async()=>{
- const D=require('../assets/ld-domain.js');const remote=payload();remote.sessions.push({id:'cloud-new',date:'2026-11-01',people:1,duration:1});
- const applied=[];let persisted=0;
- const c=bootContext({result:{source:'cloud',payload:remote},pending:true,extra:{LDDomain:D,persist:()=>persisted++}});
- const local=payload();local.sessions.push({id:'mine',date:'2026-11-02',people:3,duration:1});
- c.context.dataStorage.getItem=k=>JSON.stringify(k.endsWith('_sync_base')?payload():local);
- c.context.applyImportedState=p=>{applied.push(p);c.context.state=p;};
- c.context.syncController.acceptRemote=p=>{c.accepted.push(p);c.context.state=structuredClone(p);};
- await c.context.initData();
- assert.equal(c.accepted.length,1);assert.equal(persisted,1);
- assert.deepEqual(applied.at(-1).sessions.map(s=>s.id).sort(),['cloud-new','fixture','mine']);
+for (const scenario of ['conflict','missing-base','offline','independent']) test('pending local data survives two boots: '+scenario,async()=>{
+ const base=payload(),local=payload(),remote=payload();
+ local.sessions[0].people=5;
+ if(scenario==='independent') remote.sessions.push({id:'new-cloud'});
+ else remote.sessions[0].people=7;
+ const data=new Map([['test',JSON.stringify(local)],['test_sync_meta','{"dirty":true}']]);
+ if(scenario!=='missing-base')data.set('test_sync_base',JSON.stringify(base));
+ const storage={getItem:key=>data.get(key)??null,setItem:(key,value)=>data.set(key,value)};
+ let requests=0;
+ for(let boot=0;boot<2;boot++){
+   const {context}=bootContext({result:scenario==='offline'?{source:'failed',payload:null}:{source:'cloud',payload:remote}});
+   context.dataStorage=storage;
+   context.LDDomain=require('../assets/ld-domain.js');
+   vm.runInContext(fs.readFileSync(path.join(__dirname,'../assets/ld-sync.js'),'utf8'),context);
+   context.applyImportedState=value=>{context.state=structuredClone(value);};
+   context.syncController=context.createLDSync({storage,key:'test',getSettings:()=>context.syncSettings,getState:()=>context.state,applyState:context.applyImportedState,fetcher:()=>{requests++;throw Error('unexpected request');}});
+   await context.initData();
+   assert.equal(context.state.sessions[0].people,5);
+   assert.equal(JSON.parse(data.get('test')).sessions[0].people,5);
+   assert.equal(context.syncController.hasPending(),true);
+   assert.equal(context.state.sessions.length,scenario==='independent'?2:1);
+   assert.equal(storage.getItem('test_sync_base'),scenario==='missing-base'?null:JSON.stringify(scenario==='independent'?remote:base));
+ }
+ assert.equal(requests,0);
 });
 test('site snapshot uses existing acceptRemote and version path; pending edits keep original priority',async()=>{
  const p=payload();const a=bootContext({result:{source:'snapshot',payload:p}});await a.context.initData();assert.deepEqual(a.accepted,[p]);assert.deepEqual(a.writes,[['test_version','3']]);assert.equal(a.context.window.LDLoadInfo.status,'snapshot');

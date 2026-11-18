@@ -6350,7 +6350,7 @@ tr:hover td.empty-cell {
   <script src="assets/ld-insight.js?v=20261030-insight-1110b"></script>
   <script src="assets/closeout-reports.js?v=20261014-closeout2"></script>
   <script src="assets/okr.js?v=20261029-okr10"></script>
-  <script src="assets/ld-sync.js"></script>
+  <script src="assets/ld-sync.js?v=20261118-recovery"></script>
   <script src="assets/ld-data-load.js?v=20261021-fallback-1110"></script>
   <link rel="stylesheet" href="assets/ld-data-load.css?v=20261021-fallback">
 </head>
@@ -8029,7 +8029,7 @@ tr:hover td.empty-cell {
   <div class="modal-overlay" id="confirmModal">
     <div class="modal">
       <div class="modal-header" id="confirmTitle">确认操作</div>
-      <div class="modal-body" id="confirmMessage">您确定要执行此操作吗？</div>
+      <div class="modal-body" id="confirmMessage" style="white-space:pre-line;max-height:55vh;overflow:auto">您确定要执行此操作吗？</div>
       <div class="modal-footer">
         <button class="btn btn-secondary" onclick="closeConfirm(false)">取消</button>
         <button class="btn btn-primary" id="confirmBtn" onclick="closeConfirm(true)">确认</button>
@@ -8262,7 +8262,7 @@ tr:hover td.empty-cell {
       document.dispatchEvent(new Event('ld-load-state'));
     }
 
-    async function loadRemoteData() {
+    async function loadRemoteData(pendingLocal) {
       setDataLoadState('loading');
       let result=null;
       if(syncSettings.enabled&&syncSettings.token){
@@ -8275,9 +8275,21 @@ tr:hover td.empty-cell {
         try{const cached=JSON.parse(dataStorage.getItem(STORAGE_KEY)||'null');if(cached&&Array.isArray(cached.sessions)){applyImportedState(cached);setDataLoadState('cache');return false;}}catch(_){}
         setDataLoadState('failed');return false;
       }
+      let merged;
+      if (pendingLocal) {
+        try {
+          const base = JSON.parse(dataStorage.getItem(STORAGE_KEY + '_sync_base') || 'null');
+          if (!base) throw Error('缺少同步基线');
+          merged = LDDomain.mergeThreeWay(base, pendingLocal, result.payload);
+        } catch (_) {
+          applyImportedState(pendingLocal);
+          setDataLoadState('local');
+          showToast('本机修改尚未合并，已保留本机版本。请先导出 JSON 备份，再核对云端数据。', 'info');
+          return false;
+        }
+      }
       try{
-        // 沿用原有基线建立和版本记录，不改任何写入/合并路径。
-        syncController.acceptRemote(result.payload);
+        syncController.acceptRemote(result.payload, merged);
         dataStorage.setItem(STORAGE_KEY+'_version',String(DATA_VERSION));
         setDataLoadState(result.source);
         return true;
@@ -8291,15 +8303,10 @@ tr:hover td.empty-cell {
         try { applyImportedState(JSON.parse(raw)); setDataLoadState('local'); syncController.emit(); syncController.schedule(); return; } catch (_) {}
       }
       if (syncController.hasPending() && raw) {
-        // 没配置同步的浏览器，本机改动永远推不上去。仍以云端为准，再把本机改动叠上去，
-        // 否则这台浏览器会一直停在旧数据上。
-        let local = null, base = null;
-        try { local = JSON.parse(raw); base = JSON.parse(dataStorage.getItem(STORAGE_KEY + '_sync_base') || 'null'); } catch (_) {}
-        const loaded = await loadRemoteData();
-        if (loaded && local && base) {
-          try { applyImportedState(LDDomain.mergeThreeWay(base, local, structuredClone(state))); persist(); }
-          catch (_) { showToast('本机未同步的改动与云端有冲突，已显示云端数据', 'info'); }
-        }
+        let local;
+        try { local = JSON.parse(raw); if (!Array.isArray(local.sessions)) throw Error(); }
+        catch (_) { setDataLoadState('failed'); return; }
+        await loadRemoteData(local);
         return;
       }
       // Load cloud unless this browser has unsynced edits.
@@ -9176,86 +9183,9 @@ tr:hover td.empty-cell {
       });
     }
 
-    function buildTaskEpisodeStats(tasks) {
-      const stats = new Map();
-      tasks.forEach(task => {
-        const episode = parseEpisodeLike(task.episode);
-        if (!Number.isFinite(episode)) return;
-        const entry = stats.get(episode) || { total: 0, done: 0 };
-        entry.total += 1;
-        if (task.done === true || task.done === 'true') entry.done += 1;
-        stats.set(episode, entry);
-      });
-      return stats;
-    }
 
-    function pickEpisodeFromTasks(stats) {
-      let candidate = null;
-      stats.forEach((info, episode) => {
-        const score = [
-          info.done > 0 ? 1 : 0,
-          info.done,
-          info.total,
-          episode
-        ];
-        if (!candidate) {
-          candidate = { episode, score };
-          return;
-        }
-        for (let i = 0; i < score.length; i += 1) {
-          if (score[i] !== candidate.score[i]) {
-            if (score[i] > candidate.score[i]) candidate = { episode, score };
-            return;
-          }
-        }
-      });
-      return candidate ? candidate.episode : null;
-    }
 
-    function normalizeEpisodeValue(current, list, tasks, titles) {
-      const currentNum = parseEpisodeLike(current);
-      const taskStats = buildTaskEpisodeStats(tasks);
-      const taskEpisodes = Array.from(taskStats.keys());
-      const listEpisodes = list.map(item => parseEpisodeLike(item.episode)).filter(Number.isFinite);
-      const titleEpisodes = Object.keys(titles || {}).map(parseEpisodeLike).filter(Number.isFinite);
-      const allEpisodes = Array.from(new Set([...taskEpisodes, ...listEpisodes, ...titleEpisodes]));
-      if (!allEpisodes.length) return Number.isFinite(currentNum) ? currentNum : null;
-      const maxEpisode = Math.max(...allEpisodes);
-      const taskPick = pickEpisodeFromTasks(taskStats);
-      if (!Number.isFinite(currentNum)) return pickEpisodeFromTasks(taskStats) ?? maxEpisode;
-      const hasCurrent = allEpisodes.includes(currentNum);
-      const hasDone = Array.from(taskStats.values()).some(info => info.done > 0);
-      if (taskPick !== null) {
-        if (!taskStats.has(currentNum)) return taskPick;
-        const info = taskStats.get(currentNum);
-        if (hasDone && info.done === 0 && taskPick !== currentNum) return taskPick;
-      }
-      if (taskStats.has(currentNum)) return currentNum;
-      if (!hasCurrent) return taskPick ?? maxEpisode;
-      if (currentNum === 0 && maxEpisode > 0) return taskPick ?? maxEpisode;
-      return currentNum;
-    }
 
-    function normalizeImportedEpisodes() {
-      state.currentStationEpisode = normalizeEpisodeValue(
-        state.currentStationEpisode,
-        state.aiStations,
-        state.aiStationTasks,
-        state.aiStationTitles
-      );
-      state.currentShareEpisode = normalizeEpisodeValue(
-        state.currentShareEpisode,
-        state.aiShares,
-        state.aiShareTasks,
-        state.aiShareTitles
-      );
-      if (state.currentStationEpisode !== null && state.currentStationEpisode !== undefined) {
-        applyStationEpisode(state.currentStationEpisode);
-      }
-      if (state.currentShareEpisode !== null && state.currentShareEpisode !== undefined) {
-        applyShareEpisode(state.currentShareEpisode);
-      }
-    }
 
     function applyImportedState(payload) {
       state.sessions = Array.isArray(payload.sessions) ? payload.sessions : [];
@@ -9298,11 +9228,44 @@ tr:hover td.empty-cell {
       URL.revokeObjectURL(url);
     };
 
-    // 导入是整库替换，先让人看清楚要换成什么。
-    function confirmImport(payload, apply) {
-      const rows = [['培训', 'sessions'], ['开销', 'expenses'], ['广播站', 'aiStations'], ['分享月', 'aiShares'], ['金融百科', 'financeWiki']]
-        .map(([label, key]) => `${label} ${state[key].length} → ${Array.isArray(payload[key]) ? payload[key].length : 0} 条`).join('\n');
-      showConfirm('导入会用文件里的数据替换当前全部记录' + ((syncSettings.enabled && syncSettings.token) ? '，并同步到云端' : '') + '。\n\n' + rows + '\n\n确认替换吗？', apply);
+    const backupTables = {sessions:'培训', budgets:'预算', expenses:'开销', aiStations:'广播站', aiShares:'分享月', aiStationTasks:'广播站任务', aiShareTasks:'分享月任务', financeWiki:'金融百科'};
+    const backupTitles = {aiStationTitles:'广播站标题', aiShareTitles:'分享月标题'};
+    function restoreBackup(data, onSuccess) {
+      const object = value => value !== null && typeof value === 'object' && !Array.isArray(value);
+      const wrapped = object(data) && Object.hasOwn(data, 'data');
+      if (wrapped && ![2, DATA_VERSION].includes(data.version)) throw Error('不支持此备份版本');
+      const payload = wrapped ? data.data : data;
+      if (!object(payload)) throw Error('备份格式不正确');
+      const legacy = wrapped && data.version === 2;
+      const next = {...payload}, lines = [];
+      for (const [key,label] of Object.entries(backupTables)) {
+        if (legacy && key === 'expenses' && !Object.hasOwn(payload,key)) {
+          next[key] = state[key];
+          lines.push('开销：旧版无此字段，保留当前记录');
+          continue;
+        }
+        const records = payload[key];
+        if (!Array.isArray(records) || !records.every(row => object(row) && (typeof row.id === 'string' && row.id.trim() || Number.isFinite(row.id))) ||
+            new Set(records.map(row => String(row.id))).size !== records.length) throw Error(label + '缺失或记录无效，未导入');
+        lines.push(label + '：' + state[key].length + ' → ' + records.length);
+      }
+      for (const [key,label] of Object.entries(backupTitles)) {
+        if (!object(next[key]) || !Object.values(next[key]).every(title => typeof title === 'string')) throw Error(label + '缺失或格式错误');
+        lines.push(label + '：' + Object.keys(state[key]).length + ' → ' + Object.keys(next[key]).length);
+      }
+      for (const [key,label] of [['currentStationEpisode','广播站当前期'],['currentShareEpisode','分享月当前期']]) {
+        if (next[key] !== null && !(Number.isInteger(next[key]) && next[key] >= 0) &&
+            !(legacy && typeof next[key] === 'string' && Number.isFinite(parseEpisodeLike(next[key])))) throw Error(label + '缺失或格式错误');
+        lines.push(label + '：' + (state[key] ?? '未选') + ' → ' + (next[key] ?? '未选'));
+      }
+      if (['loading','failed'].includes(window.LDLoadInfo.status)) throw Error('台账尚未加载，不能替换');
+      const original = JSON.stringify(state);
+      showConfirm('导入后将替换以下数据' + ((syncSettings.enabled && syncSettings.token) ? '，并同步到云端' : '') + '。\n\n' + lines.join('\n') + '\n\n确认替换吗？', () => {
+        if (JSON.stringify(state) !== original) { showToast('当前台账已变化，请重新预览备份', 'error'); return; }
+        try { applyImportedState(next); persist(); }
+        catch (error) { applyImportedState(JSON.parse(original)); showToast('导入失败：' + error.message, 'error'); return; }
+        renderAll(); renderAIKnowledge(); onSuccess?.(); showToast('数据导入成功', 'success');
+      });
     }
 
     window.importJson = function () {
@@ -9315,20 +9278,7 @@ tr:hover td.empty-cell {
       const reader = new FileReader();
       reader.onload = ev => {
         try {
-          const data = JSON.parse(ev.target.result);
-          if (!data || typeof data !== 'object') throw new Error('文件格式不正确');
-          const payload = data.data && typeof data.data === 'object' ? data.data : data;
-          const hasPayload = ['sessions', 'budgets', 'aiStations', 'aiShares', 'aiStationTasks', 'aiShareTasks']
-            .some(key => Array.isArray(payload[key]));
-          if (!hasPayload) throw new Error('缺少关键字段');
-          confirmImport(payload, () => {
-            applyImportedState(payload);
-            normalizeImportedEpisodes();
-            persist();
-            renderAll();
-            renderAIKnowledge();
-            showToast('数据导入成功', 'success');
-          });
+          restoreBackup(JSON.parse(ev.target.result));
         } catch (err) { showToast('导入失败：' + err.message, 'error'); }
       };
       reader.readAsText(file);
@@ -9398,20 +9348,7 @@ tr:hover td.empty-cell {
         return;
       }
       try {
-        const data = decodeBackupPayload(raw);
-        const payload = data && data.data && typeof data.data === 'object' ? data.data : data;
-        const hasPayload = ['sessions', 'budgets', 'aiStations', 'aiShares', 'aiStationTasks', 'aiShareTasks']
-          .some(key => Array.isArray(payload[key]));
-        if (!hasPayload) throw new Error('缺少关键字段');
-        confirmImport(payload, () => {
-          applyImportedState(payload);
-          normalizeImportedEpisodes();
-          persist();
-          renderAll();
-          renderAIKnowledge();
-          updateBackupMeta('已导入');
-          showToast('备份码已导入', 'success');
-        });
+        restoreBackup(decodeBackupPayload(raw), () => updateBackupMeta('已导入'));
       } catch (err) {
         showToast('导入失败：' + err.message, 'error');
       }
