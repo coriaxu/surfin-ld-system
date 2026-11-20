@@ -1,6 +1,106 @@
 {
   "sessions": [
     {
+      "id": "anutz0xw",
+      "date": "2026-11-12",
+      "course": "L5 向上汇报",
+      "project": "2026管理者训练营 1.0",
+      "lecturer": "徐浩",
+      "people": 6,
+      "duration": 2,
+      "note": ""
+    },
+    {
+      "id": "x2r41wun",
+      "date": "2026-11-11",
+      "course": "1 对 1 辅导答疑",
+      "project": "AI 赋能训练营第四期",
+      "lecturer": "徐浩",
+      "people": 1,
+      "duration": 1,
+      "note": "高磊"
+    },
+    {
+      "id": "ssl6yncz",
+      "date": "2026-11-11",
+      "course": "1 对 1 辅导答疑",
+      "project": "AI 赋能训练营第四期",
+      "lecturer": "徐浩",
+      "people": 1,
+      "duration": 1,
+      "note": " Kenneth"
+    },
+    {
+      "id": "f0x3qnty",
+      "date": "2026-11-10",
+      "course": "1 对 1 辅导答疑",
+      "project": "AI 赋能训练营第四期",
+      "lecturer": "徐浩",
+      "people": 1,
+      "duration": 1,
+      "note": "雨菲"
+    },
+    {
+      "id": "uxjb8ajr",
+      "date": "2026-11-10",
+      "course": "1 对 1 辅导答疑",
+      "project": "AI 赋能训练营第四期",
+      "lecturer": "徐浩",
+      "people": 1,
+      "duration": 1,
+      "note": "秦园春"
+    },
+    {
+      "id": "oxjmgpsc",
+      "date": "2026-11-06",
+      "course": "L1 AI 领导力",
+      "project": "AI 赋能训练营第四期",
+      "lecturer": "徐浩",
+      "people": 4,
+      "duration": 1,
+      "note": ""
+    },
+    {
+      "id": "2vlvvram",
+      "date": "2026-10-30",
+      "course": "第三期：用 AI 做一支视频",
+      "project": "咖啡开小灶",
+      "lecturer": "徐浩",
+      "people": 4,
+      "duration": 1,
+      "note": "往期学员：荣萌、王雅平、郭嘉宇、路璐"
+    },
+    {
+      "id": "t8zmj1q1",
+      "date": "2026-10-29",
+      "course": "认可与建设性反馈",
+      "project": "2026管理者训练营 1.0",
+      "lecturer": "徐浩",
+      "people": 6,
+      "duration": 2,
+      "note": "第四课"
+    },
+    {
+      "id": "rr1osvdc",
+      "date": "2026-10-23",
+      "course": "1 对 1 辅导答疑",
+      "project": "AI 赋能训练营",
+      "lecturer": "徐浩",
+      "people": 1,
+      "duration": 0.5,
+      "note": "荣萌"
+    },
+    {
+      "id": "wgras0qf",
+      "date": "2026-10-21",
+      "course": "1 对 1 辅导答疑",
+      "project": "AI 赋能训练营第四期",
+      "lecturer": "徐浩",
+      "people": 1,
+      "duration": 1,
+      "note": "江国浩"
+    },
+    {
       "id": "saevmhvx",
       "date": "2026-10-20",
       "course": "1 对 1 辅导答疑",
@@ -89,6 +189,16 @@
       "people": 1,
       "duration": 1,
       "note": "韩丽辉"
+    },
+    {
+      "id": "yqduuh8l",
+      "date": "2026-10-08",
+      "course": "咖啡交流",
+      "project": "AI 赋能训练营",
+      "lecturer": "徐浩",
+      "people": 1,
+      "duration": 1,
+      "note": "路璐，第三期 C 组座谈请假后单独交流"
     },
     {
       "id": "2faxhfg3",
@@ -869,120 +979,26 @@
       "people": 1,
       "duration": 2,
       "note": "跟双双"
-    },
-    {
-      "id": "wgras0qf",
-      "date": "2026-10-21",
-      "course": "1 对 1 辅导答疑",
-      "project": "AI 赋能训练营第四期",
-      "lecturer": "徐浩",
-      "people": 1,
-      "duration": 1,
-      "note": "江国浩"
-    },
-    {
-      "id": "rr1osvdc",
-      "date": "2026-10-23",
-      "course": "1 对 1 辅导答疑",
-      "project": "AI 赋能训练营",
-      "lecturer": "徐浩",
-      "people": 1,
-      "duration": 0.5,
-      "note": "荣萌"
-    },
-    {
-      "id": "yqduuh8l",
-      "date": "2026-10-08",
-      "course": "咖啡交流",
-      "project": "AI 赋能训练营",
-      "lecturer": "徐浩",
-      "people": 1,
-      "duration": 1,
-      "note": "路璐，第三期 C 组座谈请假后单独交流"
-    },
-    {
-      "id": "t8zmj1q1",
-      "date": "2026-10-29",
-      "course": "认可与建设性反馈",
-      "project": "2026管理者训练营 1.0",
-      "lecturer": "徐浩",
-      "people": 6,
-      "duration": 2,
-      "note": "第四课"
-    },
-    {
-      "id": "2vlvvram",
-      "date": "2026-10-30",
-      "course": "第三期：用 AI 做一支视频",
-      "project": "咖啡开小灶",
-      "lecturer": "徐浩",
-      "people": 4,
-      "duration": 1,
-      "note": "往期学员：荣萌、王雅平、郭嘉宇、路璐"
-    },
-    {
-      "id": "oxjmgpsc",
-      "date": "2026-11-06",
-      "course": "L1 AI 领导力",
-      "project": "AI 赋能训练营第四期",
-      "lecturer": "徐浩",
-      "people": 4,
-      "duration": 1,
-      "note": ""
-    },
-    {
-      "id": "x2r41wun",
-      "date": "2026-11-11",
-      "course": "1 对 1 辅导答疑",
-      "project": "AI 赋能训练营第四期",
-      "lecturer": "徐浩",
-      "people": 1,
-      "duration": 1,
-      "note": "高磊"
-    },
-    {
-      "id": "ssl6yncz",
-      "date": "2026-11-11",
-      "course": "1 对 1 辅导答疑",
-      "project": "AI 赋能训练营第四期",
-      "lecturer": "徐浩",
-      "people": 1,
-      "duration": 1,
-      "note": " Kenneth"
-    },
-    {
-      "id": "f0x3qnty",
-      "date": "2026-11-10",
-      "course": "1 对 1 辅导答疑",
-      "project": "AI 赋能训练营第四期",
-      "lecturer": "徐浩",
-      "people": 1,
-      "duration": 1,
-      "note": "雨菲"
-    },
-    {
-      "id": "uxjb8ajr",
-      "date": "2026-11-10",
-      "course": "1 对 1 辅导答疑",
-      "project": "AI 赋能训练营第四期",
-      "lecturer": "徐浩",
-      "people": 1,
-      "duration": 1,
-      "note": "秦园春"
-    },
-    {
-      "id": "anutz0xw",
-      "date": "2026-11-12",
-      "course": "L5 向上汇报",
-      "project": "2026管理者训练营 1.0",
-      "lecturer": "徐浩",
-      "people": 6,
-      "duration": 2,
-      "note": ""
     }
   ],
   "budgets": [],
   "expenses": [
+    {
+      "id": "7l83bkem",
+      "date": "2026-11-16",
+      "month": "2026-11",
+      "type": "regular",
+      "amount": 474.62,
+      "desc": "Claude Pro 账号。"
+    },
+    {
+      "id": "m9c9vxyw",
+      "date": "2026-11-15",
+      "month": "2026-11",
+      "type": "regular",
+      "amount": 711,
+      "desc": "ChatGPT 11 月 pro 100 刀"
+    },
     {
       "id": "l27snwka",
       "date": "2026-10-15",
@@ -1118,14 +1134,6 @@
       "type": "regular",
       "amount": 150,
       "desc": "Gemini 订阅费用"
-    },
-    {
-      "id": "m9c9vxyw",
-      "date": "2026-11-15",
-      "month": "2026-11",
-      "type": "regular",
-      "amount": 711,
-      "desc": "ChatGPT 11 月 pro 100 刀"
     }
   ],
   "aiStations": [
